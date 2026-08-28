@@ -1,5 +1,6 @@
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
-import { Button, PhotoFrame } from "@/components/ui/primitives";
+import { Button } from "@/components/ui/primitives";
 import { SmileyDoodle, SparkleDoodle } from "@/components/ui/doodles";
 import { hero } from "@/lib/content";
 
@@ -55,10 +56,16 @@ export default function Hero() {
             className="absolute inset-x-6 bottom-6 h-full rounded-[2rem] bg-terracotta/90"
             aria-hidden="true"
           />
-          <PhotoFrame
-            label={hero.photoLabel}
-            className="relative z-10 aspect-[4/5] shadow-[0_30px_60px_-30px_rgba(38,33,24,0.5)]"
-          />
+          <div className="relative z-10 aspect-[4/5] overflow-hidden rounded-3xl shadow-[0_30px_60px_-30px_rgba(38,33,24,0.5)]">
+            <Image
+              src="/images/HERO.jpg"
+              alt="A man sits on a rock at the edge of a lake at sunset, seen from behind"
+              fill
+              priority
+              sizes="(min-width: 1024px) 45vw, 90vw"
+              className="object-cover"
+            />
+          </div>
           <SmileyDoodle className="absolute -top-6 -left-2 z-20 h-14 w-14 animate-float text-ink" />
         </div>
       </div>

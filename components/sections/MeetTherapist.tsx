@@ -1,5 +1,5 @@
+import Image from "next/image";
 import { BadgeCheck } from "lucide-react";
-import { PhotoFrame } from "@/components/ui/primitives";
 import { GeometricPattern } from "@/components/ui/doodles";
 import { therapist } from "@/lib/content";
 
@@ -50,11 +50,15 @@ export default function MeetTherapist() {
 
         {/* Portrait — inset, never flush to section edges */}
         <div className="flex items-center px-8 py-12 sm:px-12 lg:py-24 lg:pr-14">
-          <PhotoFrame
-            label={therapist.photoLabel}
-            tone="dark"
-            className="w-full aspect-[4/5] shadow-[0_30px_60px_-25px_rgba(0,0,0,0.55)]"
-          />
+          <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl shadow-[0_30px_60px_-25px_rgba(0,0,0,0.55)]">
+            <Image
+              src="/images/THERAPIST.jpg"
+              alt="Portrait of Jordan Taylor, LPC Associate, seated in the therapy room"
+              fill
+              sizes="(min-width: 1024px) 30vw, 80vw"
+              className="object-cover"
+            />
+          </div>
         </div>
       </div>
     </section>

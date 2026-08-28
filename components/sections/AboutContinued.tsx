@@ -1,5 +1,6 @@
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
-import { Button, PhotoFrame } from "@/components/ui/primitives";
+import { Button } from "@/components/ui/primitives";
 import { CornerAccent } from "@/components/ui/doodles";
 import { aboutContinued } from "@/lib/content";
 
@@ -14,11 +15,13 @@ export default function AboutContinued() {
         {/* Inset portrait + accent (mirrored: accent top-left) */}
         <div className="relative order-2 px-6 pt-8 pb-6 sm:px-10 lg:order-1 lg:px-10">
           <CornerAccent className="absolute top-0 left-0 z-0 h-32 w-32 -scale-x-100 text-olive/70" />
-          <div className="relative z-10">
-            <PhotoFrame
-              label={aboutContinued.photoLabel}
-              tone="dark"
-              className="aspect-[3/4] shadow-[0_26px_50px_-28px_rgba(38,33,24,0.45)]"
+          <div className="relative z-10 aspect-[3/4] overflow-hidden rounded-3xl shadow-[0_26px_50px_-28px_rgba(38,33,24,0.45)]">
+            <Image
+              src="/images/ABOUT-2.jpg"
+              alt="A father stands with his arms around his two sons, facing a mountain vista at sunset"
+              fill
+              sizes="(min-width: 1024px) 45vw, 90vw"
+              className="object-cover"
             />
           </div>
         </div>

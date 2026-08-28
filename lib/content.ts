@@ -130,10 +130,19 @@ export const approaches = {
         "Unconditional regard, deep listening, and the conviction that you are the expert on your own life.",
     },
   ],
-  photoLabels: [
-    "In session — drop photo in /public/images/approach-1.jpg",
-    "The room itself — drop photo in /public/images/approach-2.jpg",
-    "Community work — drop photo in /public/images/approach-3.jpg",
+  photos: [
+    {
+      src: "/images/APPROACH-1.jpg",
+      alt: "A therapist takes notes during a counseling session in a warm, plant-filled office",
+    },
+    {
+      src: "/images/APPROACH-2.jpg",
+      alt: "Two people in conversation during a session; framed wall art reads You are more than your story",
+    },
+    {
+      src: "/images/APPROACH-3.jpg",
+      alt: "A group therapy circle gathered in a cozy room at sunset",
+    },
   ],
 };
 

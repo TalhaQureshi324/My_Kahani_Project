@@ -1,4 +1,5 @@
-import { PhotoFrame, SectionHeading } from "@/components/ui/primitives";
+import Image from "next/image";
+import { SectionHeading } from "@/components/ui/primitives";
 import { CornerAccent } from "@/components/ui/doodles";
 import { about } from "@/lib/content";
 
@@ -26,10 +27,13 @@ export default function About() {
         {/* Inset portrait + accent */}
         <div className="relative px-6 pt-8 pb-6 sm:px-10 lg:px-10">
           <CornerAccent className="absolute top-0 right-0 z-0 h-32 w-32 text-terracotta/70" />
-          <div className="relative z-10">
-            <PhotoFrame
-              label={about.photoLabel}
-              className="aspect-[3/4] shadow-[0_26px_50px_-28px_rgba(38,33,24,0.45)]"
+          <div className="relative z-10 aspect-[3/4] overflow-hidden rounded-3xl shadow-[0_26px_50px_-28px_rgba(38,33,24,0.45)]">
+            <Image
+              src="/images/ABOUT-1.jpg"
+              alt="A father and his young son walk hand in hand down a tree-lined path at sunset"
+              fill
+              sizes="(min-width: 1024px) 45vw, 90vw"
+              className="object-cover"
             />
           </div>
         </div>

@@ -52,10 +52,10 @@ export default function WhyWorkWithMe() {
           className="mt-14 inline-block transition-transform duration-300 hover:-translate-y-1"
           aria-label="Professional verification badge (link destination to be configured)"
         >
-          {/* eslint-disable-next-line @next/next/no-img-element -- placeholder badge swaps for a real asset later */}
+          {/* eslint-disable-next-line @next/next/no-img-element -- badge image supplied by the practice */}
           <img
-            src="/icons/badge-placeholder.svg"
-            alt={whyWork.badgeAlt}
+            src="/images/Badge_WHY_WORK_WITH_ME.jpg"
+            alt="Inclusive Therapist badge — celebrating all identities"
             width={148}
             height={148}
             className="rounded-full shadow-[0_16px_35px_-18px_rgba(42,42,42,0.55)]"
