@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 700" preserveAspectRatio="xMidYMid slice">
+  <!-- Original placeholder artwork — replace this file with a real
+       panoramic photo (e.g. /public/images/banner.jpg) before launch. -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f7f1e6"/>
+      <stop offset="0.55" stop-color="#f0d6c4"/>
+      <stop offset="1" stop-color="#e8c3ae"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="700" fill="url(#sky)"/>
+  <circle cx="1180" cy="210" r="90" fill="#dfa45c" opacity="0.85"/>
+  <circle cx="1180" cy="210" r="120" fill="none" stroke="#bc5b34" stroke-width="3" opacity="0.35"/>
+  <!-- hills -->
+  <path d="M0 520 C 240 420 420 470 640 430 C 880 385 1120 470 1360 420 C 1460 400 1540 420 1600 405 L1600 700 L0 700 Z" fill="#5c6b4a" opacity="0.9"/>
+  <path d="M0 590 C 300 520 560 585 860 545 C 1120 510 1380 575 1600 540 L1600 700 L0 700 Z" fill="#3b4634"/>
+  <!-- soccer ball doodle -->
+  <g transform="translate(300 560) scale(1.15)">
+    <circle r="34" fill="#f7f1e6" stroke="#262118" stroke-width="3"/>
+    <path d="M0 -14 L12 -5 L7 11 L-7 11 L-12 -5 Z" fill="#262118"/>
+    <path d="M0 -34v8M24 -24l-6 6M34 0h-8M24 24l-6-6M0 34v-8M-24 24l6-6M-34 0h8M-24 -24l6 6" stroke="#262118" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <!-- placeholder caption -->
+  <text x="800" y="660" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-size="26" fill="#f7f1e6" opacity="0.85">Full-width break image — replace with your panoramic photo</text>
+</svg>

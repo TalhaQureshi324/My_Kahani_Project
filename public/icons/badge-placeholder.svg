@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Original placeholder badge — replace with your own professional
+       verification badge (e.g. /public/icons/badge.svg) before launch. -->
+  <circle cx="100" cy="100" r="94" fill="#f5ebe6" stroke="#5c2b1d" stroke-width="3"/>
+  <circle cx="100" cy="100" r="76" fill="none" stroke="#6b6f38" stroke-width="2" stroke-dasharray="3 6"/>
+  <path d="M100 52 L110 84 L143 84 L116 104 L126 136 L100 117 L74 136 L84 104 L57 84 L90 84 Z" fill="#5c2b1d"/>
+  <text x="100" y="160" text-anchor="middle" font-family="Georgia, serif" font-size="13" font-weight="bold" letter-spacing="1.5" fill="#2a2a2a">LPC ASSOCIATE</text>
+  <text x="100" y="176" text-anchor="middle" font-family="Georgia, serif" font-size="8" letter-spacing="2" fill="#5c2b1d">VERIFIED · PLACEHOLDER BADGE</text>
+</svg>

@@ -1,0 +1,99 @@
+@import "tailwindcss";
+
+@theme {
+  /* ── Palette ─────────────────────────────────────────────── */
+  --color-cream: #f7f1e6;
+  --color-cream-dark: #eee5d2;
+  --color-paper: #fcf9f1;
+  --color-ink: #262118;
+  --color-ink-soft: #6b6354;
+  --color-terracotta: #bc5b34;
+  --color-terracotta-deep: #98431f;
+  --color-terracotta-tint: #f0d6c4;
+  --color-olive: #5c6b4a;
+  --color-forest: #3b4634;
+  --color-night: #211d15;
+  --color-night-2: #2d2820;
+  --color-sun: #dfa45c;
+
+  /* Rust editorial suite (therapist bio + CTA sections) */
+  --color-rust: #7b3b26;
+  --color-rust-deep: #63291a;
+  --color-mustard: #d29b5a;
+  --color-gold: #b38200;
+  --color-creamwarm: #f5ebe6;
+  --color-cocoa: #4a2a1b;
+
+  /* Sage qualifications + olive approach sections */
+  --color-sage: #99a69c;
+  --color-charcoal: #2a2a2a;
+  --color-terradark: #5c2b1d;
+  --color-sand: #ded3c4;
+  --color-sand-deep: #d2c4af;
+  --color-olivegreen: #6b6f38;
+
+  /* ── Type ────────────────────────────────────────────────── */
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+
+  /* ── Motion ──────────────────────────────────────────────── */
+  --animate-marquee: marquee 42s linear infinite;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-float-slow: float 11s ease-in-out infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0) rotate(-2deg);
+    }
+    50% {
+      transform: translateY(-10px) rotate(2deg);
+    }
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-marquee,
+  .animate-float,
+  .animate-float-slow {
+    animation: none !important;
+  }
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: var(--color-terracotta);
+  color: var(--color-cream);
+}
+
+/* Hand-drawn underline used under display headings */
+.marker-underline {
+  background-image: linear-gradient(
+    to right,
+    var(--color-terracotta),
+    var(--color-terracotta)
+  );
+  background-repeat: no-repeat;
+  background-size: 100% 0.14em;
+  background-position: 0 92%;
+}
