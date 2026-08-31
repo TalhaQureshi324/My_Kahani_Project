@@ -130,6 +130,8 @@ export const approaches = {
         "Unconditional regard, deep listening, and the conviction that you are the expert on your own life.",
     },
   ],
+  outro:
+    "Blended together, these approaches let us tend to the roots of what you're carrying while still building concrete momentum toward where you want to be.",
   photos: [
     {
       src: "/images/APPROACH-1.jpg",
