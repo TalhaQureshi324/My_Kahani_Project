@@ -148,45 +148,45 @@ export const approaches = {
   ],
 };
 
-export const services = {
-  eyebrow: "Services",
-  title: "Counseling for every chapter",
-  lede: "Whatever brought you here, there is a format that fits. All sessions are offered in-person in Austin or virtually across Texas.",
+export const counselingServices = {
+  title: "Counseling Services",
+  subtitle: "In Austin, TX & Online",
+  ctaLabel: "Book your appointment",
   items: [
     {
-      icon: "person",
-      title: "Individual therapy",
-      blurb: "One-on-one space to untangle anxiety, burnout, identity, and the big transitions in between.",
-      fit: "Good fit if you want a steady, private place to think out loud.",
-      meta: "50 minutes · in-person or virtual",
+      icon: "/icons/individual_therapy_icon.webp",
+      iconAlt: "Spray-painted graffiti smiley face",
+      badge: "Individual Therapy",
+      description:
+        "A supportive space to manage stress, anxiety, depression, or life transitions while reconnecting with your authentic self.",
     },
     {
-      icon: "rings",
-      title: "Couples therapy",
-      blurb: "For partners who want to fight better, understand earlier, and like each other again.",
-      fit: "Good fit if communication keeps breaking down in the same places.",
-      meta: "55 minutes · in-person or virtual",
+      icon: "/icons/couple _counsoling_icon.webp",
+      iconAlt: "Spray-painted graffiti heart pierced by an arrow",
+      badge: "Couples Counseling",
+      description:
+        "Helping couples improve communication, rebuild trust, and strengthen intimacy.",
     },
     {
-      icon: "family",
-      title: "Family therapy",
-      blurb: "Room for everyone at the table — blending stepparenting, boundaries, and generational patterns.",
-      fit: "Good fit when the issue belongs to the whole system, not one person.",
-      meta: "55 minutes · in-person preferred",
+      icon: "/icons/family_therapy_icon.webp",
+      iconAlt: "Spray-painted graffiti peace sign",
+      badge: "Family Therapy",
+      description:
+        "Focused on parent–child relationships (teen or adult children) to break unhealthy patterns and build stronger connections.",
     },
     {
-      icon: "group",
-      title: "Group therapy",
-      blurb: "Structured small groups where people practicing similar things grow alongside each other.",
-      fit: "Good fit if you are tired of working on it alone.",
-      meta: "90 minutes · rotating cohorts",
+      icon: "/icons/group_therapy_icon.webp",
+      iconAlt: "Geometric illustration of overlapping offset squares",
+      badge: "Group Therapy",
+      description:
+        "Healing in community with others who share similar experiences.",
     },
     {
-      icon: "compass",
-      title: "Career coaching",
-      blurb: "For the dreaded question — what do I actually want to do? — with a coach who has sat in that chair too.",
-      fit: "Good fit for students, switchers, and the quietly restless.",
-      meta: "50 minutes · virtual",
+      icon: "/icons/career_counsoling_and_coaching_icon.webp",
+      iconAlt: "Spray-painted graffiti spiral swirl",
+      badge: "Career Counseling & Coaching",
+      description:
+        "Combining recruiting-industry experience with therapeutic insight to help you navigate layoffs, burnout, and career transitions.",
     },
   ],
 };

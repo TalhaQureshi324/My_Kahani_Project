@@ -6,7 +6,7 @@ import BioConclusion from "@/components/sections/BioConclusion";
 import BreakBanner from "@/components/sections/BreakBanner";
 import WhyWorkWithMe from "@/components/sections/WhyWorkWithMe";
 import TherapyApproach from "@/components/sections/TherapyApproach";
-import Services from "@/components/sections/Services";
+import CounselingServices from "@/components/sections/CounselingServices";
 import Location from "@/components/sections/Location";
 import Specialties from "@/components/sections/Specialties";
 import Pricing from "@/components/sections/Pricing";
@@ -24,7 +24,7 @@ export default function Home() {
       <BreakBanner />
       <WhyWorkWithMe />
       <TherapyApproach />
-      <Services />
+      <CounselingServices />
       <Location />
       <Specialties />
       <Pricing />
