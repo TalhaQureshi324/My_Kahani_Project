@@ -3,15 +3,15 @@ import { approaches } from "@/lib/content";
 
 /**
  * Section 8 — Therapy approach: a structural replica of the reference
- * site's fluid engine grid. A 24-column proportional grid on a canvas
+ * site's fluid engine grid, over a single full-section background
+ * image (theraphy_section_background.webp — olive band top, sand field,
+ * diamond lattice right). A 24-column proportional grid on a canvas
  * capped at 1500px with 4vw side gutters; row heights scale with the
  * container (factor 0.0215), and typography is fluid (body scales as
- * min(0.6vw + 1rem, 34px), serif 400 headings). The geometric texture
- * is a full-height layer on the right ~31% of the canvas (465px at
- * full scale, one box = 100px tall) sitting behind the photo stack.
- * Everything derives from --container-width, so the whole section
- * scales proportionally at any viewport width or zoom level — there is
- * no fixed-pixel breakpoint to break.
+ * min(0.6vw + 1rem, 34px), serif 400 headings). Everything derives
+ * from --container-width, so the whole section scales proportionally
+ * at any viewport width or zoom level — there is no fixed-pixel
+ * breakpoint to break.
  *
  * Desktop grid areas (row-start/col-start/row-end/col-end on 47×24):
  *   heading  3/2/6/18   intro 9/4/15/15   outro 39/4/42/15
@@ -72,26 +72,18 @@ export default function TherapyApproach() {
         } as React.CSSProperties
       }
     >
-      {/* Full-height geometric texture on the right 31% of the canvas,
-          behind everything else (465px wide, boxes 100px tall). */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-y-0 z-0"
-        style={{
-          right: "calc((100% - var(--container-width)) / 2)",
-          width: "calc(var(--container-width) * 0.31)",
-          backgroundImage: "url('/images/approach-texture.svg')",
-          backgroundSize: "auto 700px",
-          backgroundRepeat: "repeat",
-        }}
-      />
-
-      {/* Olive band across the top of the section */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-x-0 top-0 z-0 bg-olivegreen"
-        style={{ height: "calc(var(--container-width) * 0.085)" }}
-      />
+      {/* Full-section background: olive band on top (behind the heading),
+          sand field, and the diamond lattice on the right — anchored
+          right/top so the pattern strip always stays fully visible. */}
+      <div aria-hidden="true" className="absolute inset-0 z-0">
+        <Image
+          src="/images/theraphy_section_background.webp"
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover object-right-top"
+        />
+      </div>
 
       {/* Desktop >=768px: the 24-column fluid engine grid */}
       <div
@@ -140,7 +132,7 @@ export default function TherapyApproach() {
 
       {/* Mobile <768px: stacked fluid layout, same typography */}
       <div className="relative z-10 mx-auto flex w-full max-w-[calc(1500px+8vw)] flex-col px-[4vw] pb-16 pt-6 md:hidden">
-        <h2 className="font-display text-[clamp(2rem,2.2vw+1.25rem,2.625rem)] font-normal leading-[1.2] tracking-normal text-ink">
+        <h2 className="font-display text-[clamp(2rem,2.2vw+1.25rem,2.625rem)] font-normal leading-[1.2] tracking-normal text-cream">
           {approaches.bannerTitle}
         </h2>
         <p className={`${bodyText} mt-6`}>{approaches.intro}</p>
