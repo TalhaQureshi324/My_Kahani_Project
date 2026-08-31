@@ -24,7 +24,7 @@ const LARGE_TEXT = "text-[min(0.6vw+1rem,2.125rem)]";
 const PHOTO_WIDTH = "calc(var(--container-width) * 0.2233)"; // 335px at 1500px canvas
 
 // Reference grid areas for the five modality items and three photos.
-// Text blocks start at column 3 + 30px padding = 155px from grid left.
+// Text blocks start at column 3 + 24px padding = ~150px from grid left.
 const ITEM_AREAS = [
   "16 / 3 / 19 / 16",
   "20 / 3 / 24 / 16",
@@ -34,7 +34,7 @@ const ITEM_AREAS = [
 ];
 const IMAGE_AREAS = ["7 / 17 / 21 / 24", "21 / 17 / 33 / 24", "34 / 17 / 46 / 24"];
 
-const bodyText = `${LARGE_TEXT} font-normal leading-[1.6] tracking-[0.01em] text-charcoal`;
+const bodyText = `${LARGE_TEXT} leading-[1.6] tracking-[0.01em] text-charcoal`;
 
 function Item({ name, blurb }: { name: string; blurb: string }) {
   return (
@@ -75,9 +75,10 @@ export default function TherapyApproach() {
     >
       {/* Background, composed from the supplied image: solid sand base,
           the image's olive band across the top (171px of the 1500px
-          canvas, shown at native aspect), and the pattern strip —
-          195px wide (13% of canvas) — running from below the band to
-          the bottom of the section, full-bleed to the right edge. */}
+          canvas, shown at native aspect), and the pattern strip — at
+          least 390px (26% of canvas) — running from below the band to
+          the bottom of the section, full-bleed to the right edge with
+          ~80% of each photo sitting on top of it. */}
       <div
         aria-hidden="true"
         className="absolute inset-0 z-0 bg-[#DED5C8]"
@@ -98,7 +99,7 @@ export default function TherapyApproach() {
         className="absolute bottom-0 right-0 z-0"
         style={{
           top: "max(calc(var(--container-width) * 0.114), 120px)",
-          width: "calc(var(--container-width) * 0.13)",
+          width: "max(calc(var(--container-width) * 0.26), 390px)",
           backgroundImage: "url('/images/approach-pattern-strip.webp')",
           backgroundSize: "auto 100%",
           backgroundPosition: "right top",
@@ -120,27 +121,27 @@ export default function TherapyApproach() {
         }
       >
         <h2
-          className="self-center pl-[30px] font-display text-[clamp(2rem,2.2vw+1.25rem,2.625rem)] font-normal leading-[1.2] tracking-normal text-cream"
+          className="self-center pl-[24px] font-display text-[clamp(2rem,2.2vw+1.25rem,2.625rem)] font-normal leading-[1.2] tracking-normal text-cream"
           style={{ gridArea: "2 / 3 / 4 / 18" }}
         >
           {approaches.bannerTitle}
         </h2>
 
         <p
-          className={`${bodyText} pl-[30px]`}
+          className={`${bodyText} pl-[24px]`}
           style={{ gridArea: "9 / 3 / 15 / 15" }}
         >
           {approaches.intro}
         </p>
 
         {approaches.items.map((item, i) => (
-          <div key={item.name} className="pl-[30px]" style={{ gridArea: ITEM_AREAS[i] }}>
+          <div key={item.name} className="pl-[24px]" style={{ gridArea: ITEM_AREAS[i] }}>
             <Item {...item} />
           </div>
         ))}
 
         <p
-          className={`${bodyText} pl-[30px]`}
+          className={`${bodyText} pl-[24px]`}
           style={{ gridArea: "39 / 3 / 42 / 15" }}
         >
           {approaches.outro}
