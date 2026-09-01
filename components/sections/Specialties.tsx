@@ -2,14 +2,15 @@ import Image from "next/image";
 import { specialties } from "@/lib/content";
 
 /**
- * Section 12 — Specialties / Areas of focus: a cream ticker strip
- * scrolls "SPECIALTIES" endlessly in the display serif, then the olive
- * #605C31 urban texture (areas_of_focus.webp, repeating) carries four
- * subsections of alternating photo/text rows — items 1–3, 4–6, 7–9 and
- * the final single item. Photos sit in crisp black double frames
- * (border-2 + p-3) at exact dimensions. A curved black-stroked wave in
- * the next section's cream-dark fills the bottom edge of the last
- * subsection as the transition into Pricing.
+ * Section 12 — Specialties / Areas of focus: the olive #605C31 urban
+ * texture (areas_of_focus.webp, repeating) runs from behind the giant
+ * SPECIALTIES marquee (padded clear of the slanted map section above)
+ * down through four subsections of alternating photo/text rows — items
+ * 1–3, 4–6, 7–9 and the final single item. Photos render borderless at
+ * exact dimensions (2.webp carries its own offset frame in the asset).
+ * A curved black-stroked wave in the next section's cream-dark fills
+ * the bottom edge of the last subsection as the transition into
+ * Pricing.
  */
 
 const TEXTURE =
@@ -19,19 +20,17 @@ type Item = (typeof specialties.items)[number];
 
 function Frame({ item }: { item: Item }) {
   return (
-    <div className="border-2 border-black bg-transparent p-3">
-      <div
-        className="relative max-w-full overflow-hidden"
-        style={{ width: item.w, height: item.h }}
-      >
-        <Image
-          src={item.img}
-          alt={`${item.title} — area of focus illustration`}
-          fill
-          sizes="(min-width: 768px) 460px, 92vw"
-          className="object-cover"
-        />
-      </div>
+    <div
+      className="relative max-w-full overflow-hidden border-none bg-transparent p-0"
+      style={{ width: item.w, height: item.h }}
+    >
+      <Image
+        src={item.img}
+        alt={`${item.title} — area of focus illustration`}
+        fill
+        sizes="(min-width: 768px) 460px, 92vw"
+        className="object-cover"
+      />
     </div>
   );
 }
@@ -39,8 +38,8 @@ function Frame({ item }: { item: Item }) {
 function ItemText({ item, center }: { item: Item; center?: boolean }) {
   return (
     <div className={center ? "mx-auto max-w-xl text-center" : "max-w-md"}>
-      <h3 className="text-xl font-bold text-white">{item.title}</h3>
-      <p className="mt-2 text-base leading-relaxed text-[#F5EBE6]">
+      <h3 className="mb-2 text-[24px] font-bold text-white">{item.title}</h3>
+      <p className="text-[24px] font-normal leading-relaxed text-[#F5EBE6]">
         {item.text}
       </p>
     </div>
@@ -88,7 +87,7 @@ function Ticker() {
       {Array.from({ length: 6 }).map((_, i) => (
         <span
           key={i}
-          className="px-6 font-display text-3xl font-semibold uppercase tracking-wide text-charcoal md:text-5xl"
+          className="px-6 font-display text-6xl font-semibold uppercase tracking-wide text-[#F5EBE6] md:text-8xl lg:text-9xl"
         >
           {specialties.marqueeWord}
         </span>
@@ -97,7 +96,9 @@ function Ticker() {
   );
 
   return (
-    <div className="w-full overflow-hidden whitespace-nowrap border-b border-black/20 bg-[#F5EBE6] py-4">
+    <div
+      className={`w-full overflow-hidden whitespace-nowrap border-b border-black/20 py-4 pt-16 md:pt-24 ${TEXTURE}`}
+    >
       <div className="flex w-max animate-marquee">
         {row(false)}
         {row(true)}
@@ -121,7 +122,7 @@ export default function Specialties() {
       {/* Subsection 1 — items 1–3, opened by the Areas of focus heading */}
       <div className={TEXTURE}>
         <div className="mx-auto max-w-6xl px-6">
-          <h2 className="pt-12 text-center font-display text-2xl font-semibold uppercase tracking-widest text-[#F5EBE6] md:pt-16 md:text-4xl">
+          <h2 className="pt-12 text-center font-display text-[30px] font-semibold uppercase tracking-wide text-[#F5EBE6] md:pt-16 md:text-[45px]">
             {specialties.subheading}
           </h2>
           {groups[0].map((item) => (
