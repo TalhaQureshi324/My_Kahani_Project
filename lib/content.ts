@@ -191,12 +191,12 @@ export const counselingServices = {
   ],
 };
 
-export const locationCopy = {
-  eyebrow: "Location",
-  title: "Where we are located",
-  parking: "Free lot parking — [add access details]",
-  virtualNote: "Secure video sessions from wherever you feel most at home.",
-  hoursNote: "Evening and early-morning slots open each week.",
+export const locationBanner = {
+  heading: "Locations:",
+  virtualLine1: "Virtual therapy sessions",
+  virtualLine2: "across Texas",
+  inPersonLabel: "In-person therapy",
+  headline: ["Conveniently", "located in the heart", "of Austin"],
 };
 
 export const specialties = {

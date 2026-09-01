@@ -7,7 +7,8 @@ import BreakBanner from "@/components/sections/BreakBanner";
 import WhyWorkWithMe from "@/components/sections/WhyWorkWithMe";
 import TherapyApproach from "@/components/sections/TherapyApproach";
 import CounselingServices from "@/components/sections/CounselingServices";
-import Location from "@/components/sections/Location";
+import LocationBanner from "@/components/sections/LocationBanner";
+import LocationMap from "@/components/sections/LocationMap";
 import Specialties from "@/components/sections/Specialties";
 import Pricing from "@/components/sections/Pricing";
 import DadBlockSummary from "@/components/sections/DadBlockSummary";
@@ -25,7 +26,8 @@ export default function Home() {
       <WhyWorkWithMe />
       <TherapyApproach />
       <CounselingServices />
-      <Location />
+      <LocationBanner />
+      <LocationMap />
       <Specialties />
       <Pricing />
       <DadBlockSummary />
