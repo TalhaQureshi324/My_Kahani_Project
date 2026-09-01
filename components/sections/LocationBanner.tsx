@@ -6,11 +6,11 @@ import { site } from "@/lib/site";
  * Section 10 — Locations banner: the supplied split background (kraft
  * texture over teal street map, red torn-paper scrap baked into the
  * graphic on the left) at a flat desktop aspect (~490px at 1100px
- * wide, matching the reference). The background graphic is rotated
- * -1.2° so the kraft/teal boundary reads as a subtle diagonal, the
- * way the reference slants. Overlay text sits inside the torn paper
- * and the serif headline pins to the bottom-right corner over the map.
- * Below md a taller 3/4 crop with object-left keeps the paper framed.
+ * wide, matching the reference). Clean horizontal top and bottom
+ * edges; the angled divider lives at the bottom of Section 11. The
+ * "LOCATIONS:" text block sits centered inside the torn paper and the
+ * serif headline pins to the bottom-right corner over the map. Below
+ * md a taller 3/4 crop with object-left keeps the paper framed.
  */
 export default function LocationBanner() {
   return (
@@ -21,11 +21,11 @@ export default function LocationBanner() {
           alt=""
           fill
           sizes="100vw"
-          className="rotate-[-1.2deg] scale-[1.06] object-cover object-left md:object-center"
+          className="object-cover object-left md:object-center"
         />
 
-        {/* Text inside the red torn paper */}
-        <div className="absolute left-[6%] top-[15%] w-[34%] md:left-[7%] md:top-[9%] md:w-[27%]">
+        {/* Text inside the red torn paper — set low, comfortably inside the rip */}
+        <div className="absolute left-[6%] top-[17%] w-[34%] md:left-[7%] md:top-[18%] md:w-[27%]">
           <h2 className="font-sans text-[4vw] font-bold uppercase tracking-[0.12em] text-[#F7F1E6] md:text-[1.8vw]">
             {locationBanner.heading}
           </h2>

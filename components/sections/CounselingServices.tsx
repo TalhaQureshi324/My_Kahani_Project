@@ -49,7 +49,7 @@ export default function CounselingServices() {
         className="absolute inset-0 bg-[url('/images/counseling_services_background.webp')] bg-cover bg-center bg-no-repeat"
       />
 
-      <div className="relative z-10 mx-auto max-w-6xl px-6 py-20 md:py-24">
+      <div className="relative z-10 mx-auto max-w-6xl px-6 pt-20 pb-10 md:pt-24 md:pb-12">
         <h2 className="text-center font-display text-4xl font-semibold uppercase tracking-wide text-[#F5EBE6] sm:text-5xl">
           {title}
         </h2>
@@ -77,8 +77,8 @@ export default function CounselingServices() {
           ))}
         </div>
 
-        {/* CTA */}
-        <div className="mt-16 text-center">
+        {/* CTA — tight beneath the bottom row */}
+        <div className="mt-10 text-center md:mt-12">
           <a
             href="#contact"
             className="inline-block rounded-full border border-white bg-[#5C6430] px-8 py-3 text-[#F5EBE6] transition-colors hover:bg-[#4E5528]"
