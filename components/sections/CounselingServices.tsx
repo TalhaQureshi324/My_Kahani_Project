@@ -29,7 +29,7 @@ function ServiceCard({
         height={141}
         className="h-[141px] w-[141px] object-contain"
       />
-      <span className="mt-6 inline-block bg-black px-3 py-1 text-center font-sans text-[30px] font-bold uppercase tracking-wide text-white">
+      <span className="mt-6 inline-block whitespace-nowrap rounded-none bg-black px-3 py-[3px] text-center font-sans text-[20px] font-bold uppercase tracking-tight text-white md:text-[28px]">
         {badge}
       </span>
       <p className="mt-4 text-[24px] leading-relaxed text-[#F5EBE6]">
@@ -50,7 +50,7 @@ export default function CounselingServices() {
       />
 
       <div className="relative z-10 mx-auto max-w-6xl px-6 pt-20 pb-10 md:pt-24 md:pb-12">
-        <h2 className="text-center font-display text-[2.75rem] font-bold uppercase leading-[1.05] tracking-wide text-[#F5EBE6] md:text-[104px]">
+        <h2 className="whitespace-nowrap text-center font-display text-3xl font-bold uppercase leading-[1.05] tracking-wide text-[#F5EBE6] md:text-5xl lg:text-6xl">
           {title}
         </h2>
         <p className="mt-4 text-center font-sans text-[1.5rem] font-bold uppercase tracking-wider text-[#F5EBE6] md:text-[46px]">
