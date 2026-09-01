@@ -25,14 +25,14 @@ function ServiceCard({
       <Image
         src={icon}
         alt={iconAlt}
-        width={120}
-        height={120}
-        className="h-24 w-24 object-contain md:h-[120px] md:w-[120px]"
+        width={141}
+        height={141}
+        className="h-[141px] w-[141px] object-contain"
       />
-      <span className="mt-6 inline-block bg-black px-3 py-1 text-center font-sans text-sm font-bold uppercase tracking-wide text-white">
+      <span className="mt-6 inline-block bg-black px-3 py-1 text-center font-sans text-[30px] font-bold uppercase tracking-wide text-white">
         {badge}
       </span>
-      <p className="mt-4 max-w-xs text-base leading-relaxed text-[#F5EBE6]">
+      <p className="mt-4 text-[24px] leading-relaxed text-[#F5EBE6]">
         {description}
       </p>
     </div>
@@ -50,10 +50,10 @@ export default function CounselingServices() {
       />
 
       <div className="relative z-10 mx-auto max-w-6xl px-6 pt-20 pb-10 md:pt-24 md:pb-12">
-        <h2 className="text-center font-display text-4xl font-semibold uppercase tracking-wide text-[#F5EBE6] sm:text-5xl">
+        <h2 className="text-center font-display text-[2.75rem] font-bold uppercase leading-[1.05] tracking-wide text-[#F5EBE6] md:text-[104px]">
           {title}
         </h2>
-        <p className="mt-4 text-center font-sans text-base uppercase tracking-wider text-[#F5EBE6] sm:text-lg">
+        <p className="mt-4 text-center font-sans text-[1.5rem] font-bold uppercase tracking-wider text-[#F5EBE6] md:text-[46px]">
           {subtitle}
         </p>
 
@@ -81,7 +81,7 @@ export default function CounselingServices() {
         <div className="mt-10 text-center md:mt-12">
           <a
             href="#contact"
-            className="inline-block rounded-full border border-white bg-[#5C6430] px-8 py-3 text-[#F5EBE6] transition-colors hover:bg-[#4E5528]"
+            className="inline-flex h-[65px] w-[302px] items-center justify-center rounded-full border border-white bg-[#5C6430] px-8 text-[20px] text-[#F5EBE6] transition-colors hover:bg-[#4E5528]"
           >
             {ctaLabel}
           </a>
