@@ -45,8 +45,8 @@ export default function LocationBanner() {
           </ul>
         </div>
 
-        {/* Serif headline over the teal map, lower right */}
-        <h3 className="absolute bottom-[7%] right-[5%] text-left font-display text-[7vw] font-semibold uppercase leading-[1.05] text-[#F5EBE6] md:bottom-[8%] md:text-[3vw]">
+        {/* Serif headline pinned to the bottom-right corner over the teal map */}
+        <h3 className="absolute bottom-[4%] right-[4%] text-left font-display text-[7vw] font-semibold uppercase leading-[1.05] text-[#F5EBE6] md:bottom-[5%] md:text-[3vw]">
           {locationBanner.headline.map((line) => (
             <span key={line} className="block">
               {line}

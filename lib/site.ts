@@ -12,6 +12,10 @@ export const site = {
   email: "hello@mykahani.example.com",
   hours: "Mon–Fri · 9:00 AM – 6:00 PM CT",
   virtual: "Virtual sessions anywhere in Texas",
+  // Temporary map location (user-supplied link) — replace with the
+  // practice's real coordinates or street address when finalized.
+  mapQuery: "43.6548253,-79.388447",
+  mapZoom: 15,
   copyrightName: "My Kahani Counseling, PLLC",
   credits: "Designed & built with care",
 };
