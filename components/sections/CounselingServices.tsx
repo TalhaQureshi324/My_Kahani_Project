@@ -49,7 +49,7 @@ export default function CounselingServices() {
         className="absolute inset-0 bg-[url('/images/counseling_services_background.webp')] bg-cover bg-center bg-no-repeat"
       />
 
-      <div className="relative z-10 mx-auto max-w-6xl px-6 pt-20 pb-10 md:pt-24 md:pb-12">
+      <div className="relative z-10 mx-auto max-w-6xl px-6 pt-20 pb-4 md:pt-24 md:pb-6">
         <h2 className="whitespace-nowrap text-center font-display text-3xl font-bold uppercase leading-[1.05] tracking-wide text-[#F5EBE6] md:text-5xl lg:text-6xl">
           {title}
         </h2>
@@ -81,7 +81,7 @@ export default function CounselingServices() {
         <div className="mt-10 text-center md:mt-12">
           <a
             href="#contact"
-            className="inline-flex h-[65px] w-[302px] items-center justify-center rounded-full border border-white bg-[#5C6430] px-8 text-[20px] text-[#F5EBE6] transition-colors hover:bg-[#4E5528]"
+            className="inline-flex h-[65px] w-[302px] items-center justify-center rounded-full border border-[rgb(243,237,229)] bg-[#5C6430] px-8 text-[18px] text-[rgb(243,237,229)] transition-colors hover:bg-[#4E5528]"
           >
             {ctaLabel}
           </a>
