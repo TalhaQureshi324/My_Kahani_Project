@@ -29,7 +29,7 @@ function ServiceCard({
         height={141}
         className="h-[141px] w-[141px] object-contain"
       />
-      <span className="mt-6 inline-block whitespace-nowrap rounded-none bg-black px-3 py-[3px] text-center font-sans text-[20px] font-bold uppercase tracking-tight text-white md:text-[28px]">
+      <span className="mt-6 inline-block w-fit whitespace-nowrap rounded-none bg-black px-1 py-0 text-center font-display text-[20px] font-semibold uppercase leading-none tracking-tight text-[#F5EBE6] md:text-[28px]">
         {badge}
       </span>
       <p className="mt-4 text-[24px] leading-relaxed text-[#F5EBE6]">
