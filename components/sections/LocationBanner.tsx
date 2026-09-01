@@ -4,28 +4,28 @@ import { site } from "@/lib/site";
 
 /**
  * Section 10 — Locations banner: the supplied split background (kraft
- * texture top, dusty-teal street map bottom) with the red torn-paper
- * scrap baked into the graphic on the left. Overlay text sits inside
- * the torn paper ("LOCATIONS:" + virtual/in-person bullets) and the
- * serif headline stacks over the teal map in the lower right. The
- * wrapper keeps the image's aspect ratio (taller crop below md, with
- * object-left so the paper stays in frame) so the % positioned
- * overlays stay aligned at every width.
+ * texture over teal street map, red torn-paper scrap baked into the
+ * graphic on the left) at a flat desktop aspect (~490px at 1100px
+ * wide, matching the reference). The background graphic is rotated
+ * -1.2° so the kraft/teal boundary reads as a subtle diagonal, the
+ * way the reference slants. Overlay text sits inside the torn paper
+ * and the serif headline pins to the bottom-right corner over the map.
+ * Below md a taller 3/4 crop with object-left keeps the paper framed.
  */
 export default function LocationBanner() {
   return (
     <section id="location" className="relative w-full scroll-mt-24 overflow-hidden">
-      <div className="relative aspect-[3/4] md:aspect-[1500/844]">
+      <div className="relative aspect-[3/4] md:aspect-[1500/670]">
         <Image
           src="/images/location_banner_bg.webp"
           alt=""
           fill
           sizes="100vw"
-          className="object-cover object-left md:object-center"
+          className="rotate-[-1.2deg] scale-[1.06] object-cover object-left md:object-center"
         />
 
         {/* Text inside the red torn paper */}
-        <div className="absolute left-[6%] top-[15%] w-[34%] md:left-[7%] md:top-[16%] md:w-[27%]">
+        <div className="absolute left-[6%] top-[15%] w-[34%] md:left-[7%] md:top-[9%] md:w-[27%]">
           <h2 className="font-sans text-[4vw] font-bold uppercase tracking-[0.12em] text-[#F7F1E6] md:text-[1.8vw]">
             {locationBanner.heading}
           </h2>
@@ -45,8 +45,8 @@ export default function LocationBanner() {
           </ul>
         </div>
 
-        {/* Serif headline pinned to the bottom-right corner over the teal map */}
-        <h3 className="absolute bottom-[4%] right-[4%] text-left font-display text-[7vw] font-semibold uppercase leading-[1.05] text-[#F5EBE6] md:bottom-[5%] md:text-[3vw]">
+        {/* Serif headline pinned low in the bottom-right corner over the teal map */}
+        <h3 className="absolute bottom-[3%] right-[4%] text-left font-display text-[7vw] font-semibold uppercase leading-[1.05] text-[#F5EBE6] md:text-[3vw]">
           {locationBanner.headline.map((line) => (
             <span key={line} className="block">
               {line}

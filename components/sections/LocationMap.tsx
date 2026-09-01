@@ -10,9 +10,10 @@ import { site } from "@/lib/site";
 export default function LocationMap() {
   return (
     <section className="relative w-full overflow-hidden py-16 md:py-24">
+      {/* Texture tilted to continue the banner's slanted kraft/teal seam */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-[url('/images/location_map_bg.webp')] bg-cover bg-center"
+        className="absolute -bottom-[6%] -left-[4%] -right-[4%] -top-[6%] rotate-[-1.2deg] bg-[url('/images/location_map_bg.webp')] bg-cover bg-center"
       />
 
       <div className="relative flex w-full items-center justify-center">
