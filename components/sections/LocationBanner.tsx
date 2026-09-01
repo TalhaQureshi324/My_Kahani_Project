@@ -5,17 +5,17 @@ import { site } from "@/lib/site";
 /**
  * Section 10 — Locations banner: the supplied split background (kraft
  * texture over teal street map, red torn-paper scrap baked into the
- * graphic on the left) at a flat desktop aspect (~490px at 1100px
- * wide, matching the reference). Clean horizontal top and bottom
- * edges; the angled divider lives at the bottom of Section 11. The
- * "LOCATIONS:" text block sits centered inside the torn paper and the
- * serif headline pins to the bottom-right corner over the map. Below
- * md a taller 3/4 crop with object-left keeps the paper framed.
+ * graphic on the left) extended to 1731x741 so the paper renders at
+ * ~490px tall on desktop viewports. Clean horizontal edges; the angled
+ * divider lives at the bottom of Section 11. The "LOCATIONS:" text
+ * block sits centered inside the red body, clear of the top rip, and
+ * the serif headline pins to the bottom-right corner over the map.
+ * Below md a taller 3/4 crop with object-left keeps the paper framed.
  */
 export default function LocationBanner() {
   return (
     <section id="location" className="relative w-full scroll-mt-24 overflow-hidden">
-      <div className="relative aspect-[3/4] md:aspect-[1500/670]">
+      <div className="relative aspect-[3/4] md:aspect-[1731/741]">
         <Image
           src="/images/location_banner_bg.webp"
           alt=""
@@ -24,8 +24,8 @@ export default function LocationBanner() {
           className="object-cover object-left md:object-center"
         />
 
-        {/* Text inside the red torn paper — set low, comfortably inside the rip */}
-        <div className="absolute left-[6%] top-[17%] w-[34%] md:left-[7%] md:top-[18%] md:w-[27%]">
+        {/* Text centered inside the red torn-paper body, clear of the rip */}
+        <div className="absolute left-[6%] top-[28%] w-[34%] md:left-[7%] md:w-[27%]">
           <h2 className="font-sans text-[4vw] font-bold uppercase tracking-[0.12em] text-[#F7F1E6] md:text-[1.8vw]">
             {locationBanner.heading}
           </h2>
