@@ -214,7 +214,7 @@ export const specialties = {
     {
       img: "/images/2.webp",
       w: 350,
-      h: 450,
+      h: 426,
       title: "Therapy for Professionals",
       text: "Counseling for tech and corporate professionals experiencing burnout, career stress, or life transitions.",
       align: "left" as const,
@@ -246,7 +246,7 @@ export const specialties = {
     {
       img: "/images/6.webp",
       w: 450,
-      h: 180,
+      h: 204,
       title: "Teen Therapy (13+)",
       text: "A safe space for adolescents (especially young men) to manage stress, identity challenges, and peer pressure.",
       align: "center" as const,
