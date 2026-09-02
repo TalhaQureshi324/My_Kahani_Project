@@ -149,33 +149,15 @@ export default function Specialties() {
         </div>
       </div>
 
-      {/* Subsection 4 — final item. The wave curve fills with the cream
-          buffer of the mural section below, with the bold black stroke
-          on the boundary; the mural band starts flush beneath it. */}
-      <div className={`relative ${TEXTURE}`}>
+      {/* Subsection 4 — final item; ends on a plain olive edge. The
+          mural section below carries its own olive wave + black stroke
+          that cuts directly into its image. */}
+      <div className={TEXTURE}>
         <div className="mx-auto max-w-6xl px-6 pb-28 md:pb-36">
           {groups[3].map((item) => (
             <Row key={item.title} item={item} />
           ))}
         </div>
-        <svg
-          aria-hidden="true"
-          className="absolute inset-x-0 bottom-0 block h-[90px] w-full"
-          viewBox="0 0 1440 90"
-          preserveAspectRatio="none"
-        >
-          <path
-            d="M0 45 C 240 95, 480 -5, 720 45 C 960 95, 1200 -5, 1440 45 L1440 90 L0 90 Z"
-            fill="#F5EBE6"
-          />
-          <path
-            d="M0 45 C 240 95, 480 -5, 720 45 C 960 95, 1200 -5, 1440 45"
-            fill="none"
-            stroke="#000"
-            strokeWidth="6"
-            vectorEffect="non-scaling-stroke"
-          />
-        </svg>
       </div>
     </section>
   );
