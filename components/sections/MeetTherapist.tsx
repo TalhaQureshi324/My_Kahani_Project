@@ -53,7 +53,7 @@ export default function MeetTherapist() {
           <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl shadow-[0_30px_60px_-25px_rgba(0,0,0,0.55)]">
             <Image
               src="/images/THERAPIST.jpg"
-              alt="Portrait of Jordan Taylor, LPC Associate, seated in the therapy room"
+              alt="Portrait of Fahd Alam, therapeutic counsellor, seated in the therapy room"
               fill
               sizes="(min-width: 1024px) 30vw, 80vw"
               className="object-cover"

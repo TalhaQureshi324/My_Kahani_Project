@@ -21,8 +21,8 @@ const sans = DM_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "My Kahani — Therapy & Counseling in Austin, TX",
-    template: "%s — My Kahani",
+    default: "True Self Me — Therapy & Counseling in Austin, TX",
+    template: "%s — True Self Me",
   },
   description:
     "Individual, couples, family, and group counseling in Austin, Texas and virtually across the state. Placeholder description — replace with your own.",

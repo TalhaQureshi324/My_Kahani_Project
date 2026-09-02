@@ -20,8 +20,8 @@ export const hero = {
 
 export const about = {
   eyebrow: "About the practice",
-  title: "About My Kahani",
-  lead: "My Kahani is an Austin-based counseling practice serving clients in person across the city and virtually throughout Texas — built for people who want therapy that feels like a real relationship, not an appointment.",
+  title: "About True Self Me",
+  lead: "True Self Me is an Austin-based counseling practice serving clients in person across the city and virtually throughout Texas — built for people who want therapy that feels like a real relationship, not an appointment.",
   paragraphs: [
     "The name is deliberate. A kahani is a story, and every person who walks through the door carries one worth hearing in full. Here, authenticity is the starting point: you get a therapist who is honest, present, and unafraid of the messy middle chapters.",
     "The work leans on a simple belief about resilience — people are not broken puzzles to solve. Like a city block, a life is built one piece at a time, and the foundations that hold best are laid in community. Therapy here is about finding your footing, then adding the next stone.",
@@ -57,44 +57,58 @@ export const aboutContinued = {
 export const therapist = {
   eyebrow: "Meet your therapist",
   heading: "Meet your therapist",
-  name: "Jordan Taylor",
-  credential: "LPC Associate",
-  supervisorLine: "Supervised by [Supervisor Name], LPC-S",
-  roleLine: "Licensed Professional Counselor · Associate, supervised in Texas",
-  photoLabel: "Therapist headshot — drop your photo in /public/images/therapist.jpg",
+  name: "Fahd Alam",
+  credential: "Therapeutic Counsellor",
+  supervisorLine:
+    "CPCAB Trained | MBA, LLB, BE, PMP | 20+ Years International Leadership Experience",
+  roleLine: "Therapeutic counsellor working with adults and adolescents",
+  photoLabel: "Portrait of Fahd Alam, therapeutic counsellor",
   paragraphs: [
-    "Jordan did not come to counseling by accident. Before this, there were years in corporate roles — the long commutes, the performance reviews, the quiet Sunday dread — watching capable people slowly disappear inside jobs that looked fine from the outside.",
-    "There was fatherhood, too, which reorganized every priority Jordan thought was settled and taught more about patience, repair, and humility than any training ever could.",
-    "Those lived experiences now do the heavy lifting in the room. Jordan blends them with clinical training to offer therapy that is warm and practical at once — curious rather than clinical, honest rather than scripted.",
-    "The heart of this work is a belief formed along the way: nobody heals in isolation, and nobody should have to.",
+    "You can be successful, capable and outwardly in control while privately feeling overwhelmed, disconnected, angry, uncertain or stuck.",
+    "I came to counselling after more than twenty years in international business, technology, entrepreneurship and senior leadership. I have worked across countries and cultures, built businesses, led teams through difficult periods and experienced the pressures, uncertainty and personal sacrifices that often accompany ambition and responsibility.",
+    "I later trained formally in counselling, completing a Diploma in Counselling Studies and Diploma in Therapeutic Counselling through CPCAB. My wider academic background includes an MBA from LUMS, an LLB from the University of London, a Bachelor of Engineering from GIK Institute, and PMP certification.",
+    "This combination of therapeutic training and real-world experience shapes the way I work.",
+    "My approach is warm, engaged and conversational. I am interested not simply in the immediate problem, but in understanding the patterns underneath it: how earlier experiences, attachment, family relationships, culture and expectations may influence the way you experience yourself and others today.",
+    "I work with adults and adolescents experiencing relationship difficulties, family conflict, separation, anxiety, anger, low self-esteem, parenting challenges, professional pressure, major life transitions, identity questions and recurring emotional or relationship patterns.",
+    "I have a particular interest in working with professionals, executives, entrepreneurs and people carrying significant responsibility. Success can create its own kind of isolation, particularly when everyone around you expects confidence and certainty.",
+    "I also understand the importance of culture. For Pakistani, South Asian and other collectivist clients, family, marriage, religion, duty, reputation and intergenerational expectations can be deeply connected to emotional wellbeing.",
   ],
   quote:
-    "My job is not to rewrite your story. It is to help you hold the pen with steadier hands.",
-  chips: ["LPC Associate", "Trauma-informed", "Community-minded", "LGBTQ+ affirming"],
+    "You do not need to arrive knowing exactly what is wrong or what you want to say.",
+  chips: [
+    "CPCAB Trained",
+    "20+ years leadership experience",
+    "Adults & adolescents",
+    "Culturally attuned",
+  ],
 };
 
 export const bioConclusion = {
-  text: "Somewhere along the way, a good hour of conversation gave Jordan permission to pause — to stop performing and start healing. That pause became a practice, and the practice became a promise: you do not have to carry it all alone, and you do not have to carry it quietly.",
+  text: "Therapy can begin simply with an honest conversation about where you are today, and together we can begin to understand how you got there and what you would like to change.",
   cta: "Book your appointment",
 };
 
 export const whyWork = {
   heading: "Why work with me",
   intro:
-    "Before you hand someone your story, you deserve the plain-language version of who is sitting across from you — the training behind the title, the license behind the name, and the supervision that keeps the work honest. No jargon, no mystery.",
+    "Before you hand someone your story, you deserve the plain-language version of who is sitting across from you — the training behind the title and the experience behind the work. No jargon, no mystery.",
   qualHeading: "Qualifications:",
   education: {
     header: "Education:",
     items: [
-      { degree: "Counseling and Guidance, MA", school: "[Add your university]" },
-      { degree: "Psychology, BS", school: "[Add your university]" },
+      { degree: "Diploma in Therapeutic Counselling", school: "CPCAB" },
+      { degree: "Diploma in Counselling Studies", school: "CPCAB" },
+      { degree: "MBA", school: "LUMS" },
+      { degree: "LLB", school: "University of London" },
+      { degree: "Bachelor of Engineering", school: "GIK Institute" },
+      { degree: "PMP Certification", school: "Project Management Institute" },
     ],
   },
   license: {
-    header: "License:",
-    title: "Licensed Professional Counselor Associate",
-    number: "Texas License # [XXXXX]",
-    supervision: "Supervised by [Supervisor Name], LPC-S · License # [XXXXX]",
+    header: "Training & credentials:",
+    title: "Therapeutic Counsellor — CPCAB Trained",
+    number: "Diploma in Therapeutic Counselling · Diploma in Counselling Studies",
+    supervision: "20+ years of international leadership experience",
   },
   badgeAlt: "Professional verification badge placeholder",
 };

@@ -1,4 +1,4 @@
-# My Kahani — Therapy Practice Website
+# True Self Me — Therapy Practice Website
 
 A Next.js (App Router) + TypeScript + Tailwind CSS v4 implementation of a
 single-page therapy practice site with a community-program sub-section,
