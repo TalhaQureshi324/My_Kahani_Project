@@ -46,10 +46,14 @@ function ItemText({ item, center }: { item: Item; center?: boolean }) {
   );
 }
 
-function Row({ item }: { item: Item }) {
+function Row({ item, flush }: { item: Item; flush?: boolean }) {
+  const rowPad = flush
+    ? "pt-10 pb-1 md:pt-14 md:pb-2"
+    : "py-10 md:py-14";
+
   if (item.align === "center") {
     return (
-      <div className="flex flex-col items-center gap-8 py-10 text-center md:py-14">
+      <div className={`flex flex-col items-center gap-8 text-center ${rowPad}`}>
         <Frame item={item} />
         <ItemText item={item} center />
       </div>
@@ -65,7 +69,7 @@ function Row({ item }: { item: Item }) {
   const text = <ItemText item={item} />;
 
   return (
-    <div className="grid items-center gap-8 py-10 md:grid-cols-2 md:gap-12 md:py-14">
+    <div className={`grid items-center gap-8 md:grid-cols-2 md:gap-12 ${rowPad}`}>
       {imageFirst ? (
         <>
           {frame}
@@ -149,13 +153,13 @@ export default function Specialties() {
         </div>
       </div>
 
-      {/* Subsection 4 — final item; ends on a plain olive edge. The
-          mural section below carries its own olive wave + black stroke
-          that cuts directly into its image. */}
+      {/* Subsection 4 — final item, tight against the mural section's
+          wave divider (the wave + black stroke live at the top of the
+          mural section and paint directly beneath this row). */}
       <div className={TEXTURE}>
-        <div className="mx-auto max-w-6xl px-6 pb-28 md:pb-36">
+        <div className="mx-auto max-w-6xl px-6 pb-8 md:pb-12">
           {groups[3].map((item) => (
-            <Row key={item.title} item={item} />
+            <Row key={item.title} item={item} flush />
           ))}
         </div>
       </div>
