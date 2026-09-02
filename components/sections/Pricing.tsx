@@ -22,7 +22,7 @@ export default function Pricing() {
 
       <div className="relative mx-auto w-[88%] max-w-[860px] pb-[100px]">
         {/* Heading floats on the cream brick canvas above the slate box */}
-        <h2 className="pt-[max(44px,6vw)] text-center font-display text-[45px] font-normal uppercase tracking-wide text-black">
+        <h2 className="pt-[max(44px,6vw)] text-center font-display text-[min(84px,11.5vw)] font-normal uppercase leading-none tracking-wide text-black">
           {pricing.heading}
         </h2>
 
