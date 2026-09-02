@@ -13,11 +13,11 @@ import Image from "next/image";
  */
 export default function PotentialLimitlessBanner() {
   return (
-    <section className="relative w-full overflow-hidden">
+    <section className="relative z-10 w-full overflow-hidden">
       <div
         className="relative w-full"
         style={{
-          clipPath: "polygon(0 0, 100% 0, 100% calc(100% - 3vw), 0 100%)",
+          clipPath: "polygon(0 0, 100% 0, 100% calc(100% - 20px), 0 100%)",
         }}
       >
         <Image
@@ -63,15 +63,17 @@ export default function PotentialLimitlessBanner() {
         />
       </svg>
 
-      {/* Bottom slant — bold black line across the clipped edge */}
+      {/* Bottom slant — bold black line across the gentle 20px tilted
+          edge; the Right Guidance section's background fills the wedge
+          beneath it */}
       <svg
         aria-hidden="true"
-        className="absolute inset-x-0 bottom-0 block h-[3vw] w-full"
-        viewBox="0 0 1440 43"
+        className="absolute inset-x-0 bottom-0 block h-[20px] w-full"
+        viewBox="0 0 1440 20"
         preserveAspectRatio="none"
       >
         <path
-          d="M0 43 L1440 0"
+          d="M0 20 L1440 0"
           fill="none"
           stroke="#000"
           strokeWidth="6"

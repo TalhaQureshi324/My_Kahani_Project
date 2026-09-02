@@ -3,13 +3,15 @@ import { rightGuidance } from "@/lib/content";
 /**
  * Section 14 — "The right guidance": a full-width centered statement
  * banner on the supplied textured background (deep terracotta/rust
- * fallback), sitting flush beneath the mural's slanted bottom edge.
- * Two centered thought blocks in the uppercase display serif at
- * exactly 45px on large screens, scaled down responsively.
+ * fallback). Pulled up -mt-[20px] and layered beneath the mural
+ * section (z-10 there) so its background fills the wedge under the
+ * mural's gentle 20px tilted bottom edge — zero cream gap, the black
+ * stroke rides directly above it. Two centered thought blocks in the
+ * uppercase display serif at exactly 45px on large screens.
  */
 export default function RightGuidance() {
   return (
-    <section className="relative w-full overflow-hidden bg-[#7B3B26]">
+    <section className="relative -mt-[20px] w-full overflow-hidden bg-[#7B3B26]">
       <div
         aria-hidden="true"
         className="absolute inset-0 bg-[url('/images/right_guidance_background.webp')] bg-cover bg-center bg-no-repeat"
