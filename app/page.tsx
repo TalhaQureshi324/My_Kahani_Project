@@ -11,6 +11,7 @@ import LocationBanner from "@/components/sections/LocationBanner";
 import LocationMap from "@/components/sections/LocationMap";
 import Specialties from "@/components/sections/Specialties";
 import PotentialLimitlessBanner from "@/components/sections/PotentialLimitlessBanner";
+import RightGuidance from "@/components/sections/RightGuidance";
 import Pricing from "@/components/sections/Pricing";
 import DadBlockSummary from "@/components/sections/DadBlockSummary";
 import Contact from "@/components/sections/Contact";
@@ -31,6 +32,7 @@ export default function Home() {
       <LocationMap />
       <Specialties />
       <PotentialLimitlessBanner />
+      <RightGuidance />
       <Pricing />
       <DadBlockSummary />
       <Contact />

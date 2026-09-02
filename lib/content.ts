@@ -213,6 +213,17 @@ export const locationBanner = {
   headline: ["Conveniently", "located in the heart", "of Austin"],
 };
 
+export const rightGuidance = {
+  blocks: [
+    ["The right guidance can help you find", "steadiness again."],
+    [
+      "Begin your journey toward a more",
+      "grounded, connected version of",
+      "yourself.",
+    ],
+  ],
+};
+
 export const specialties = {
   marqueeWord: "Specialties",
   subheading: "Areas of focus",
