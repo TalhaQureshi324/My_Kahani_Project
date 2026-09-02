@@ -312,33 +312,24 @@ export const specialties = {
 };
 
 export const pricing = {
-  eyebrow: "Investment",
-  title: "Straightforward fees",
-  lede: "Therapy is an investment, and it should never be a mystery. Here is exactly what sessions cost.",
-  cards: [
-    {
-      name: "Individual",
-      price: "$125",
-      unit: "per 50-minute session",
-      points: ["In-person or virtual", "Weekly or bi-weekly", "Evening slots available"],
-    },
-    {
-      name: "Couples & family",
-      price: "$185",
-      unit: "per 55-minute session",
-      points: ["Up to 4 people in the room", "In-person preferred", "Intake includes a relational map"],
-    },
-    {
-      name: "Group",
-      price: "$30–$60",
-      unit: "per group session, sliding",
-      points: ["90-minute cohorts", "6–8 members", "New cohorts each season"],
-    },
+  heading: "Pricing",
+  perSession: "All prices are per session",
+  rates: [
+    "Individual Therapy: $125",
+    "Couples Therapy: $185",
+    "Family Therapy: $185",
+    "Group Therapy: $30 to $60",
   ],
-  sliding: {
-    title: "Sliding scale seats, always",
-    text: "A portion of every calendar is reserved for sliding-scale work, because cost should not decide who gets support. Ask — no income statements, no awkwardness. If the practice is not the right fit, you will be pointed toward somewhere that is.",
-  },
+  accessibilityHeading: [
+    "At True Self Me, we want to",
+    "make sure therapy is accessible to",
+    "everyone.",
+  ],
+  accessibilityTextPre: "That's why we have a few ",
+  accessibilityTextBold: "sliding scale sessions",
+  accessibilityTextPost:
+    " available for those who may not be able to afford our normal out of pocket prices. Please be sure to ask your therapist because these spots are very limited.",
+  ctaLabel: "Book your appointment",
 };
 
 export const program = {
