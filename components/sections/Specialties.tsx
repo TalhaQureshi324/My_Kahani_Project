@@ -149,29 +149,11 @@ export default function Specialties() {
         </div>
       </div>
 
-      {/* Subsection 4 — final item; the wave curve overlays the mural
-          section that tucks beneath (mural is pulled up -mt-[90px]).
-          The olive texture is masked to end along the curve, so the
-          mural shows through below it and the black stroke rides the
-          boundary. */}
-      <div className="relative z-10">
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-[#605C31] bg-[url('/images/areas_of_focus.webp')] bg-repeat"
-          style={{
-            WebkitMaskImage:
-              "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 90' preserveAspectRatio='none'%3E%3Cpath d='M0 0 H1440 V45 C1200 -5 960 95 720 45 C480 -5 240 95 0 45 Z' fill='black'/%3E%3C/svg%3E\")",
-            WebkitMaskRepeat: "no-repeat",
-            WebkitMaskPosition: "bottom",
-            WebkitMaskSize: "100% 90px",
-            maskImage:
-              "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 90' preserveAspectRatio='none'%3E%3Cpath d='M0 0 H1440 V45 C1200 -5 960 95 720 45 C480 -5 240 95 0 45 Z' fill='black'/%3E%3C/svg%3E\")",
-            maskRepeat: "no-repeat",
-            maskPosition: "bottom",
-            maskSize: "100% 90px",
-          }}
-        />
-        <div className="relative mx-auto max-w-6xl px-6 pb-28 md:pb-36">
+      {/* Subsection 4 — final item. The wave curve fills with the cream
+          buffer of the mural section below, with the bold black stroke
+          on the boundary; the mural band starts flush beneath it. */}
+      <div className={`relative ${TEXTURE}`}>
+        <div className="mx-auto max-w-6xl px-6 pb-28 md:pb-36">
           {groups[3].map((item) => (
             <Row key={item.title} item={item} />
           ))}
@@ -182,6 +164,10 @@ export default function Specialties() {
           viewBox="0 0 1440 90"
           preserveAspectRatio="none"
         >
+          <path
+            d="M0 45 C 240 95, 480 -5, 720 45 C 960 95, 1200 -5, 1440 45 L1440 90 L0 90 Z"
+            fill="#F5EBE6"
+          />
           <path
             d="M0 45 C 240 95, 480 -5, 720 45 C 960 95, 1200 -5, 1440 45"
             fill="none"
