@@ -2,17 +2,18 @@ import Image from "next/image";
 
 /**
  * Section 13 — "Your potential is limitless" mural, edge-to-edge.
- * The image spans the full viewport width (w-full object-cover with a
- * minimum height) on a terracotta #7B3B26 base. The top edge is cut by
- * an olive #605C31 wave overlay with a bold black stroke running along
- * the curve, directly into the mural; the bottom edge is clipped on a
- * subtle upward diagonal traced by another bold black stroke, with the
- * terracotta base showing immediately beneath the line. No cream
- * wrapper, no container margins.
+ * The image spans the full viewport width (object-cover, min-height,
+ * scaled 1.08 to crop the asset's black letterbox frame). The top cut
+ * is the specialties' own areas_of_focus.webp texture clipped to the
+ * wave shape (objectBoundingBox clip-path) with a bold black stroke on
+ * the curve, so it blends seamlessly with the section above. The
+ * bottom edge is clipped on an upward diagonal with another bold
+ * black stroke; the section has no background of its own, so whatever
+ * follows shows beneath the slant.
  */
 export default function PotentialLimitlessBanner() {
   return (
-    <section className="relative w-full overflow-hidden bg-[#7B3B26]">
+    <section className="relative w-full overflow-hidden">
       <div
         className="relative w-full"
         style={{
@@ -25,22 +26,34 @@ export default function PotentialLimitlessBanner() {
           width={1500}
           height={500}
           sizes="100vw"
-          className="block h-auto w-full min-h-[380px] object-cover md:min-h-[480px]"
+          className="block h-auto w-full min-h-[380px] scale-[1.08] object-cover md:min-h-[480px]"
         />
       </div>
 
-      {/* Top wave — olive fill above the curve, black stroke on it,
-          cutting directly into the mural image */}
+      {/* Wave clip definition (objectBoundingBox units keep it
+          responsive at any width) */}
+      <svg width="0" height="0" aria-hidden="true" className="absolute">
+        <defs>
+          <clipPath id="mural-wave-clip" clipPathUnits="objectBoundingBox">
+            <path d="M0 0 H1 V0.5 C0.8333 -0.0556 0.6667 1.0556 0.5 0.5 C0.3333 -0.0556 0.1667 1.0556 0 0.5 Z" />
+          </clipPath>
+        </defs>
+      </svg>
+
+      {/* Top wave — specialties texture clipped to the curve */}
+      <div
+        aria-hidden="true"
+        className="absolute left-0 top-0 block h-[90px] w-full bg-[#605C31] bg-[url('/images/areas_of_focus.webp')] bg-repeat"
+        style={{ clipPath: "url(#mural-wave-clip)" }}
+      />
+
+      {/* Bold black stroke along the curved boundary */}
       <svg
         aria-hidden="true"
         className="absolute left-0 top-0 block h-[90px] w-full"
         viewBox="0 0 1440 90"
         preserveAspectRatio="none"
       >
-        <path
-          d="M0 0 H1440 V45 C1200 -5 960 95 720 45 C480 -5 240 95 0 45 Z"
-          fill="#605C31"
-        />
         <path
           d="M0 45 C 240 95, 480 -5, 720 45 C 960 95, 1200 -5, 1440 45"
           fill="none"
@@ -50,8 +63,7 @@ export default function PotentialLimitlessBanner() {
         />
       </svg>
 
-      {/* Bottom slant — bold black line across the clipped edge,
-          terracotta immediately below */}
+      {/* Bottom slant — bold black line across the clipped edge */}
       <svg
         aria-hidden="true"
         className="absolute inset-x-0 bottom-0 block h-[3vw] w-full"
