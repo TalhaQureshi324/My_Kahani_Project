@@ -13,7 +13,7 @@ import Specialties from "@/components/sections/Specialties";
 import PotentialLimitlessBanner from "@/components/sections/PotentialLimitlessBanner";
 import RightGuidance from "@/components/sections/RightGuidance";
 import Pricing from "@/components/sections/Pricing";
-import DadBlockSummary from "@/components/sections/DadBlockSummary";
+import TheDadBlockSection from "@/components/sections/TheDadBlockSection";
 import Contact from "@/components/sections/Contact";
 
 export default function Home() {
@@ -34,7 +34,7 @@ export default function Home() {
       <PotentialLimitlessBanner />
       <RightGuidance />
       <Pricing />
-      <DadBlockSummary />
+      <TheDadBlockSection />
       <Contact />
     </>
   );

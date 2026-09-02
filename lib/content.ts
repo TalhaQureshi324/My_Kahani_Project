@@ -332,10 +332,24 @@ export const pricing = {
   ctaLabel: "Book your appointment",
 };
 
+export const dadBlockSpotlight = {
+  heading: "The Dad Block",
+  beliefHeading: ["We believe", "growth", "happens in", "community"],
+  beliefSub: "- Not in isolation",
+  beliefIntro:
+    "That's why we created a dedicated space outside of the therapy room just for dads to form community.",
+  paragraph1:
+    "The Dad Block is a free community organization for guys in the Austin area who want to be present, engaged, and intentional in their parenting.",
+  paragraph2:
+    "Guided by professional insight, it's a grounded, pressure-free environment to build genuine relationships with other dads navigating the same everyday challenges. You don't have to carry fatherhood alone.",
+  ctaLabel: "Learn More",
+  ctaHref: "/the-dad-block",
+};
+
 export const program = {
   // The community program highlighted across the site ("Dad Block" role in the spec).
   name: "The Fathers' Circle",
-  navLabel: "The Fathers' Circle",
+  navLabel: "The Dad Block",
   tagline: "A community for dads who are done doing it alone",
   home: {
     eyebrow: "More than therapy",
