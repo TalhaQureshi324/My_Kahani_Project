@@ -436,30 +436,34 @@ export const events = {
 };
 
 export const contact = {
-  eyebrow: "Contact",
-  title: "Start the conversation",
-  lede: "Reach out with questions, book a free 15-minute consult, or just say hello. You will hear back within two business days.",
+  heading: "CONTACT ME",
+  paragraph:
+    "Please feel free to reach out here. If you're interested in any service types listed below, you can go ahead and schedule your free consultation now with the form to the right.",
+  nameLabel: "Name",
+  firstNameLabel: "First Name",
+  lastNameLabel: "Last Name",
+  phoneLabel: "Phone",
+  emailLabel: "Email",
+  messageLabel: "Message",
+  servicesLabel: "Service Inquiring about",
   serviceOptions: [
-    "Individual therapy",
-    "Couples therapy",
-    "Family therapy",
-    "Group therapy",
-    "Career coaching",
-    "The Fathers' Circle",
-    "Not sure yet",
-  ],
-  referralOptions: [
-    "Google search",
-    "Instagram or social media",
-    "Friend or family",
-    "A community event",
-    "Therapy directory",
-    "Another provider",
+    "Individual Therapy (Adult)",
+    "Individual Therapy (Teen)",
+    "Couples Therapy",
+    "Family Therapy",
+    "Professional Collaboration",
     "Other",
   ],
-  crisis:
-    "If you are in crisis or thinking about harming yourself, please call or text 988 (Suicide & Crisis Lifeline) or call 911 — this form is not monitored around the clock.",
-  successTitle: "Message received",
-  successBody:
-    "Thank you for reaching out. You will get a personal reply within two business days. In the meantime, be gentle with yourself.",
+  referralLabel: "How did you hear about me?",
+  referralPlaceholder: "Please select one",
+  referralOptions: [
+    "Google search",
+    "Psychology Today or another directory",
+    "Referral from a friend or family member",
+    "Referral from another professional",
+    "Social media",
+    "Community event or group",
+    "Other",
+  ],
+  submitLabel: "Submit",
 };

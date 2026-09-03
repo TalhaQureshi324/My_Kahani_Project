@@ -14,7 +14,7 @@ import PotentialLimitlessBanner from "@/components/sections/PotentialLimitlessBa
 import RightGuidance from "@/components/sections/RightGuidance";
 import Pricing from "@/components/sections/Pricing";
 import TheDadBlockSection from "@/components/sections/TheDadBlockSection";
-import Contact from "@/components/sections/Contact";
+import ContactSection from "@/components/sections/ContactSection";
 
 export default function Home() {
   return (
@@ -35,7 +35,7 @@ export default function Home() {
       <RightGuidance />
       <Pricing />
       <TheDadBlockSection />
-      <Contact />
+      <ContactSection />
     </>
   );
 }
