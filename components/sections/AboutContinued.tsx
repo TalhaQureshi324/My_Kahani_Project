@@ -10,8 +10,12 @@ import { aboutContinued } from "@/lib/content";
  */
 export default function AboutContinued() {
   return (
-    <section className="border-t border-ink/10">
-      <div className="mx-auto grid max-w-7xl gap-14 px-5 py-20 sm:px-8 lg:grid-cols-2 lg:gap-20 lg:py-24">
+    <section className="relative bg-[#DED5C8]">
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[url('/images/ABOUT_THE_PRACTICE_BACKGROUND.webp')] bg-repeat"
+      />
+      <div className="relative mx-auto grid max-w-7xl gap-14 px-5 py-20 sm:px-8 lg:grid-cols-2 lg:gap-20 lg:py-24">
         {/* Inset portrait + accent (mirrored: accent top-left) */}
         <div className="relative order-2 px-6 pt-8 pb-6 sm:px-10 lg:order-1 lg:px-10">
           <CornerAccent className="absolute top-0 left-0 z-0 h-32 w-32 -scale-x-100 text-olive/70" />

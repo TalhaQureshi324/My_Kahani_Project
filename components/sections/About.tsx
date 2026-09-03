@@ -9,15 +9,19 @@ import { about } from "@/lib/content";
  */
 export default function About() {
   return (
-    <section id="about" className="scroll-mt-24 border-t border-ink/10">
-      <div className="mx-auto grid max-w-7xl gap-14 px-5 py-20 sm:px-8 lg:grid-cols-2 lg:gap-20 lg:py-28">
+    <section id="about" className="relative scroll-mt-24 bg-[#5C3A26]">
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[url('/images/aBOUT_TRUE_SELF_ME_BACKGROUND.webp')] bg-repeat"
+      />
+      <div className="relative mx-auto grid max-w-7xl gap-14 px-5 py-20 sm:px-8 lg:grid-cols-2 lg:gap-20 lg:py-28">
         {/* Copy */}
         <div>
-          <SectionHeading eyebrow={about.eyebrow} title={about.title} />
-          <p className="mt-6 text-lg leading-relaxed font-bold text-ink">
+          <SectionHeading eyebrow={about.eyebrow} title={about.title} dark />
+          <p className="mt-6 text-lg leading-relaxed font-bold text-[#F5EBE6]">
             {about.lead}
           </p>
-          <div className="mt-5 space-y-5 text-base leading-relaxed text-ink-soft">
+          <div className="mt-5 space-y-5 text-base leading-relaxed text-[#F5EBE6]/80">
             {about.paragraphs.map((p) => (
               <p key={p.slice(0, 24)}>{p}</p>
             ))}

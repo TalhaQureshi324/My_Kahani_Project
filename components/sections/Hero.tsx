@@ -11,6 +11,11 @@ import { hero } from "@/lib/content";
 export default function Hero() {
   return (
     <section id="hero" className="relative overflow-hidden">
+      {/* textured backdrop */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[#DED5C8] bg-[url('/images/HERO_SECTION_BACKGROUND.webp')] bg-repeat"
+      />
       {/* soft backdrop shapes */}
       <div
         className="pointer-events-none absolute -top-24 right-[-10%] h-[420px] w-[420px] rounded-full bg-terracotta-tint/50 blur-3xl"
