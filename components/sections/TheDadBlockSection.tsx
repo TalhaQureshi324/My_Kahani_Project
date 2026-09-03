@@ -22,8 +22,8 @@ export default function TheDadBlockSection() {
       />
 
       <div className="relative pt-16 pb-24 px-6 md:px-12">
-        {/* Giant wordmark */}
-        <h2 className="text-center font-display text-5xl font-semibold uppercase leading-none tracking-wide text-black md:text-8xl lg:text-[min(170px,12.8vw)] xl:text-[170px]">
+        {/* Giant wordmark — always a single row */}
+        <h2 className="whitespace-nowrap text-center font-display text-[min(48px,11vw)] font-semibold uppercase leading-none tracking-wide text-black md:text-[min(96px,12.5vw)] lg:text-[min(170px,12.6vw)]">
           {dad.heading}
         </h2>
 
@@ -48,19 +48,19 @@ export default function TheDadBlockSection() {
           {/* Right column — brewery photo with grunge overlay (mobile: second) */}
           <div className="relative order-2 w-full lg:col-start-2 lg:row-start-1">
             <Image
-              src="/images/dad_block_brewery.webp"
+              src="/images/dad_block_right_side.webp"
               alt="Fathers from the Dad Block community laughing and high-fiving at a brewery gathering"
-              width={1200}
-              height={900}
+              width={750}
+              height={500}
               sizes="(min-width: 1024px) 50vw, 92vw"
               className="h-auto w-full object-cover"
             />
             <Image
-              src="/images/dad_block_grunge.webp"
+              src="/images/dad_block_extra_design.webp"
               alt=""
               aria-hidden="true"
-              width={500}
-              height={500}
+              width={300}
+              height={300}
               className="pointer-events-none absolute -bottom-6 -right-6 z-10 w-[42%] select-none"
             />
           </div>
@@ -78,10 +78,10 @@ export default function TheDadBlockSection() {
           {/* Left column — hiking photo below the text (mobile: fourth) */}
           <div className="order-4 lg:col-start-1 lg:row-start-2">
             <Image
-              src="/images/dad_block_hiking.webp"
-              alt="A group of fathers hiking together on a trail"
-              width={1200}
-              height={800}
+              src="/images/dad_block_left_side.webp"
+              alt="A group of fathers hiking together along a trail in the woods"
+              width={750}
+              height={500}
               sizes="(min-width: 1024px) 50vw, 92vw"
               className="h-auto w-full object-cover"
             />
