@@ -1,6 +1,7 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowUp, Mail, MapPin, Phone } from "lucide-react";
-import { BlockMark, SquiggleDoodle } from "@/components/ui/doodles";
+import { SquiggleDoodle } from "@/components/ui/doodles";
 import { mainNav } from "@/components/navbar/nav-config";
 import { site } from "@/lib/site";
 import { program } from "@/lib/content";
@@ -13,17 +14,14 @@ export default function Footer() {
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
           {/* Brand + location */}
           <div>
-            <div className="flex items-center gap-3">
-              <BlockMark className="h-10 w-10" />
-              <div className="leading-tight">
-                <p className="font-display text-2xl font-semibold">
-                  {site.name}
-                </p>
-                <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-cream/60">
-                  {site.tagline}
-                </p>
-              </div>
-            </div>
+            <Image
+              src="/images/true_self_me_footer_logo_cream.png"
+              alt={site.name}
+              width={1203}
+              height={951}
+              sizes="160px"
+              className="h-28 w-auto md:h-32"
+            />
             <p className="mt-5 max-w-xs text-sm leading-relaxed text-cream/70">
               Counseling and community for every chapter of your story — in
               person in Austin and virtually across Texas.

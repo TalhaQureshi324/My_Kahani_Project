@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { ChevronDown, Menu } from "lucide-react";
-import { BlockMark } from "@/components/ui/doodles";
 import { cta, mainNav } from "./nav-config";
 import { site } from "@/lib/site";
 import MobileDrawer from "./MobileDrawer";
@@ -33,16 +33,20 @@ export default function Navbar() {
           aria-label="Main navigation"
         >
           {/* Brand */}
-          <Link href="/" className="group flex items-center gap-3">
-            <BlockMark className="h-9 w-9 transition-transform duration-300 group-hover:-rotate-6" />
-            <span className="leading-tight">
-              <span className="block font-display text-xl font-semibold tracking-tight">
-                {site.name}
-              </span>
-              <span className="block text-[11px] font-medium uppercase tracking-[0.18em] text-ink-soft">
-                {site.tagline}
-              </span>
-            </span>
+          <Link
+            href="/"
+            className="group flex shrink-0 items-center"
+            aria-label={`${site.name} — home`}
+          >
+            <Image
+              src="/images/true_self_me_logo_header.png"
+              alt={site.name}
+              width={1117}
+              height={356}
+              priority
+              sizes="(min-width: 1024px) 220px, 160px"
+              className="h-10 w-auto sm:h-11 lg:h-12"
+            />
           </Link>
 
           {/* Desktop nav */}
