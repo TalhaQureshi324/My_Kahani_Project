@@ -15,7 +15,7 @@ export default function Footer() {
           {/* Brand + location */}
           <div>
             <Image
-              src="/images/true_self_me_footer_logo_cream.png"
+              src="/images/true_self_me_footer_logo_original.png"
               alt={site.name}
               width={1203}
               height={951}
