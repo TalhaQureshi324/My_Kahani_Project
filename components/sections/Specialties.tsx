@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Reveal from "@/components/ui/Reveal";
 import { specialties } from "@/lib/content";
 
 /**
@@ -130,7 +131,9 @@ export default function Specialties() {
             {specialties.subheading}
           </h2>
           {groups[0].map((item) => (
-            <Row key={item.title} item={item} />
+            <Reveal key={item.title}>
+              <Row item={item} />
+            </Reveal>
           ))}
         </div>
       </div>
@@ -139,7 +142,9 @@ export default function Specialties() {
       <div className={TEXTURE}>
         <div className="mx-auto max-w-6xl px-6">
           {groups[1].map((item) => (
-            <Row key={item.title} item={item} />
+            <Reveal key={item.title}>
+              <Row item={item} />
+            </Reveal>
           ))}
         </div>
       </div>
@@ -148,7 +153,9 @@ export default function Specialties() {
       <div className={TEXTURE}>
         <div className="mx-auto max-w-6xl px-6">
           {groups[2].map((item) => (
-            <Row key={item.title} item={item} />
+            <Reveal key={item.title}>
+              <Row item={item} />
+            </Reveal>
           ))}
         </div>
       </div>
@@ -159,7 +166,9 @@ export default function Specialties() {
       <div className={TEXTURE}>
         <div className="mx-auto max-w-6xl px-6 pb-8 md:pb-12">
           {groups[3].map((item) => (
-            <Row key={item.title} item={item} flush />
+            <Reveal key={item.title}>
+              <Row item={item} flush />
+            </Reveal>
           ))}
         </div>
       </div>
