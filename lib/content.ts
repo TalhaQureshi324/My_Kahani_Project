@@ -209,7 +209,7 @@ export const locationBanner = {
   heading: "Locations:",
   virtualLine1: "Virtual therapy sessions",
   virtualLine2: "across Texas",
-  inPersonLabel: "In-person therapy",
+  virtualOnlyLabel: "Fully virtual practice",
   headline: ["Conveniently", "located in the heart", "of Austin"],
 };
 

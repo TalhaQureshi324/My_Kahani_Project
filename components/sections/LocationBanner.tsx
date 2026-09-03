@@ -36,7 +36,7 @@ export default function LocationBanner() {
               {locationBanner.virtualLine2}
             </li>
             <li>
-              • {locationBanner.inPersonLabel}
+              • {locationBanner.virtualOnlyLabel}
               <br />
               {site.addressLines[0]}
               <br />
