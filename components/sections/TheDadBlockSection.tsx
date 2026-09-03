@@ -23,7 +23,7 @@ export default function TheDadBlockSection() {
 
       <div className="relative pt-16 pb-24 px-6 md:px-12">
         {/* Giant wordmark — always a single row */}
-        <h2 className="whitespace-nowrap text-center font-display text-[min(48px,11vw)] font-semibold uppercase leading-none tracking-wide text-black md:text-[min(96px,12.5vw)] lg:text-[min(165px,12.6vw)]">
+        <h2 className="whitespace-nowrap text-center font-display text-[min(48px,11vw)] font-semibold uppercase leading-none tracking-wide text-black md:text-[min(96px,12.5vw)] lg:text-[min(150px,12.6vw)]">
           {dad.heading}
         </h2>
 
@@ -61,7 +61,7 @@ export default function TheDadBlockSection() {
               aria-hidden="true"
               width={300}
               height={300}
-              className="pointer-events-none absolute -bottom-6 -right-6 z-10 w-[42%] translate-x-[23%] translate-y-[8%] select-none"
+              className="pointer-events-none absolute -bottom-[44%] -right-6 z-10 w-[42%] translate-x-[23%] select-none"
             />
           </div>
 
