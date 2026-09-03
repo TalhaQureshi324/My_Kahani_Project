@@ -1,11 +1,12 @@
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/primitives";
-import { CommunityHands } from "@/components/ui/doodles";
 import { bioConclusion } from "@/lib/content";
 
 /**
  * Section 5 — Bio conclusion & primary CTA: continues the rust
- * palette, centered copy, gold pill CTA, floating hands mark.
+ * palette, centered copy, gold pill CTA, hand-drawn image mark
+ * tucked into the container's lower-right corner.
  */
 export default function BioConclusion() {
   return (
@@ -23,7 +24,14 @@ export default function BioConclusion() {
             {bioConclusion.cta}
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Button>
-          <CommunityHands className="absolute -right-6 -bottom-8 h-24 w-24 text-mustard lg:-right-16 lg:-bottom-10 lg:h-32 lg:w-32" />
+          <Image
+            src="/images/ImageElements_meet_your_therapist.webp"
+            alt=""
+            aria-hidden="true"
+            width={500}
+            height={500}
+            className="pointer-events-none absolute right-4 bottom-2 h-auto w-16 select-none md:right-12 md:bottom-6 md:w-24"
+          />
         </div>
       </div>
     </section>
