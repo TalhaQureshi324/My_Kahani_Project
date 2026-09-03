@@ -18,12 +18,12 @@ export default function TheDadBlockSection() {
     <section className="relative w-full scroll-mt-24 bg-[#A26838]">
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-[url('/images/dad_block_background.webp')] bg-cover bg-center bg-no-repeat"
+        className="absolute inset-0 bg-[url('/images/dad_block_background.webp')] bg-repeat"
       />
 
       <div className="relative pt-16 pb-24 px-6 md:px-12">
         {/* Giant wordmark — always a single row */}
-        <h2 className="whitespace-nowrap text-center font-display text-[min(48px,11vw)] font-semibold uppercase leading-none tracking-wide text-black md:text-[min(96px,12.5vw)] lg:text-[min(170px,12.6vw)]">
+        <h2 className="whitespace-nowrap text-center font-display text-[min(48px,11vw)] font-semibold uppercase leading-none tracking-wide text-black md:text-[min(96px,12.5vw)] lg:text-[min(165px,12.6vw)]">
           {dad.heading}
         </h2>
 
@@ -61,7 +61,7 @@ export default function TheDadBlockSection() {
               aria-hidden="true"
               width={300}
               height={300}
-              className="pointer-events-none absolute -bottom-6 -right-6 z-10 w-[42%] select-none"
+              className="pointer-events-none absolute -bottom-6 -right-6 z-10 w-[42%] translate-x-[23%] translate-y-[8%] select-none"
             />
           </div>
 
