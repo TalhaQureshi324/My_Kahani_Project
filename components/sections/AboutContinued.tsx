@@ -6,7 +6,7 @@ import { aboutContinued } from "@/lib/content";
 /**
  * Section 3 — About continuation: mirrored 2-column grid
  * (portrait left, deep-dive copy + CTA right). The grunge splash
- * tucks behind the portrait's bottom-right corner — half on the
+ * tucks behind the portrait's bottom-left corner — half on the
  * photo, half off, always underneath it.
  */
 export default function AboutContinued() {
@@ -27,7 +27,7 @@ export default function AboutContinued() {
               aria-hidden="true"
               width={154}
               height={247}
-              className="pointer-events-none absolute bottom-0 right-0 z-0 w-[30%] translate-x-1/2 translate-y-1/2 select-none"
+              className="pointer-events-none absolute bottom-0 left-0 z-0 w-[30%] -translate-x-1/2 translate-y-1/2 select-none"
             />
             <div className="relative z-10 aspect-[3/4] overflow-hidden rounded-3xl shadow-[0_26px_50px_-28px_rgba(38,33,24,0.45)]">
               <Image
