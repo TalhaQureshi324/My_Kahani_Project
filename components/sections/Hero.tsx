@@ -71,7 +71,7 @@ export default function Hero() {
               className="object-cover"
             />
           </div>
-          <SmileyDoodle className="absolute -top-6 -left-2 z-20 h-14 w-14 animate-float text-ink" />
+          <SmileyDoodle className="absolute -top-16 -left-2 z-20 h-14 w-14 animate-float text-ink" />
         </div>
       </div>
     </section>
