@@ -11,9 +11,9 @@ import { bioConclusion } from "@/lib/content";
 export default function BioConclusion() {
   return (
     <section className="bg-rust text-creamwarm">
-      <div className="mx-auto max-w-7xl overflow-hidden px-5 pt-4 pb-24 sm:px-8 lg:pb-32">
-        <div className="relative mx-auto max-w-2xl text-center">
-          <p className="font-display text-2xl leading-snug font-medium text-balance sm:text-3xl md:pr-40">
+      <div className="mx-auto max-w-7xl overflow-hidden px-5 pt-4 pb-32 sm:px-8 lg:pb-40">
+        <div className="relative mx-auto max-w-2xl text-center md:max-w-4xl md:px-40 lg:max-w-5xl lg:px-44">
+          <p className="font-display text-2xl leading-snug font-medium text-balance sm:text-3xl">
             {bioConclusion.text}
           </p>
           <Button
@@ -30,7 +30,7 @@ export default function BioConclusion() {
             aria-hidden="true"
             width={500}
             height={500}
-            className="pointer-events-none absolute right-0 -bottom-24 z-0 h-auto w-20 select-none md:-right-16 md:bottom-2 md:w-40 lg:-right-20 lg:w-48"
+            className="pointer-events-none absolute right-0 -bottom-28 z-0 h-auto w-24 select-none md:-right-20 md:bottom-2 md:w-44 lg:-right-28 lg:w-56"
           />
         </div>
       </div>
