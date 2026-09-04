@@ -1,11 +1,11 @@
 import Image from "next/image";
 import { SectionHeading } from "@/components/ui/primitives";
-import { CornerAccent } from "@/components/ui/doodles";
 import { about } from "@/lib/content";
 
 /**
- * Section 2 — About: text left, inset portrait right with a
- * line-art accent tucked behind the frame's top-right corner.
+ * Section 2 — About: text left, inset portrait right. The grunge
+ * splash tucks behind the portrait's top-right corner — half on
+ * the photo, half off, always underneath it.
  */
 export default function About() {
   return (
@@ -28,10 +28,19 @@ export default function About() {
           </div>
         </div>
 
-        {/* Inset portrait + accent */}
-        <div className="relative px-6 pt-8 pb-6 sm:px-10 lg:px-10">
-          <CornerAccent className="absolute top-0 right-0 z-0 h-32 w-32 text-terracotta/70" />
-          <div className="relative z-10 aspect-[3/4] overflow-hidden rounded-3xl shadow-[0_26px_50px_-28px_rgba(38,33,24,0.45)]">
+        {/* Inset portrait + grunge splash */}
+        <div className="px-6 pt-8 pb-6 sm:px-10 lg:px-10">
+          <div className="relative">
+            {/* splash sits behind the photo, straddling its top-right corner */}
+            <Image
+              src="/images/dad_block_extra_design_trim.webp"
+              alt=""
+              aria-hidden="true"
+              width={154}
+              height={247}
+              className="pointer-events-none absolute top-0 right-0 z-0 w-[30%] translate-x-1/2 -translate-y-1/2 select-none"
+            />
+            <div className="relative z-10 aspect-[3/4] overflow-hidden rounded-3xl shadow-[0_26px_50px_-28px_rgba(38,33,24,0.45)]">
             <Image
               src="/images/ABOUT-1.jpg"
               alt="A father and his young son walk hand in hand down a tree-lined path at sunset"
@@ -39,6 +48,7 @@ export default function About() {
               sizes="(min-width: 1024px) 45vw, 90vw"
               className="object-cover"
             />
+            </div>
           </div>
         </div>
       </div>
