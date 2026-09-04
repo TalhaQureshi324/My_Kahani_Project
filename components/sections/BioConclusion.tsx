@@ -13,7 +13,7 @@ export default function BioConclusion() {
     <section className="bg-rust text-creamwarm">
       <div className="mx-auto max-w-7xl overflow-hidden px-5 pt-4 pb-24 sm:px-8 lg:pb-32">
         <div className="relative mx-auto max-w-2xl text-center">
-          <p className="font-display text-2xl leading-snug font-medium text-balance sm:text-3xl md:pr-32">
+          <p className="font-display text-2xl leading-snug font-medium text-balance sm:text-3xl md:pr-40">
             {bioConclusion.text}
           </p>
           <Button
@@ -30,7 +30,7 @@ export default function BioConclusion() {
             aria-hidden="true"
             width={500}
             height={500}
-            className="pointer-events-none absolute right-0 -bottom-20 z-0 h-auto w-16 select-none md:-right-12 md:bottom-2 md:w-32 lg:-right-16 lg:w-36"
+            className="pointer-events-none absolute right-0 -bottom-24 z-0 h-auto w-20 select-none md:-right-16 md:bottom-2 md:w-40 lg:-right-20 lg:w-48"
           />
         </div>
       </div>
