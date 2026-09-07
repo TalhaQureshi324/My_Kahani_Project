@@ -21,10 +21,19 @@ const medicalBusinessSchema = {
   "@context": "https://schema.org",
   "@type": "MedicalBusiness",
   name: "True Self Me - Therapy & Counseling",
+  description:
+    "Professional therapy and counseling services for individuals, couples, families, and community support groups.",
   image: `${site.url}/images/og-image.jpg`,
   url: site.url,
   telephone: "+1-512-555-0143",
   priceRange: "$30 - $185",
+  medicalSpecialty: [
+    "Psychotherapy",
+    "Counseling",
+    "Individual Therapy",
+    "Couples Therapy",
+    "Family Therapy",
+  ],
   address: {
     "@type": "PostalAddress",
     addressLocality: "Austin",
@@ -39,6 +48,11 @@ const medicalBusinessSchema = {
   areaServed: {
     "@type": "City",
     name: "Austin",
+  },
+  founder: {
+    "@type": "Person",
+    name: "Fahd Alam",
+    jobTitle: "Therapeutic Counsellor (CPCAB-trained)",
   },
   sameAs: ["https://www.instagram.com", "https://www.linkedin.com"],
   openingHoursSpecification: [

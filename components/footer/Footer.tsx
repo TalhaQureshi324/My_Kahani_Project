@@ -22,7 +22,10 @@ export default function Footer() {
               sizes="160px"
               className="h-28 w-auto md:h-32"
             />
-            <p className="mt-5 max-w-xs text-sm leading-relaxed text-cream/70">
+            <p className="mt-5 text-sm font-bold tracking-wide text-cream">
+              True Self Me — Therapy &amp; Counseling
+            </p>
+            <p className="mt-3 max-w-xs text-sm leading-relaxed text-cream/70">
               Counseling and community for every chapter of your story — in
               person in Austin and virtually across Texas.
             </p>
@@ -30,9 +33,9 @@ export default function Footer() {
               <li className="flex items-start gap-3">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-terracotta-tint" aria-hidden="true" />
                 <span>
-                  {site.addressLines[0]}
+                  Austin, Texas
                   <br />
-                  {site.addressLines[1]}
+                  In-Person &amp; Telehealth
                 </span>
               </li>
               <li className="flex items-center gap-3">
@@ -48,6 +51,13 @@ export default function Footer() {
                 </a>
               </li>
             </ul>
+            <Link
+              href="/#contact"
+              aria-label="Book a therapy consultation with True Self Me"
+              className="mt-6 inline-flex items-center gap-2 rounded-full border border-cream/25 px-5 py-2.5 text-sm font-bold transition-colors hover:border-terracotta-tint hover:text-terracotta-tint"
+            >
+              Book a consultation
+            </Link>
           </div>
 
           {/* Explore */}
@@ -130,6 +140,16 @@ export default function Footer() {
             </Link>
           </p>
         </div>
+
+        {/* Privacy / HIPAA notice */}
+        <p className="mt-6 border-t border-cream/10 pt-6 text-center text-xs leading-relaxed text-cream/40 sm:text-left">
+          This website is for general information only and is not a substitute
+          for professional care. True Self Me protects the privacy and
+          confidentiality of client health information in accordance with
+          applicable HIPAA and Texas privacy standards. Please do not send
+          sensitive personal or health details through this site&apos;s forms —
+          share them directly with your therapist in a secure session.
+        </p>
       </div>
     </footer>
   );
