@@ -80,6 +80,12 @@ export const metadata: Metadata = {
     description: "Grounded therapy for individuals, couples, and dads in Austin, TX.",
     images: ["/og-image.jpg"],
   },
+  other: {
+    "geo.region": "US-TX",
+    "geo.placename": "Austin",
+    "geo.position": "30.2672;-97.7431",
+    ICBM: "30.2672, -97.7431",
+  },
 };
 
 export const viewport: Viewport = {

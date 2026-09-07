@@ -65,12 +65,47 @@ const medicalBusinessSchema = {
   ],
 };
 
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "How much do therapy sessions cost at True Self Me?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Individual therapy is $125 per session, couples and family therapy are $185 per session, and group therapy ranges from $30 to $60. Limited sliding-scale spots are also available.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Do you offer in-person and online therapy?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Yes, we provide both in-person therapy sessions in Austin, Texas, and secure telehealth appointments.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "What is The Dad Block?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "The Dad Block is a community group offering a grounded, pressure-free environment for fathers to connect, build genuine relationships, and navigate parenting together.",
+      },
+    },
+  ],
+};
+
 export default function Home() {
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(medicalBusinessSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <Hero />
       <About />
