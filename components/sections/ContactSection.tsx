@@ -190,6 +190,13 @@ export default function ContactSection() {
               {contact.submitLabel}
             </button>
           </form>
+
+          {/* Crisis / emergency notice (YMYL) */}
+          <p className="mt-4 text-center text-xs text-[#F3EDE5]/80 md:text-left">
+            Please note: This form is not monitored 24/7. If you are
+            experiencing a mental health emergency, please dial 988 or visit
+            your nearest emergency room.
+          </p>
         </div>
       </div>
     </section>

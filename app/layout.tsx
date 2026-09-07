@@ -60,12 +60,12 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: site.url,
     siteName: "True Self Me",
-    title: "True Self Me | Therapy & Counseling",
+    title: "True Self Me | Therapy & Counseling in Austin, TX",
     description:
-      "A grounded, pressure-free space for individual, couples, and group therapy in Austin, TX.",
+      "Grounded therapy for individuals, couples, and dads. Schedule your consultation today.",
     images: [
       {
-        url: "/images/og-image.jpg",
+        url: "/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "True Self Me - Therapy & Counseling",
@@ -75,8 +75,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "True Self Me | Therapy & Counseling",
-    description: "Therapy for individuals, couples, and fathers in Austin, TX.",
-    images: ["/images/og-image.jpg"],
+    description: "Grounded therapy for individuals, couples, and dads in Austin, TX.",
+    images: ["/og-image.jpg"],
   },
 };
 

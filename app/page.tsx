@@ -23,7 +23,7 @@ const medicalBusinessSchema = {
   name: "True Self Me - Therapy & Counseling",
   description:
     "Professional therapy and counseling services for individuals, couples, families, and community support groups.",
-  image: `${site.url}/images/og-image.jpg`,
+  image: `${site.url}/og-image.jpg`,
   url: site.url,
   telephone: "+1-512-555-0143",
   priceRange: "$30 - $185",
