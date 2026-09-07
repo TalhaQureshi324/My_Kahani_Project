@@ -6,7 +6,7 @@ import RsvpForm from "@/components/forms/RsvpForm";
 import { events, program } from "@/lib/content";
 
 export const metadata: Metadata = {
-  title: `${program.name} — Events`,
+  title: "Dad Block Events",
   description:
     "Upcoming Austin meetups, workshops, and gatherings for fathers. Free and beginner-friendly — RSVP to save a spot.",
 };

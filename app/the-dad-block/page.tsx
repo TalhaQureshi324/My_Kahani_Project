@@ -6,7 +6,7 @@ import { HeartArrowDoodle, SmileyDoodle, SparkleDoodle } from "@/components/ui/d
 import { program } from "@/lib/content";
 
 export const metadata: Metadata = {
-  title: program.name,
+  title: "The Dad Block",
   description: `${program.tagline} — a free community for fathers in Austin, Texas.`,
 };
 

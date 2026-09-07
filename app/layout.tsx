@@ -3,6 +3,7 @@ import { DM_Sans, Fraunces } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/navbar/Navbar";
 import Footer from "@/components/footer/Footer";
+import { site } from "@/lib/site";
 
 const display = Fraunces({
   subsets: ["latin"],
@@ -20,12 +21,55 @@ const sans = DM_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(site.url),
   title: {
-    default: "True Self Me — Therapy & Counseling in Austin, TX",
-    template: "%s — True Self Me",
+    default: "True Self Me | Therapy & Counseling in Austin, TX",
+    template: "%s | True Self Me",
   },
   description:
-    "Individual, couples, family, and group counseling in Austin, Texas and virtually across the state. Placeholder description — replace with your own.",
+    "Grounded, authentic therapy and counseling for individuals, teens, couples, and dads. Professional support to help you find steadiness, clarity, and purpose.",
+  keywords: [
+    "Austin Therapy",
+    "Therapy for Dads",
+    "Men's Mental Health",
+    "Couples Therapy",
+    "Individual Counseling",
+    "The Dad Block",
+    "Sliding Scale Therapy Austin",
+    "True Self Me",
+  ],
+  authors: [{ name: "True Self Me" }],
+  creator: "True Self Me",
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: site.url,
+    siteName: "True Self Me",
+    title: "True Self Me | Therapy & Counseling",
+    description:
+      "A grounded, pressure-free space for individual, couples, and group therapy in Austin, TX.",
+    images: [
+      {
+        url: "/images/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "True Self Me - Therapy & Counseling",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "True Self Me | Therapy & Counseling",
+    description: "Therapy for individuals, couples, and fathers in Austin, TX.",
+    images: ["/images/og-image.jpg"],
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

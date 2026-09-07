@@ -3,6 +3,7 @@
  * PLACEHOLDER details — swap phone, email and address with your own.
  */
 export const site = {
+  url: "https://mykahaniproject.vercel.app",
   name: "True Self Me",
   tagline: "Therapy & counseling",
   city: "Austin, Texas",
