@@ -5,8 +5,8 @@ export type NavItem = { label: string; href: string; children?: NavChild[] };
 
 export const mainNav: NavItem[] = [
   { label: "About", href: "/#about" },
-  { label: "Meet Fahd", href: "/#meet-therapist" },
-  { label: "Approach", href: "/#therapy-approach" },
+  { label: "Meet Fahd", href: "/#meet-fahd" },
+  { label: "Approach", href: "/#approach" },
   { label: "Services", href: "/#services" },
   { label: "Specialties", href: "/#specialties" },
   { label: "Pricing", href: "/#pricing" },

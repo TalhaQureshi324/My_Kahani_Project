@@ -10,7 +10,7 @@ import { therapist } from "@/lib/content";
 export default function MeetTherapist() {
   return (
     <section
-      id="meet-therapist"
+      id="meet-fahd"
       className="scroll-mt-24 bg-rust text-creamwarm"
     >
       <div className="mx-auto grid max-w-7xl lg:grid-cols-[96px_minmax(0,1fr)_minmax(300px,400px)]">

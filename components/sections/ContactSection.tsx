@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, type FormEvent } from "react";
 import { contact } from "@/lib/content";
 
 /**
@@ -20,6 +23,25 @@ function Required() {
 }
 
 export default function ContactSection() {
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (status === "loading") return;
+    const form = event.currentTarget;
+    setStatus("loading");
+    try {
+      // Wire this to a real endpoint (API route, Formspree, or practice email relay).
+      const data = Object.fromEntries(new FormData(form).entries());
+      await new Promise((resolve) => setTimeout(resolve, 900));
+      void data;
+      setStatus("success");
+      form.reset();
+    } catch {
+      setStatus("error");
+    }
+  }
+
   return (
     <section
       id="contact"
@@ -38,7 +60,28 @@ export default function ContactSection() {
 
         {/* Right column — consultation form */}
         <div className="lg:col-span-7">
-          <form action="#" method="post" className="space-y-6">
+          {status === "success" ? (
+            <div
+              role="status"
+              className="flex min-h-[320px] flex-col items-center justify-center gap-4 border border-[#F3EDE5]/40 px-6 py-12 text-center"
+            >
+              <p className="font-display text-2xl uppercase tracking-wide text-[#F3EDE5]">
+                Thank you for reaching out.
+              </p>
+              <p className="max-w-md text-lg leading-relaxed text-[#F3EDE5]/90">
+                We will connect with you within 24–48 hours to schedule your
+                consultation.
+              </p>
+              <button
+                type="button"
+                onClick={() => setStatus("idle")}
+                className="mt-4 rounded-full border-2 border-white px-8 py-3 text-sm font-bold text-white transition-colors hover:bg-white/10"
+              >
+                Send another message
+              </button>
+            </div>
+          ) : (
+          <form action="#" method="post" onSubmit={handleSubmit} className="space-y-6">
             {/* A. Name — first/last pair */}
             <div>
               <span className={`${labelClass} mb-3 block`}>
@@ -185,11 +228,19 @@ export default function ContactSection() {
             {/* Submit CTA */}
             <button
               type="submit"
-              className="mt-8 inline-block rounded-full border-2 border-white bg-[#9E8120] px-10 py-3 text-lg font-bold text-white transition-colors hover:bg-[#8B7119]"
+              disabled={status === "loading"}
+              className="mt-8 inline-block rounded-full border-2 border-white bg-[#9E8120] px-10 py-3 text-lg font-bold text-white transition-colors hover:bg-[#8B7119] disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {contact.submitLabel}
+              {status === "loading" ? "Submitting…" : contact.submitLabel}
             </button>
+            {status === "error" ? (
+              <p role="alert" className="mt-4 text-sm font-medium text-[#F3EDE5]">
+                Something went wrong sending your message. Please try again, or
+                email us directly.
+              </p>
+            ) : null}
           </form>
+          )}
 
           {/* Crisis / emergency notice (YMYL) */}
           <p className="mt-4 text-center text-xs text-[#F3EDE5]/80 md:text-left">

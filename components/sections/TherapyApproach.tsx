@@ -65,7 +65,7 @@ function FramedPhoto({ src, alt }: { src: string; alt: string }) {
 export default function TherapyApproach() {
   return (
     <section
-      id="therapy-approach"
+      id="approach"
       className="relative scroll-mt-24 overflow-hidden bg-sand"
       style={
         {

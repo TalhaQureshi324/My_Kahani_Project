@@ -42,8 +42,10 @@ export const metadata: Metadata = {
   creator: "True Self Me",
   icons: {
     icon: "/favicon.ico",
+    shortcut: "/favicon-16x16.png",
     apple: "/apple-touch-icon.png",
   },
+  manifest: "/site.webmanifest",
   alternates: {
     canonical: site.url,
   },
