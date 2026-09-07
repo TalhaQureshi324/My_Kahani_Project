@@ -17,14 +17,13 @@ import TheDadBlockSection from "@/components/sections/TheDadBlockSection";
 import ContactSection from "@/components/sections/ContactSection";
 import { site } from "@/lib/site";
 
-const localBusinessSchema = {
+const medicalBusinessSchema = {
   "@context": "https://schema.org",
-  "@type": "LocalBusiness",
-  name: "True Self Me Therapy & Counseling",
+  "@type": "MedicalBusiness",
+  name: "True Self Me - Therapy & Counseling",
   image: `${site.url}/images/og-image.jpg`,
-  description:
-    "Professional therapy and counseling services for individuals, couples, families, and community support groups.",
   url: site.url,
+  telephone: "+1-512-555-0143",
   priceRange: "$30 - $185",
   address: {
     "@type": "PostalAddress",
@@ -32,6 +31,16 @@ const localBusinessSchema = {
     addressRegion: "TX",
     addressCountry: "US",
   },
+  geo: {
+    "@type": "GeoCoordinates",
+    latitude: 30.2672,
+    longitude: -97.7431,
+  },
+  areaServed: {
+    "@type": "City",
+    name: "Austin",
+  },
+  sameAs: ["https://www.instagram.com", "https://www.linkedin.com"],
   openingHoursSpecification: [
     {
       "@type": "OpeningHoursSpecification",
@@ -47,7 +56,7 @@ export default function Home() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(medicalBusinessSchema) }}
       />
       <Hero />
       <About />

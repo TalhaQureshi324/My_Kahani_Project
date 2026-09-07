@@ -37,12 +37,19 @@ export default function Hero() {
             {hero.titleTop}{" "}
             <em className="marker-underline text-terracotta">{hero.titleAccent}</em>{" "}
             {hero.titleEnd}
+            <span className="sr-only">
+              {" "}
+              True Self Me — Therapy &amp; Counseling in Austin, TX
+            </span>
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-soft">
             {hero.lede}
           </p>
           <div className="mt-9 flex flex-wrap items-center gap-4">
-            <Button href="/#contact">
+            <Button
+              href="/#contact"
+              aria-label="Schedule an initial counseling session"
+            >
               {hero.primaryCta}
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Button>

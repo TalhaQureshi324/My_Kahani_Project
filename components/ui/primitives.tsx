@@ -10,6 +10,7 @@ type ButtonProps = {
   className?: string;
   type?: "button" | "submit";
   disabled?: boolean;
+  "aria-label"?: string;
 };
 
 const base =
@@ -35,17 +36,18 @@ export function Button({
   className = "",
   type = "button",
   disabled,
+  "aria-label": ariaLabel,
 }: ButtonProps) {
   const cls = `${base} ${variants[variant]} ${className}`;
   if (href) {
     return (
-      <Link href={href} className={cls}>
+      <Link href={href} className={cls} aria-label={ariaLabel}>
         {children}
       </Link>
     );
   }
   return (
-    <button type={type} className={cls} disabled={disabled}>
+    <button type={type} className={cls} disabled={disabled} aria-label={ariaLabel}>
       {children}
     </button>
   );

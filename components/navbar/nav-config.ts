@@ -1,6 +1,6 @@
 import { program } from "@/lib/content";
 
-export type NavChild = { label: string; href: string };
+export type NavChild = { label: string; href: string; ariaLabel?: string };
 export type NavItem = { label: string; href: string; children?: NavChild[] };
 
 export const mainNav: NavItem[] = [
@@ -14,7 +14,11 @@ export const mainNav: NavItem[] = [
     label: program.navLabel,
     href: "/the-dad-block",
     children: [
-      { label: "Learn More", href: "/the-dad-block" },
+      {
+        label: "Learn More",
+        href: "/the-dad-block",
+        ariaLabel: "Learn more about The Dad Block community group for fathers",
+      },
       { label: "Events", href: "/the-dad-block/events" },
     ],
   },

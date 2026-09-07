@@ -118,6 +118,7 @@ export default function MobileDrawer({
                     <DrawerLink
                       href={child.href}
                       label={child.label}
+                      ariaLabel={child.ariaLabel}
                       onClick={onClose}
                     />
                   </li>
@@ -162,6 +163,7 @@ export default function MobileDrawer({
           <Link
             href={cta.href}
             onClick={onClose}
+            aria-label="Book a therapy consultation with True Self Me"
             className="flex w-full items-center justify-center gap-2 rounded-full bg-terracotta px-6 py-3.5 text-sm font-bold tracking-wide text-cream transition-colors hover:bg-terracotta-deep"
           >
             {cta.label}
@@ -181,16 +183,19 @@ function DrawerLink({
   label,
   onClick,
   large = false,
+  ariaLabel,
 }: {
   href: string;
   label: string;
   onClick: () => void;
   large?: boolean;
+  ariaLabel?: string;
 }) {
   return (
     <Link
       href={href}
       onClick={onClick}
+      aria-label={ariaLabel}
       className={`flex items-center justify-between rounded-2xl px-4 transition-colors hover:bg-cream-dark ${
         large ? "py-4 font-display text-lg font-medium" : "py-3.5 text-base"
       }`}

@@ -71,6 +71,7 @@ export default function Navbar() {
                         <Link
                           key={child.label}
                           href={child.href}
+                          aria-label={child.ariaLabel}
                           className="block rounded-xl px-4 py-2.5 text-sm font-medium text-ink transition-colors hover:bg-cream-dark hover:text-terracotta"
                         >
                           {child.label}
@@ -95,6 +96,7 @@ export default function Navbar() {
           <div className="flex items-center gap-3">
             <Link
               href={cta.href}
+              aria-label="Book a therapy consultation with True Self Me"
               className="hidden rounded-full bg-terracotta px-5 py-2.5 text-sm font-bold tracking-wide text-cream shadow-[0_6px_20px_-8px_rgba(152,67,31,0.7)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-terracotta-deep sm:inline-flex"
             >
               {cta.label}

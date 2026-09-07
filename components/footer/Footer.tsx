@@ -76,7 +76,11 @@ export default function Footer() {
             </p>
             <ul className="mt-5 space-y-3 text-sm">
               <li>
-                <Link href="/the-dad-block" className="text-cream/75 transition-colors hover:text-terracotta-tint">
+                <Link
+                  href="/the-dad-block"
+                  aria-label="Learn more about The Dad Block community group for fathers"
+                  className="text-cream/75 transition-colors hover:text-terracotta-tint"
+                >
                   {program.name} · Learn More
                 </Link>
               </li>

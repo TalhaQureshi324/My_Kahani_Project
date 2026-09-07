@@ -29,9 +29,9 @@ function ServiceCard({
         height={141}
         className="h-[141px] w-[141px] object-contain"
       />
-      <span className="mt-6 inline-block w-fit whitespace-nowrap rounded-none bg-black px-1 py-0 text-center font-display text-[20px] font-semibold uppercase leading-none tracking-tight text-[#F5EBE6] md:text-[28px]">
+      <h3 className="mt-6 inline-block w-fit whitespace-nowrap rounded-none bg-black px-1 py-0 text-center font-display text-[20px] font-semibold uppercase leading-none tracking-tight text-[#F5EBE6] md:text-[28px]">
         {badge}
-      </span>
+      </h3>
       <p className="mt-4 text-[24px] leading-relaxed text-[#F5EBE6]">
         {description}
       </p>
@@ -81,6 +81,7 @@ export default function CounselingServices() {
         <div className="mt-10 text-center md:mt-12">
           <a
             href="#contact"
+            aria-label="Schedule an initial counseling session"
             className="inline-flex h-[65px] w-[302px] items-center justify-center rounded-full border border-[rgb(243,237,229)] bg-[#5C6430] px-8 text-[18px] text-[rgb(243,237,229)] transition-colors hover:bg-[#4E5528]"
           >
             {ctaLabel}

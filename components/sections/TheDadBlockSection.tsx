@@ -49,7 +49,7 @@ export default function TheDadBlockSection() {
           <div className="relative order-2 w-full lg:col-start-2 lg:row-start-1">
             <Image
               src="/images/dad_block_right_side.webp"
-              alt="Fathers from the Dad Block community laughing and high-fiving at a brewery gathering"
+              alt="Fathers gathering and supporting each other at The Dad Block community event in Austin, TX"
               width={750}
               height={500}
               sizes="(min-width: 1024px) 50vw, 92vw"
@@ -79,7 +79,7 @@ export default function TheDadBlockSection() {
           <div className="order-4 lg:col-start-1 lg:row-start-2">
             <Image
               src="/images/dad_block_left_side.webp"
-              alt="A group of fathers hiking together along a trail in the woods"
+              alt="Fathers hiking together and supporting each other at a Dad Block community gathering in Austin, TX"
               width={750}
               height={500}
               sizes="(min-width: 1024px) 50vw, 92vw"
@@ -91,6 +91,7 @@ export default function TheDadBlockSection() {
           <div className="order-5 lg:col-start-2 lg:row-start-3">
             <Link
               href={dad.ctaHref}
+              aria-label="Learn more about The Dad Block community group for fathers"
               className="inline-block rounded-full border border-white/60 bg-black px-10 py-3 text-[18px] font-medium text-white transition-colors hover:bg-night-2"
             >
               {dad.ctaLabel}

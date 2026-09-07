@@ -54,7 +54,11 @@ export default function AboutContinued() {
               <p key={p.slice(0, 24)}>{p}</p>
             ))}
           </div>
-          <Button href="/#contact" className="mt-9 self-start">
+          <Button
+            href="/#contact"
+            aria-label="Schedule an initial counseling session"
+            className="mt-9 self-start"
+          >
             {aboutContinued.cta}
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Button>

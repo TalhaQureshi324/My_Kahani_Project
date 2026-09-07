@@ -19,6 +19,7 @@ export default function BioConclusion() {
           <Button
             href="/#contact"
             variant="gold"
+            aria-label="Schedule an initial counseling session"
             className="mt-10 px-9 py-4 text-xs tracking-[0.2em] uppercase"
           >
             {bioConclusion.cta}
