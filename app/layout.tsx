@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { DM_Sans, Fraunces } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/navbar/Navbar";
@@ -80,6 +80,13 @@ export const metadata: Metadata = {
     description: "Grounded therapy for individuals, couples, and dads in Austin, TX.",
     images: ["/og-image.jpg"],
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#5D1F13",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

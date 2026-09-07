@@ -70,7 +70,7 @@ function Row({ item, flush }: { item: Item; flush?: boolean }) {
   const text = <ItemText item={item} />;
 
   return (
-    <div className={`grid items-center gap-8 md:grid-cols-2 md:gap-12 ${rowPad}`}>
+    <div className={`grid grid-cols-1 items-center gap-8 md:grid-cols-2 md:gap-12 ${rowPad}`}>
       {imageFirst ? (
         <>
           {frame}

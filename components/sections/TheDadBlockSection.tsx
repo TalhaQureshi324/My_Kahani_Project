@@ -15,7 +15,7 @@ import { dadBlockSpotlight as dad } from "@/lib/content";
  */
 export default function TheDadBlockSection() {
   return (
-    <section className="relative w-full scroll-mt-24 bg-[#A26838]">
+    <section className="relative w-full scroll-mt-24 overflow-x-clip bg-[#A26838]">
       <div
         aria-hidden="true"
         className="absolute inset-0 bg-[url('/images/dad_block_background.webp')] bg-repeat"

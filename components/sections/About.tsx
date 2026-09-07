@@ -9,7 +9,7 @@ import { about } from "@/lib/content";
  */
 export default function About() {
   return (
-    <section id="about" className="relative scroll-mt-24 bg-[#5C3A26]">
+    <section id="about" className="relative scroll-mt-24 overflow-x-clip bg-[#5C3A26]">
       <div
         aria-hidden="true"
         className="absolute inset-0 bg-[url('/images/aBOUT_TRUE_SELF_ME_BACKGROUND.webp')] bg-repeat"

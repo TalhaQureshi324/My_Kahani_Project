@@ -24,9 +24,13 @@ function Required() {
 
 export default function ContactSection() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [honeypot, setHoneypot] = useState("");
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    // Hidden trap field: real users never fill it — bots autocomplete it.
+    // Silently drop the submission without any request.
+    if (honeypot !== "") return;
     if (status === "loading") return;
     const form = event.currentTarget;
     setStatus("loading");
@@ -82,6 +86,20 @@ export default function ContactSection() {
             </div>
           ) : (
           <form action="#" method="post" onSubmit={handleSubmit} className="space-y-6">
+            {/* Honeypot — hidden from humans, tempting for bots */}
+            <div className="hidden" aria-hidden="true">
+              <label htmlFor="company_website">Website</label>
+              <input
+                id="company_website"
+                type="text"
+                name="company_website"
+                tabIndex={-1}
+                autoComplete="off"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+              />
+            </div>
+
             {/* A. Name — first/last pair */}
             <div>
               <span className={`${labelClass} mb-3 block`}>
