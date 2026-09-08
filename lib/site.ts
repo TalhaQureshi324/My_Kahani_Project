@@ -12,7 +12,7 @@ export const site = {
   phoneHref: "tel:+15125550143",
   email: "hello@trueselfme.example.com",
   hours: "Mon–Fri · 9:00 AM – 6:00 PM CT",
-  virtual: "Virtual sessions anywhere in Texas",
+  virtual: "Virtual sessions across the United States",
   // Temporary map location (user-supplied link) — replace with the
   // practice's real coordinates or street address when finalized.
   mapQuery: "43.6548253,-79.388447",

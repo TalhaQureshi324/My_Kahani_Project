@@ -170,7 +170,7 @@ export default function MobileDrawer({
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
           <p className="mt-3 text-center text-xs text-ink-soft">
-            {site.city} · Virtual across Texas
+            {site.virtual}
           </p>
         </div>
       </div>

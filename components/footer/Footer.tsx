@@ -26,16 +26,16 @@ export default function Footer() {
               True Self Me — Therapy &amp; Counseling
             </p>
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-cream/70">
-              Counseling and community for every chapter of your story — in
-              person in Austin and virtually across Texas.
+              Counseling and community for every chapter of your story —
+              virtual sessions across the United States.
             </p>
             <ul className="mt-6 space-y-3 text-sm text-cream/70">
               <li className="flex items-start gap-3">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-terracotta-tint" aria-hidden="true" />
                 <span>
-                  Austin, Texas
+                  Based in Austin, Texas
                   <br />
-                  In-Person &amp; Telehealth
+                  Serving clients nationwide
                 </span>
               </li>
               <li className="flex items-center gap-3">
@@ -146,7 +146,7 @@ export default function Footer() {
           This website is for general information only and is not a substitute
           for professional care. True Self Me protects the privacy and
           confidentiality of client health information in accordance with
-          applicable HIPAA and Texas privacy standards. Please do not send
+          applicable HIPAA and US privacy standards. Please do not send
           sensitive personal or health details through this site&apos;s forms —
           share them directly with your therapist in a secure session.
         </p>

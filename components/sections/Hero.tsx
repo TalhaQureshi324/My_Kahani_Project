@@ -39,7 +39,8 @@ export default function Hero() {
             {hero.titleEnd}
             <span className="sr-only">
               {" "}
-              True Self Me — Therapy &amp; Counseling in Austin, TX
+              True Self Me — Virtual Therapy &amp; Counseling Across the
+              United States
             </span>
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-soft">

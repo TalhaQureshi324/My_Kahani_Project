@@ -23,19 +23,20 @@ const sans = DM_Sans({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: "True Self Me | Therapy & Counseling in Austin, TX",
+    default: "True Self Me | Virtual Therapy & Counseling Across the US",
     template: "%s | True Self Me",
   },
   description:
-    "Grounded, authentic therapy and counseling for individuals, teens, couples, and dads. Professional support to help you find steadiness, clarity, and purpose.",
+    "Grounded, authentic virtual therapy for individuals, teens, couples, and dads across the United States — support to find steadiness, clarity, and purpose.",
   keywords: [
-    "Austin Therapy",
+    "Virtual Therapy",
+    "Online Therapy",
     "Therapy for Dads",
     "Men's Mental Health",
     "Couples Therapy",
     "Individual Counseling",
     "The Dad Block",
-    "Sliding Scale Therapy Austin",
+    "Sliding Scale Therapy",
     "True Self Me",
   ],
   authors: [{ name: "True Self Me" }],
@@ -62,9 +63,9 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: site.url,
     siteName: "True Self Me",
-    title: "True Self Me | Therapy & Counseling in Austin, TX",
+    title: "True Self Me | Virtual Therapy & Counseling Across the US",
     description:
-      "Grounded therapy for individuals, couples, and dads. Schedule your consultation today.",
+      "A grounded, pressure-free space for individual, couples, and group therapy — virtual sessions across the United States.",
     images: [
       {
         url: "/og-image.jpg",
@@ -77,7 +78,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "True Self Me | Therapy & Counseling",
-    description: "Grounded therapy for individuals, couples, and dads in Austin, TX.",
+    description: "Virtual therapy for individuals, couples, and dads across the United States.",
     images: ["/og-image.jpg"],
   },
   other: {

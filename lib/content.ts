@@ -208,7 +208,7 @@ export const locationBanner = {
   heading: "Locations:",
   virtualLine1: "Virtual therapy sessions",
   virtualLine2: "across United States",
-  headline: ["Conveniently", "located in the heart", "of Austin"],
+  headline: ["Virtual sessions", "from anywhere in", "the United States"],
 };
 
 export const rightGuidance = {

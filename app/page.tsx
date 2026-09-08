@@ -22,7 +22,7 @@ const medicalBusinessSchema = {
   "@type": "MedicalBusiness",
   name: "True Self Me - Therapy & Counseling",
   description:
-    "Professional therapy and counseling services for individuals, couples, families, and community support groups.",
+    "Professional virtual therapy and counseling services for individuals, couples, families, and community support groups across the United States.",
   image: `${site.url}/og-image.jpg`,
   url: site.url,
   telephone: "+1-512-555-0143",
@@ -46,8 +46,8 @@ const medicalBusinessSchema = {
     longitude: -97.7431,
   },
   areaServed: {
-    "@type": "City",
-    name: "Austin",
+    "@type": "Country",
+    name: "United States",
   },
   founder: {
     "@type": "Person",
@@ -79,10 +79,10 @@ const faqSchema = {
     },
     {
       "@type": "Question",
-      name: "Do you offer in-person and online therapy?",
+      name: "Do you offer online therapy?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Yes, we provide both in-person therapy sessions in Austin, Texas, and secure telehealth appointments.",
+        text: "Yes — True Self Me is a fully virtual practice providing secure telehealth appointments to clients across the United States.",
       },
     },
     {
