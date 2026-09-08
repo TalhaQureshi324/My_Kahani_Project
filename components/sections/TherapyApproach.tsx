@@ -121,7 +121,7 @@ export default function TherapyApproach() {
         }
       >
         <h2
-          className="self-center pl-[24px] font-display text-[clamp(2rem,2.2vw+1.25rem,2.625rem)] font-normal leading-[1.2] tracking-normal text-cream"
+          className="self-center pl-[24px] font-display text-3xl font-normal leading-[1.2] tracking-normal text-cream md:text-5xl lg:text-6xl"
           style={{ gridArea: "2 / 3 / 4 / 18" }}
         >
           {approaches.bannerTitle}
@@ -160,7 +160,7 @@ export default function TherapyApproach() {
 
       {/* Mobile <768px: stacked fluid layout, same typography */}
       <div className="relative z-10 mx-auto flex w-full max-w-[calc(1500px+8vw)] flex-col px-[4vw] pb-16 pt-6 md:hidden">
-        <h2 className="font-display text-[clamp(2rem,2.2vw+1.25rem,2.625rem)] font-normal leading-[1.2] tracking-normal text-cream">
+        <h2 className="font-display text-3xl font-normal leading-[1.2] tracking-normal text-cream md:text-5xl lg:text-6xl">
           {approaches.bannerTitle}
         </h2>
         <p className={`${bodyText} mt-6`}>{approaches.intro}</p>
