@@ -14,11 +14,13 @@ function ServiceCard({
   iconAlt,
   badge,
   description,
+  compact,
 }: {
   icon: string;
   iconAlt: string;
   badge: string;
   description: string;
+  compact?: boolean;
 }) {
   return (
     <div className="flex flex-col items-center text-center">
@@ -29,7 +31,11 @@ function ServiceCard({
         height={141}
         className="h-[141px] w-[141px] object-contain"
       />
-      <h3 className="mt-6 inline-block w-fit max-w-full rounded-none bg-black px-1 py-0 text-center font-display text-[20px] font-semibold uppercase leading-none tracking-tight text-[#F5EBE6] md:text-[28px]">
+      <h3
+        className={`mt-6 inline-block w-fit whitespace-nowrap rounded-none bg-black px-1 py-0 text-center font-display font-semibold uppercase leading-none tracking-tight text-[#F5EBE6] ${
+          compact ? "text-[18px] lg:text-[25px]" : "text-[20px] lg:text-[28px]"
+        }`}
+      >
         {badge}
       </h3>
       <p className="mt-4 text-[24px] leading-relaxed text-[#F5EBE6]">
@@ -40,7 +46,7 @@ function ServiceCard({
 }
 
 export default function CounselingServices() {
-  const { title, subtitle, items, ctaLabel } = counselingServices;
+  const { title, items, ctaLabel } = counselingServices;
 
   return (
     <section id="services" className="relative scroll-mt-24 bg-[#A26838]">
@@ -53,9 +59,6 @@ export default function CounselingServices() {
         <h2 className="text-center font-display text-3xl font-bold uppercase leading-[1.05] tracking-wide text-[#F5EBE6] md:text-5xl lg:text-6xl">
           {title}
         </h2>
-        <p className="mt-4 text-center font-sans text-[1.5rem] font-bold uppercase tracking-wider text-[#F5EBE6] md:text-[46px]">
-          {subtitle}
-        </p>
 
         {/* Row 1 — three columns */}
         <div className="mt-14 grid gap-12 sm:gap-10 md:grid-cols-3">

@@ -163,7 +163,6 @@ export const approaches = {
 
 export const counselingServices = {
   title: "Counseling Services",
-  subtitle: "In Austin, TX & Online",
   ctaLabel: "Book your appointment",
   items: [
     {
@@ -198,6 +197,7 @@ export const counselingServices = {
       icon: "/icons/career_counsoling_and_coaching_icon.webp",
       iconAlt: "Spray-painted graffiti spiral swirl",
       badge: "Career Counseling & Coaching",
+      compact: true,
       description:
         "Combining recruiting-industry experience with therapeutic insight to help you navigate layoffs, burnout, and career transitions.",
     },
@@ -208,7 +208,6 @@ export const locationBanner = {
   heading: "Locations:",
   virtualLine1: "Virtual therapy sessions",
   virtualLine2: "across United States",
-  virtualOnlyLabel: "Fully virtual practice",
   headline: ["Conveniently", "located in the heart", "of Austin"],
 };
 

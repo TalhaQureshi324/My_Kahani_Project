@@ -14,7 +14,7 @@ import { locationBanner } from "@/lib/content";
 export default function LocationBanner() {
   return (
     <section id="location" className="relative w-full scroll-mt-24 overflow-hidden">
-      <div className="relative aspect-[3/4] md:aspect-[1731/741]">
+      <div className="relative aspect-square md:aspect-[1731/520]">
         <Image
           src="/images/location_banner_bg.webp"
           alt=""
@@ -24,7 +24,7 @@ export default function LocationBanner() {
         />
 
         {/* Text centered inside the red torn-paper body, clear of the rip */}
-        <div className="absolute left-[6%] top-[28%] w-[34%] md:left-[7%] md:w-[27%]">
+        <div className="absolute left-[6%] top-[20%] w-[34%] md:left-[7%] md:w-[27%]">
           <h2 className="font-sans text-[4vw] font-bold uppercase tracking-[0.12em] text-[#F7F1E6] md:text-[1.8vw]">
             {locationBanner.heading}
           </h2>
@@ -33,9 +33,6 @@ export default function LocationBanner() {
               • {locationBanner.virtualLine1}
               <br />
               {locationBanner.virtualLine2}
-            </li>
-            <li>
-              • {locationBanner.virtualOnlyLabel}
             </li>
           </ul>
         </div>
