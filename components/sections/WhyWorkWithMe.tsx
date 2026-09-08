@@ -31,7 +31,7 @@ export default function WhyWorkWithMe() {
               {whyWork.education.items.map((item) => (
                 <li key={item.degree}>
                   <p className="font-medium">{item.degree}</p>
-                  <p className="italic">{item.school}</p>
+                  {item.school ? <p className="italic">{item.school}</p> : null}
                 </li>
               ))}
             </ul>

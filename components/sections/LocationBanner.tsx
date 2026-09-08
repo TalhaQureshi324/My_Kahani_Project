@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { locationBanner } from "@/lib/content";
-import { site } from "@/lib/site";
 
 /**
  * Section 10 — Locations banner: the supplied split background (kraft
@@ -37,10 +36,6 @@ export default function LocationBanner() {
             </li>
             <li>
               • {locationBanner.virtualOnlyLabel}
-              <br />
-              {site.addressLines[0]}
-              <br />
-              {site.addressLines[1]}
             </li>
           </ul>
         </div>

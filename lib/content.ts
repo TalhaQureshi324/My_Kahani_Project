@@ -8,7 +8,7 @@
  */
 
 export const hero = {
-  eyebrow: "Austin, TX · In-person & virtual across Texas",
+  eyebrow: "Across United States",
   titleTop: "Therapy that gives",
   titleAccent: "your story",
   titleEnd: "room to grow.",
@@ -21,9 +21,9 @@ export const hero = {
 export const about = {
   eyebrow: "About the practice",
   title: "About True Self Me",
-  lead: "True Self Me is an Austin-based counseling practice serving clients in person across the city and virtually throughout Texas — built for people who want therapy that feels like a real relationship, not an appointment.",
+  lead: "True Self Me is US based counselling practice, serving clients virtually throughout the United States – built for people who want therapy that feels like a real relationship, not an appointment.",
   paragraphs: [
-    "The name is deliberate. A kahani is a story, and every person who walks through the door carries one worth hearing in full. Here, authenticity is the starting point: you get a therapist who is honest, present, and unafraid of the messy middle chapters.",
+    "Here, authenticity is the starting point: you get a therapist who is honest, present, and unafraid of the messy middle chapters.",
     "The work leans on a simple belief about resilience — people are not broken puzzles to solve. Like a city block, a life is built one piece at a time, and the foundations that hold best are laid in community. Therapy here is about finding your footing, then adding the next stone.",
   ],
   photoLabel: "Father and son walking — drop photo in /public/images/about-1.jpg",
@@ -60,13 +60,13 @@ export const therapist = {
   name: "Fahd Alam",
   credential: "Therapeutic Counsellor",
   supervisorLine:
-    "CPCAB Trained | MBA, LLB, BE, PMP | 20+ Years International Leadership Experience",
+    "CPCAB Trained | MBA, LLB, BE | 20+ Years International Leadership Experience",
   roleLine: "Therapeutic counsellor working with adults and adolescents",
   photoLabel: "Portrait of Fahd Alam, therapeutic counsellor",
   paragraphs: [
     "You can be successful, capable and outwardly in control while privately feeling overwhelmed, disconnected, angry, uncertain or stuck.",
     "I came to counselling after more than twenty years in international business, technology, entrepreneurship and senior leadership. I have worked across countries and cultures, built businesses, led teams through difficult periods and experienced the pressures, uncertainty and personal sacrifices that often accompany ambition and responsibility.",
-    "I later trained formally in counselling, completing a Diploma in Counselling Studies and Diploma in Therapeutic Counselling through CPCAB. My wider academic background includes an MBA from LUMS, an LLB from the University of London, a Bachelor of Engineering from GIK Institute, and PMP certification.",
+    "I later trained formally in counselling, completing a Diploma in Counselling Studies and Diploma in Therapeutic Counselling through CPCAB. My wider academic background includes Engineering and business studies.",
     "This combination of therapeutic training and real-world experience shapes the way I work.",
     "My approach is warm, engaged and conversational. I am interested not simply in the immediate problem, but in understanding the patterns underneath it: how earlier experiences, attachment, family relationships, culture and expectations may influence the way you experience yourself and others today.",
     "I work with adults and adolescents experiencing relationship difficulties, family conflict, separation, anxiety, anger, low self-esteem, parenting challenges, professional pressure, major life transitions, identity questions and recurring emotional or relationship patterns.",
@@ -98,10 +98,9 @@ export const whyWork = {
     items: [
       { degree: "Diploma in Therapeutic Counselling", school: "CPCAB" },
       { degree: "Diploma in Counselling Studies", school: "CPCAB" },
-      { degree: "MBA", school: "LUMS" },
-      { degree: "LLB", school: "University of London" },
-      { degree: "Bachelor of Engineering", school: "GIK Institute" },
-      { degree: "PMP Certification", school: "Project Management Institute" },
+      { degree: "MBA" },
+      { degree: "LLB" },
+      { degree: "Bachelor of Engineering" },
     ],
   },
   license: {
@@ -208,7 +207,7 @@ export const counselingServices = {
 export const locationBanner = {
   heading: "Locations:",
   virtualLine1: "Virtual therapy sessions",
-  virtualLine2: "across Texas",
+  virtualLine2: "across United States",
   virtualOnlyLabel: "Fully virtual practice",
   headline: ["Conveniently", "located in the heart", "of Austin"],
 };
