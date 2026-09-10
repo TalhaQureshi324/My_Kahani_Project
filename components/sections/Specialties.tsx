@@ -101,9 +101,7 @@ function Ticker() {
   );
 
   return (
-    <div
-      className={`w-full overflow-hidden whitespace-nowrap border-b border-black/20 py-4 pt-16 md:pt-24 ${TEXTURE}`}
-    >
+    <div className="w-full overflow-hidden whitespace-nowrap py-4 pt-16 md:pt-24">
       <div className="flex w-max animate-marquee">
         {row(false)}
         {row(true)}
@@ -121,11 +119,11 @@ export default function Specialties() {
   ];
 
   return (
-    <section id="specialties" className="scroll-mt-24">
+    <section id="specialties" className={`scroll-mt-24 ${TEXTURE}`}>
       <Ticker />
 
       {/* Subsection 1 — items 1–3, opened by the Areas of focus heading */}
-      <div className={TEXTURE}>
+      <div>
         <div className="mx-auto max-w-6xl px-6">
           <h2 className="pt-12 text-center font-display text-[30px] font-semibold uppercase tracking-wide text-[#F5EBE6] md:pt-16 md:text-[45px]">
             {specialties.subheading}
@@ -139,7 +137,7 @@ export default function Specialties() {
       </div>
 
       {/* Subsection 2 — items 4–6 */}
-      <div className={TEXTURE}>
+      <div>
         <div className="mx-auto max-w-6xl px-6">
           {groups[1].map((item) => (
             <Reveal key={item.title}>
@@ -150,7 +148,7 @@ export default function Specialties() {
       </div>
 
       {/* Subsection 3 — items 7–9 */}
-      <div className={TEXTURE}>
+      <div>
         <div className="mx-auto max-w-6xl px-6">
           {groups[2].map((item) => (
             <Reveal key={item.title}>
@@ -163,7 +161,7 @@ export default function Specialties() {
       {/* Subsection 4 — final item, tight against the mural section's
           wave divider (the wave + black stroke live at the top of the
           mural section and paint directly beneath this row). */}
-      <div className={TEXTURE}>
+      <div>
         <div className="mx-auto max-w-6xl px-6 pb-8 md:pb-12">
           {groups[3].map((item) => (
             <Reveal key={item.title}>
