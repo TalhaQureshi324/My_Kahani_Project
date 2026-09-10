@@ -12,9 +12,12 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 export default function Reveal({
   children,
   className = "",
+  delay = 0,
 }: {
   children: ReactNode;
   className?: string;
+  /** Stagger offset in ms applied when the element reveals. */
+  delay?: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
@@ -47,6 +50,7 @@ export default function Reveal({
       className={`transition-all duration-700 ease-out ${
         visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
       } ${className}`}
+      style={visible && delay ? { transitionDelay: `${delay}ms` } : undefined}
     >
       {children}
     </div>
