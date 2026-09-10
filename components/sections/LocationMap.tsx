@@ -6,15 +6,15 @@ import { site } from "@/lib/site";
  * framed interactive Google Maps embed (keyless: light-mode street
  * map, zoom controls, pannable). The section's bottom edge is the one
  * angled divider in the location module — a clip-path diagonal rising
- * left to right, pulled 40px over the next section via -mb-10/z-10 so
- * the wedge reveals the dark section below instead of the page body.
+ * left to right, pulled 25px over the next section via -mb-[25px]/z-10
+ * so the wedge reveals the dark section below instead of the page body.
  */
 export default function LocationMap() {
   return (
     <section
-      className="relative z-10 -mb-10 w-full overflow-hidden py-16 md:py-24"
+      className="relative z-10 -mb-[25px] w-full overflow-hidden py-16 md:py-24"
       style={{
-        clipPath: "polygon(0 0, 100% 0, 100% calc(100% - 40px), 0 100%)",
+        clipPath: "polygon(0 0, 100% 0, 100% calc(100% - 25px), 0 100%)",
       }}
     >
       <div
