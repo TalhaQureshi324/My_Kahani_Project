@@ -3,6 +3,8 @@ import { DM_Sans, Fraunces } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/navbar/Navbar";
 import Footer from "@/components/footer/Footer";
+import BookingProvider from "@/components/booking/BookingProvider";
+import GclidTracker from "@/components/tracking/GclidTracker";
 import { site } from "@/lib/site";
 
 const display = Fraunces({
@@ -103,11 +105,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${display.variable} ${sans.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-cream font-sans text-ink">
-        <Navbar />
-        <main id="top" className="flex-1">
-          {children}
-        </main>
-        <Footer />
+        <GclidTracker />
+        <BookingProvider>
+          <Navbar />
+          <main id="top" className="flex-1">
+            {children}
+          </main>
+          <Footer />
+        </BookingProvider>
       </body>
     </html>
   );

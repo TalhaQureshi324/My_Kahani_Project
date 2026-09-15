@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/primitives";
+import BookingTrigger from "@/components/booking/BookingTrigger";
 import { SmileyDoodle, SparkleDoodle } from "@/components/ui/doodles";
 import { hero } from "@/lib/content";
 
@@ -47,13 +47,13 @@ export default function Hero() {
             {hero.lede}
           </p>
           <div className="mt-9 flex flex-wrap items-center gap-4">
-            <Button
-              href="/#contact"
+            <BookingTrigger
               aria-label="Schedule an initial counseling session"
+              className="inline-flex items-center gap-2 rounded-full bg-terracotta px-6 py-3 text-sm font-bold tracking-wide text-cream shadow-[0_6px_20px_-8px_rgba(152,67,31,0.7)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-terracotta-deep"
             >
               {hero.primaryCta}
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Button>
+            </BookingTrigger>
             <a
               href="/#services"
               className="text-sm font-bold tracking-wide text-ink underline decoration-terracotta decoration-2 underline-offset-8 transition-colors hover:text-terracotta"

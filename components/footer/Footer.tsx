@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowUp, Mail, MapPin, Phone } from "lucide-react";
 import { SquiggleDoodle } from "@/components/ui/doodles";
+import BookingTrigger from "@/components/booking/BookingTrigger";
 import { mainNav } from "@/components/navbar/nav-config";
 import { site } from "@/lib/site";
 import { program } from "@/lib/content";
@@ -51,13 +52,12 @@ export default function Footer() {
                 </a>
               </li>
             </ul>
-            <Link
-              href="/#contact"
+            <BookingTrigger
               aria-label="Book a therapy consultation with True Self Me"
               className="mt-6 inline-flex items-center gap-2 rounded-full border border-cream/25 px-5 py-2.5 text-sm font-bold transition-colors hover:border-terracotta-tint hover:text-terracotta-tint"
             >
               Book a consultation
-            </Link>
+            </BookingTrigger>
           </div>
 
           {/* Explore */}

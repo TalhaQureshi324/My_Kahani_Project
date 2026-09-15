@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/primitives";
+import BookingTrigger from "@/components/booking/BookingTrigger";
 import { bioConclusion } from "@/lib/content";
 
 /**
@@ -16,15 +16,13 @@ export default function BioConclusion() {
           <p className="font-display text-2xl leading-snug font-medium text-balance sm:text-3xl">
             {bioConclusion.text}
           </p>
-          <Button
-            href="/#contact"
-            variant="gold"
+          <BookingTrigger
             aria-label="Schedule an initial counseling session"
-            className="mt-10 px-9 py-4 text-xs tracking-[0.2em] uppercase"
+            className="mt-10 inline-flex items-center justify-center gap-2 rounded-full bg-gold px-9 py-4 text-xs font-bold uppercase tracking-[0.2em] text-creamwarm border border-creamwarm/70 transition-all duration-200 hover:-translate-y-0.5 hover:bg-gold/90"
           >
             {bioConclusion.cta}
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </Button>
+          </BookingTrigger>
           <Image
             src="/images/ImageElements_meet_your_therapist.webp"
             alt=""

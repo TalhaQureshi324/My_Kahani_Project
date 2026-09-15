@@ -1,3 +1,4 @@
+import BookingTrigger from "@/components/booking/BookingTrigger";
 import { pricing } from "@/lib/content";
 
 /**
@@ -53,13 +54,12 @@ export default function Pricing() {
             {pricing.accessibilityTextPost}
           </p>
 
-          <a
-            href="#contact"
+          <BookingTrigger
             aria-label="Schedule an initial counseling session"
             className="mt-8 inline-flex items-center justify-center rounded-full border border-white/40 bg-black px-8 py-3 font-sans text-[max(13px,1.2vw)] text-white transition-colors hover:bg-night-2"
           >
             {pricing.ctaLabel}
-          </a>
+          </BookingTrigger>
         </div>
       </div>
     </section>

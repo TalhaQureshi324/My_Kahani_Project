@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { ChevronDown, Menu } from "lucide-react";
+import BookingTrigger from "@/components/booking/BookingTrigger";
 import { cta, mainNav } from "./nav-config";
 import { site } from "@/lib/site";
 import MobileDrawer from "./MobileDrawer";
@@ -94,13 +95,12 @@ export default function Navbar() {
 
           {/* CTA + hamburger */}
           <div className="flex items-center gap-3">
-            <Link
-              href={cta.href}
+            <BookingTrigger
               aria-label="Book a therapy consultation with True Self Me"
               className="hidden rounded-full bg-terracotta px-5 py-2.5 text-sm font-bold tracking-wide text-cream shadow-[0_6px_20px_-8px_rgba(152,67,31,0.7)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-terracotta-deep sm:inline-flex"
             >
               {cta.label}
-            </Link>
+            </BookingTrigger>
             <button
               type="button"
               onClick={() => setDrawerOpen(true)}

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight, ChevronRight, X } from "lucide-react";
 import { BlockMark } from "@/components/ui/doodles";
+import BookingTrigger from "@/components/booking/BookingTrigger";
 import { cta, mainNav, type NavItem } from "./nav-config";
 import { site } from "@/lib/site";
 
@@ -160,15 +161,14 @@ export default function MobileDrawer({
 
         {/* Footer CTA */}
         <div className="shrink-0 border-t border-ink/10 p-5">
-          <Link
-            href={cta.href}
-            onClick={onClose}
+          <BookingTrigger
             aria-label="Book a therapy consultation with True Self Me"
+            onClick={onClose}
             className="flex w-full items-center justify-center gap-2 rounded-full bg-terracotta px-6 py-3.5 text-sm font-bold tracking-wide text-cream transition-colors hover:bg-terracotta-deep"
           >
             {cta.label}
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </Link>
+          </BookingTrigger>
           <p className="mt-3 text-center text-xs text-ink-soft">
             {site.virtual}
           </p>

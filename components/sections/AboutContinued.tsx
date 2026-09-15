@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/primitives";
+import BookingTrigger from "@/components/booking/BookingTrigger";
 import { aboutContinued } from "@/lib/content";
 
 /**
@@ -54,14 +54,13 @@ export default function AboutContinued() {
               <p key={p.slice(0, 24)}>{p}</p>
             ))}
           </div>
-          <Button
-            href="/#contact"
+          <BookingTrigger
             aria-label="Schedule an initial counseling session"
-            className="mt-9 self-start"
+            className="mt-9 inline-flex items-center gap-2 self-start rounded-full bg-terracotta px-6 py-3 text-sm font-bold tracking-wide text-cream shadow-[0_6px_20px_-8px_rgba(152,67,31,0.7)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-terracotta-deep"
           >
             {aboutContinued.cta}
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </Button>
+          </BookingTrigger>
         </div>
       </div>
     </section>
