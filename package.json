@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "booking:check": "node scripts/booking-check.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",

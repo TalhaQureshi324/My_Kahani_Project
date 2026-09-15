@@ -52,8 +52,16 @@ only ever receives an opaque token. To enable it:
    AUTHORIZENET_ENVIRONMENT=SANDBOX
    ```
 
-4. Restart the dev server. Test card for the sandbox: `4242 4242 4242 4242`
-   (or `4007000000027`), any future MM/YY, any CVV.
+4. Restart the dev server, then self-check your credentials:
+
+   ```bash
+   npm run booking:check
+   ```
+
+   ✅ "Credentials are VALID" → you're ready to book with the sandbox test
+   card `4242 4242 4242 4242` (or `4007000000027`), any future MM/YY, any CVV.
+   ❌ "Credentials are INVALID (E00007)" → re-check the API Login ID /
+   Transaction Key you pasted.
 
 For production, switch the credentials to your live gateway and set
 `AUTHORIZENET_ENVIRONMENT=PRODUCTION`. The deployment must run over HTTPS
