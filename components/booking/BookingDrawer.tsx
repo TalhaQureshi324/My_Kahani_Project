@@ -18,6 +18,13 @@ export default function BookingDrawer({
   onClose: () => void;
 }) {
   const [flowKey, setFlowKey] = useState(0);
+  const [mounted, setMounted] = useState(false);
+
+  // Lazy-mount the flow on first open so closed pages don't carry a
+  // hidden calendar; it stays mounted afterwards for the exit animation.
+  useEffect(() => {
+    if (open) setMounted(true);
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -84,7 +91,7 @@ export default function BookingDrawer({
         </div>
 
         <div className="flex-1 px-6 pb-10 pt-6 sm:px-8">
-          <BookingFlow key={flowKey} />
+          {mounted ? <BookingFlow key={flowKey} /> : null}
         </div>
       </div>
     </div>
