@@ -32,6 +32,33 @@ npm run dev      # http://localhost:3000
 npm run build    # production build
 ```
 
+## Card-on-file booking (Authorize.Net)
+
+The `/book` page and the homepage booking drawer vault a card on file via
+Authorize.net Accept.js — the card is tokenized in the browser and our server
+only ever receives an opaque token. To enable it:
+
+1. Create a free developer sandbox at https://developer.authorize.net
+   (sign up, activate via the confirmation email, log in).
+2. Under **Account → API Credentials & Keys**, generate your **API Login ID**,
+   **Transaction Key**, and **Public Client Key**.
+3. Copy `.env.example` to `.env.local` and fill in:
+
+   ```
+   AUTHORIZENET_API_LOGIN_ID=<API Login ID>
+   AUTHORIZENET_TRANSACTION_KEY=<Transaction Key>
+   NEXT_PUBLIC_AUTHORIZENET_API_LOGIN_ID=<same API Login ID>
+   NEXT_PUBLIC_AUTHORIZENET_CLIENT_KEY=<Public Client Key>
+   AUTHORIZENET_ENVIRONMENT=SANDBOX
+   ```
+
+4. Restart the dev server. Test card for the sandbox: `4242 4242 4242 4242`
+   (or `4007000000027`), any future MM/YY, any CVV.
+
+For production, switch the credentials to your live gateway and set
+`AUTHORIZENET_ENVIRONMENT=PRODUCTION`. The deployment must run over HTTPS
+(Accept.js requires it — Vercel provides this automatically).
+
 ## Replacing the placeholder content
 
 **All copy in this project is original placeholder text.** Nothing was
