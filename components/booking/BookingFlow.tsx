@@ -6,10 +6,17 @@ import {
   ArrowRight,
   CalendarDays,
   CheckCircle2,
+  Clock,
   CreditCard,
   Lock,
   UserRound,
 } from "lucide-react";
+import CustomScheduler, {
+  formatDateLong,
+  formatTimeIn,
+  slotInstant,
+  type SlotSelection,
+} from "./CustomScheduler";
 
 /**
  * The booking interaction shell: a four-stage state machine with a
@@ -31,12 +38,16 @@ const inputClass =
 
 export default function BookingFlow() {
   const [stage, setStage] = useState(1);
+  const [slot, setSlot] = useState<SlotSelection>({ dateISO: "", slotCSTHour: null });
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
 
-  const canAdvance =
-    stage !== 2 || (name.trim() !== "" && /.+@.+\..+/.test(email) && mobile.trim() !== "");
+  const stage1Done = slot.slotCSTHour !== null;
+  const stage2Done =
+    name.trim() !== "" && /.+@.+\..+/.test(email) && mobile.trim() !== "";
+
+  const canAdvance = stage === 1 ? stage1Done : stage === 2 ? stage2Done : true;
 
   function next() {
     if (!canAdvance) return;
@@ -88,9 +99,17 @@ export default function BookingFlow() {
           <p className="mt-3 text-sm font-semibold text-[#1A1A1A]">
             Initial consultation — 50 minutes
           </p>
-          <p className="mt-1 text-sm text-[#1A1A1A]/60">
-            Held virtually, nationwide.
-          </p>
+          {slot.slotCSTHour !== null ? (
+            <p className="mt-1 inline-flex items-center gap-1.5 text-sm text-[#1A1A1A]/75">
+              <Clock className="h-3.5 w-3.5 text-[#A8532B]" aria-hidden="true" />
+              {formatDateLong(slot.dateISO)} ·{" "}
+              {formatTimeIn("America/Chicago", slotInstant(slot.dateISO, slot.slotCSTHour))} CST
+            </p>
+          ) : (
+            <p className="mt-1 text-sm text-[#1A1A1A]/60">
+              Held virtually, nationwide.
+            </p>
+          )}
           <p className="mt-3 inline-flex items-center gap-2 rounded-full bg-[#5D1F13]/[0.06] px-3 py-1 text-xs font-bold text-[#5D1F13]">
             <Lock className="h-3 w-3" aria-hidden="true" />
             $0 due today
@@ -112,15 +131,8 @@ export default function BookingFlow() {
               title="Pick your time"
               sub="Choose a date and an open slot — all times shown in Central Time (CST), or your local timezone."
             />
-            <div className="flex flex-1 flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-black/[0.12] px-6 py-10 text-center">
-              <CalendarDays className="h-8 w-8 text-[#A8532B]" aria-hidden="true" />
-              <p className="text-sm font-semibold text-[#1A1A1A]">
-                Native calendar &amp; slot matrix
-              </p>
-              <p className="max-w-sm text-sm text-[#1A1A1A]/60">
-                Live availability arrives in the next milestone of the booking
-                build — the shell is in place and ready to receive it.
-              </p>
+            <div className="mt-6">
+              <CustomScheduler value={slot} onChange={setSlot} onContinue={next} />
             </div>
           </div>
         )}
@@ -216,7 +228,7 @@ export default function BookingFlow() {
           </div>
         )}
 
-        {/* Navigation */}
+        {/* Navigation — stage 1's Continue lives inside the scheduler */}
         <div className="mt-8 flex items-center justify-between border-t border-black/[0.08] pt-6">
           <button
             type="button"
@@ -227,12 +239,11 @@ export default function BookingFlow() {
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
             Back
           </button>
-          {stage < 4 && (
+          {stage >= 2 && stage < 4 && (
             <button
               type="button"
               onClick={next}
               disabled={!canAdvance}
-              aria-label={stage === 3 ? "Review and confirm booking" : undefined}
               className="inline-flex items-center gap-2 rounded-full bg-[#5D1F13] px-6 py-3 text-sm font-bold text-[#F5EFE6] shadow-[0_6px_20px_-8px_rgba(93,31,19,0.7)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#4A1811] disabled:pointer-events-none disabled:opacity-40"
             >
               {stage === 3 ? "Confirm booking" : "Continue"}
