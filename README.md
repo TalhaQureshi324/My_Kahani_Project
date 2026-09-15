@@ -63,8 +63,9 @@ only ever receives an opaque token. To enable it:
    ❌ "Credentials are INVALID (E00007)" → re-check the API Login ID /
    Transaction Key you pasted.
 
-For production, switch the credentials to your live gateway and set
-`AUTHORIZENET_ENVIRONMENT=PRODUCTION`. The deployment must run over HTTPS
+For production, add the same five variables in **Vercel → Project → Settings
+→ Environment Variables**, switch the credentials to your live gateway, and
+set `AUTHORIZENET_ENVIRONMENT=PRODUCTION`. The deployment must run over HTTPS
 (Accept.js requires it — Vercel provides this automatically).
 
 ## Replacing the placeholder content
