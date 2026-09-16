@@ -50,3 +50,4 @@ next-env.d.ts
 # client feedback documents (local only, not for GitHub)
 *.pptx
 .pptx_extract/
+.verify_*.mjs
