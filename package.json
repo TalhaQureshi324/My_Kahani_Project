@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "booking:check": "node scripts/booking-check.mjs"
+    "booking:check": "node scripts/booking-check.mjs",
+    "test": "node --experimental-strip-types --test tests/attribution.test.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",

@@ -4,7 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/navbar/Navbar";
 import Footer from "@/components/footer/Footer";
 import BookingProvider from "@/components/booking/BookingProvider";
-import GclidTracker from "@/components/tracking/GclidTracker";
+import AttributionCapture from "@/components/tracking/AttributionCapture";
 import { site } from "@/lib/site";
 
 const display = Fraunces({
@@ -105,7 +105,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${display.variable} ${sans.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-cream font-sans text-ink">
-        <GclidTracker />
+        <AttributionCapture />
         <BookingProvider>
           <Navbar />
           <main id="top" className="flex-1">

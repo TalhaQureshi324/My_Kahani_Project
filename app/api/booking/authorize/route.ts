@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { uploadOfflineConversion } from "@/lib/adsConversion";
+import { readAttributionFromCookieHeader } from "@/lib/attribution";
 
 /**
  * Booking vaulting endpoint. Receives the Accept.js opaque card token
@@ -63,6 +64,19 @@ export async function POST(request: Request) {
   }
 
   const { fullName, email, phone, gclid, opaqueToken, slotDetails } = body ?? {};
+
+  // First-party attribution — read from cookies set at the landing visit
+  // (survives landing → scheduler → card entry → confirmation).
+  const { firstTouch, lastTouch } = readAttributionFromCookieHeader(
+    request.headers.get("cookie"),
+  );
+  const attribution = {
+    first_touch: firstTouch,
+    last_touch: lastTouch,
+    // client-supplied gclid as fallback (e.g. cookies blocked)
+    gclid_fallback: gclid ?? null,
+  };
+
   if (!fullName || !email || !opaqueToken?.dataDescriptor || !opaqueToken?.dataValue) {
     return NextResponse.json(
       { success: false, error: "Missing booking details or card token." },
@@ -165,7 +179,19 @@ export async function POST(request: Request) {
     email,
     phone,
     slotDetails: slotDetails ?? null,
+    // full marketing attribution from the landing-visit cookies
     gclid: gclid ?? null,
+    gbraid: null,
+    wbraid: null,
+    utm_source: firstTouch?.utm_source ?? lastTouch?.utm_source ?? null,
+    utm_medium: firstTouch?.utm_medium ?? lastTouch?.utm_medium ?? null,
+    utm_campaign: firstTouch?.utm_campaign ?? lastTouch?.utm_campaign ?? null,
+    utm_term: firstTouch?.utm_term ?? lastTouch?.utm_term ?? null,
+    utm_content: firstTouch?.utm_content ?? lastTouch?.utm_content ?? null,
+    landing_page: firstTouch?.landing_page ?? null,
+    referrer: firstTouch?.referrer ?? null,
+    attribution_first_touch: firstTouch,
+    attribution_last_touch: lastTouch,
     createdAt: new Date().toISOString(),
   };
   console.log("[booking] appointment created:", JSON.stringify(appointment));
