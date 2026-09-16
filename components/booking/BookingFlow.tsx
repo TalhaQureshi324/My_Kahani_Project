@@ -8,19 +8,17 @@ import CustomScheduler, {
   type SlotOption,
 } from "./CustomScheduler";
 import BookingConfirmation from "./BookingConfirmation";
+import CardOnFileStep from "./CardOnFileStep";
 
 /**
  * The booking interaction shell: a four-stage state machine with a
  * persistent stepper (left) and a dynamic stage container (right).
  * Stage 1 — live availability (in-house scheduler).
  * Stage 2 — streamlined intake (first/last name, email, phone).
- * Stage 3 — review & confirm (converts the hold into a confirmed
- *           booking via the database-checked update).
+ * Stage 3 — card-on-file consent + Authorize.net-hosted payment
+ *           profile form (server-verified), which also performs the
+ *           database-checked hold → confirmed conversion.
  * Stage 4 — confirmation + .ics calendar download.
- *
- * Card-on-file (Authorize.net Accept.js) plugs into the review stage
- * in the payments milestone; IntakeAndPayment.tsx is already prepared
- * for it.
  */
 
 const STAGES = [
@@ -74,44 +72,6 @@ export default function BookingFlow() {
         expires_at: data.hold.expires_at,
       });
       setStage(2);
-    } catch {
-      setHoldError("Network error. Please try again.");
-    } finally {
-      setContinuing(false);
-    }
-  }
-
-  /** Converts the hold into a confirmed booking with client details. */
-  async function confirmBooking() {
-    if (!hold || !detailsValid) return;
-    setHoldError(null);
-    setContinuing(true);
-    try {
-      const res = await fetch("/api/booking/confirm", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          booking_id: hold.booking_id,
-          first_name: fields.firstName,
-          last_name: fields.lastName,
-          email: fields.email,
-          phone: fields.phone,
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok || !data.success) {
-        // Expired/confirmed holds send the visitor back to stage 1.
-        setHoldError(
-          data.error ??
-            "Could not confirm your booking. Please choose a time again.",
-        );
-        setStage(1);
-        setSelected(null);
-        setHold(null);
-        return;
-      }
-      setBookingId(data.booking_id);
-      setStage(4);
     } catch {
       setHoldError("Network error. Please try again.");
     } finally {
@@ -369,15 +329,24 @@ export default function BookingFlow() {
               </p>
             </div>
 
-            <button
-              type="button"
-              onClick={confirmBooking}
-              disabled={continuing}
-              className="mt-8 inline-flex items-center gap-2 self-start rounded-full bg-[#5D1F13] px-8 py-3.5 text-sm font-bold text-[#F5EFE6] shadow-[0_6px_20px_-8px_rgba(93,31,19,0.7)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#4A1811] disabled:pointer-events-none disabled:opacity-50"
-            >
-              <Lock className="h-4 w-4" aria-hidden="true" />
-              {continuing ? "Confirming…" : "Confirm booking"}
-            </button>
+            <CardOnFileStep
+              bookingId={hold!.booking_id}
+              holdExpiresAt={hold!.expires_at}
+              slot={{
+                dateISO: chicagoDateOf(selected!.start),
+                slotCSTHour: chicagoHour(selected!.start),
+              }}
+              onConfirmed={() => setStage(4)}
+              onExpired={() => {
+                setHoldError(
+                  "Your slot hold has expired. Please choose a new time to continue.",
+                );
+                setStage(1);
+                setSelected(null);
+                setHold(null);
+              }}
+              onBack={() => setStage(2)}
+            />
           </div>
         )}
 
