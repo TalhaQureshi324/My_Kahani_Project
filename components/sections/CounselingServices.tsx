@@ -84,7 +84,7 @@ export default function CounselingServices() {
         {/* CTA — tight beneath the bottom row */}
         <div className="mt-10 text-center md:mt-12">
           <BookingTrigger
-            aria-label="Schedule an initial counseling session"
+            aria-label="Schedule an initial coaching session"
             className="inline-flex h-[65px] w-[302px] items-center justify-center rounded-full border border-[rgb(243,237,229)] bg-[#5C6430] px-8 text-[18px] text-[rgb(243,237,229)] transition-colors hover:bg-[#4E5528]"
           >
             {ctaLabel}

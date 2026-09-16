@@ -160,9 +160,9 @@ export default function TherapyApproach() {
 
       {/* Mobile <768px: stacked fluid layout, same typography */}
       <div className="relative z-10 mx-auto flex w-full max-w-[calc(1500px+8vw)] flex-col px-[4vw] pb-16 pt-6 md:hidden">
-        <h2 className="font-display text-3xl font-normal leading-[1.2] tracking-normal text-cream md:text-5xl lg:text-6xl">
+        <p className="font-display text-3xl font-normal leading-[1.2] tracking-normal text-cream md:text-5xl lg:text-6xl">
           {approaches.bannerTitle}
-        </h2>
+        </p>
         <p className={`${bodyText} mt-6`}>{approaches.intro}</p>
         <div className="mt-8 flex flex-col gap-6">
           {approaches.items.map((item) => (

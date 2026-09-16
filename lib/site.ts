@@ -5,7 +5,7 @@
 export const site = {
   url: "https://mykahaniproject.vercel.app",
   name: "True Self Me",
-  tagline: "Therapy & counseling",
+  tagline: "Coaching & mentorship",
   city: "Austin, Texas",
   addressLines: ["123 Placeholder St, Suite 4", "Austin, TX 78704"],
   phone: "(512) 555-0143",

@@ -4,7 +4,7 @@ import { GeometricPattern } from "@/components/ui/doodles";
 import { therapist } from "@/lib/content";
 
 /**
- * Section 4 — Meet Your Therapist: rust compound grid —
+ * Section 4 — Meet Fahd: rust compound grid —
  * [patterned mustard strip | editorial bio | inset portrait].
  */
 export default function MeetTherapist() {
@@ -53,7 +53,7 @@ export default function MeetTherapist() {
           <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl shadow-[0_30px_60px_-25px_rgba(0,0,0,0.55)]">
             <Image
               src="/images/THERAPIST.jpg"
-              alt="Fahd Alam, therapeutic counsellor at True Self Me in Austin, seated in the therapy room"
+              alt="Fahd Alam, coach and founder of True Self Me, seated for a conversation"
               fill
               sizes="(min-width: 1024px) 30vw, 80vw"
               className="object-cover"

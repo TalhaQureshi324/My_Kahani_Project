@@ -24,10 +24,10 @@ export default function Footer() {
               className="h-28 w-auto md:h-32"
             />
             <p className="mt-5 text-sm font-bold tracking-wide text-cream">
-              True Self Me — Therapy &amp; Counseling
+              True Self Me — Coaching &amp; Mentorship
             </p>
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-cream/70">
-              Counseling and community for every chapter of your story —
+              Coaching and community for every chapter of your story —
               virtual sessions across the United States.
             </p>
             <ul className="mt-6 space-y-3 text-sm text-cream/70">
@@ -53,7 +53,7 @@ export default function Footer() {
               </li>
             </ul>
             <BookingTrigger
-              aria-label="Book a therapy consultation with True Self Me"
+              aria-label="Book a coaching consultation with True Self Me"
               className="mt-6 inline-flex items-center gap-2 rounded-full border border-cream/25 px-5 py-2.5 text-sm font-bold transition-colors hover:border-terracotta-tint hover:text-terracotta-tint"
             >
               Book a consultation
@@ -101,7 +101,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link href="/#services" className="text-cream/75 transition-colors hover:text-terracotta-tint">
-                  Group therapy cohorts
+                  Group coaching cohorts
                 </Link>
               </li>
               <li>
@@ -141,14 +141,15 @@ export default function Footer() {
           </p>
         </div>
 
-        {/* Privacy / HIPAA notice */}
+        {/* Non-clinical services + privacy notice */}
         <p className="mt-6 border-t border-cream/10 pt-6 text-center text-xs leading-relaxed text-cream/40 sm:text-left">
-          This website is for general information only and is not a substitute
-          for professional care. True Self Me protects the privacy and
-          confidentiality of client health information in accordance with
-          applicable HIPAA and US privacy standards. Please do not send
-          sensitive personal or health details through this site&apos;s forms —
-          share them directly with your therapist in a secure session.
+          Services offered through True Self Me are non-clinical coaching and
+          personal development services. They are not psychotherapy,
+          mental-health diagnosis or medical treatment. This website is for
+          general information only. Your contact details are treated as
+          confidential — please do not send sensitive personal details through
+          this site&apos;s forms; coaching conversations happen directly with
+          your coach.
         </p>
       </div>
     </footer>

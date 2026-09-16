@@ -55,7 +55,7 @@ export default function AboutContinued() {
             ))}
           </div>
           <BookingTrigger
-            aria-label="Schedule an initial counseling session"
+            aria-label="Schedule an initial coaching session"
             className="mt-9 inline-flex items-center gap-2 self-start rounded-full bg-terracotta px-6 py-3 text-sm font-bold tracking-wide text-cream shadow-[0_6px_20px_-8px_rgba(152,67,31,0.7)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-terracotta-deep"
           >
             {aboutContinued.cta}

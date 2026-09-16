@@ -169,80 +169,6 @@ export default function ContactSection() {
               />
             </div>
 
-            {/* D. Message */}
-            <div>
-              <label htmlFor="message" className={`${labelClass} mb-2`}>
-                {contact.messageLabel}
-                <Required />
-              </label>
-              <textarea
-                id="message"
-                name="message"
-                required
-                className={`${inputClass} h-32 resize-y py-3`}
-              />
-            </div>
-
-            {/* E. Service checkboxes */}
-            <div>
-              <span className={labelClass}>
-                {contact.servicesLabel}
-                <Required />
-              </span>
-              <div className="mt-3 space-y-3">
-                {contact.serviceOptions.map((option) => (
-                  <label
-                    key={option}
-                    className="flex cursor-pointer items-center gap-3 text-[#F3EDE5]"
-                  >
-                    <input
-                      type="checkbox"
-                      name="services"
-                      value={option}
-                      className="h-5 w-5 shrink-0 accent-[#F3EDE5]"
-                    />
-                    <span>{option}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* F. Referral source dropdown */}
-            <div>
-              <label htmlFor="referral" className={`${labelClass} mb-2`}>
-                {contact.referralLabel}
-                <Required />
-              </label>
-              <div className="relative">
-                <select
-                  id="referral"
-                  name="referral"
-                  required
-                  defaultValue=""
-                  className={`${inputClass} appearance-none pr-10 text-stone-700`}
-                >
-                  <option value="">{contact.referralPlaceholder}</option>
-                  {contact.referralOptions.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-                <svg
-                  aria-hidden="true"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-600"
-                >
-                  <path d="M5 7.5 10 12.5 15 7.5" />
-                </svg>
-              </div>
-            </div>
-
             {/* Submit CTA */}
             <button
               type="submit"
@@ -261,10 +187,18 @@ export default function ContactSection() {
           )}
 
           {/* Crisis / emergency notice (YMYL) */}
+          {/* Non-clinical positioning statement */}
+          <p className="mt-8 text-center text-xs leading-relaxed text-[#F3EDE5]/60 md:text-left">
+            Services offered through True Self Me are non-clinical coaching
+            and personal development services. They are not psychotherapy,
+            mental-health diagnosis or medical treatment.
+          </p>
+
+          {/* Crisis / emergency notice — kept separate from coaching info */}
           <p className="mt-4 text-center text-xs text-[#F3EDE5]/80 md:text-left">
-            Please note: This form is not monitored 24/7. If you are
-            experiencing a mental health emergency, please dial 988 or visit
-            your nearest emergency room.
+            Please note: True Self Me is not an emergency service and this
+            form is not monitored 24/7. If you are in crisis, please dial 988
+            or visit your nearest emergency room.
           </p>
         </div>
       </div>

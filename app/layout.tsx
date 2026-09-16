@@ -25,20 +25,20 @@ const sans = DM_Sans({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: "True Self Me | Virtual Therapy & Counseling Across the US",
+    default: "True Self Me | Coaching & Mentorship Across the US",
     template: "%s | True Self Me",
   },
   description:
-    "Grounded, authentic virtual therapy for individuals, teens, couples, and dads across the United States — support to find steadiness, clarity, and purpose.",
+    "Grounded, authentic coaching and mentorship for individuals, couples, and dads across the United States — support to find steadiness, clarity, and purpose.",
   keywords: [
-    "Virtual Therapy",
-    "Online Therapy",
-    "Therapy for Dads",
-    "Men's Mental Health",
-    "Couples Therapy",
-    "Individual Counseling",
+    "Personal Coaching",
+    "Professional Coaching",
+    "Coaching for Dads",
+    "Men's Coaching",
+    "Relationship & Couples Coaching",
+    "Career Coaching",
+    "Life Transition Coaching",
     "The Dad Block",
-    "Sliding Scale Therapy",
     "True Self Me",
   ],
   authors: [{ name: "True Self Me" }],
@@ -65,22 +65,22 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: site.url,
     siteName: "True Self Me",
-    title: "True Self Me | Virtual Therapy & Counseling Across the US",
+    title: "True Self Me | Coaching & Mentorship Across the US",
     description:
-      "A grounded, pressure-free space for individual, couples, and group therapy — virtual sessions across the United States.",
+      "A grounded, pressure-free space for personal and professional coaching — virtual sessions across the United States.",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "True Self Me - Therapy & Counseling",
+        alt: "True Self Me - Coaching & Mentorship",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "True Self Me | Therapy & Counseling",
-    description: "Virtual therapy for individuals, couples, and dads across the United States.",
+    title: "True Self Me | Coaching & Mentorship",
+    description: "Coaching for individuals, couples, and dads across the United States.",
     images: ["/og-image.jpg"],
   },
   other: {

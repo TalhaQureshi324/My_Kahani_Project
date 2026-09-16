@@ -69,7 +69,7 @@ export default function BookingConfirmation({
             Practitioner
           </span>
           <span className="font-semibold text-[#1A1A1A]">
-            Fahd Alam, Therapeutic Counsellor
+            Fahd Alam — Coach &amp; Mentor
           </span>
         </p>
         <p className="flex items-center justify-between gap-4">

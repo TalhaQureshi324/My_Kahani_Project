@@ -17,23 +17,16 @@ import TheDadBlockSection from "@/components/sections/TheDadBlockSection";
 import ContactSection from "@/components/sections/ContactSection";
 import { site } from "@/lib/site";
 
-const medicalBusinessSchema = {
+const professionalServiceSchema = {
   "@context": "https://schema.org",
-  "@type": "MedicalBusiness",
-  name: "True Self Me - Therapy & Counseling",
+  "@type": "ProfessionalService",
+  name: "True Self Me - Coaching & Mentorship",
   description:
-    "Professional virtual therapy and counseling services for individuals, couples, families, and community support groups across the United States.",
+    "Non-clinical coaching and mentorship services for individuals, couples, fathers, and community groups across the United States.",
   image: `${site.url}/og-image.jpg`,
   url: site.url,
   telephone: "+1-512-555-0143",
   priceRange: "$30 - $185",
-  medicalSpecialty: [
-    "Psychotherapy",
-    "Counseling",
-    "Individual Therapy",
-    "Couples Therapy",
-    "Family Therapy",
-  ],
   address: {
     "@type": "PostalAddress",
     addressLocality: "Austin",
@@ -52,7 +45,7 @@ const medicalBusinessSchema = {
   founder: {
     "@type": "Person",
     name: "Fahd Alam",
-    jobTitle: "Therapeutic Counsellor (CPCAB-trained)",
+    jobTitle: "Founder, Coach & Mentor",
   },
   sameAs: ["https://www.instagram.com", "https://www.linkedin.com"],
   openingHoursSpecification: [
@@ -71,18 +64,18 @@ const faqSchema = {
   mainEntity: [
     {
       "@type": "Question",
-      name: "How much do therapy sessions cost at True Self Me?",
+      name: "How much do coaching sessions cost at True Self Me?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Individual therapy is $125 per session, couples and family therapy are $185 per session, and group therapy ranges from $30 to $60. Limited sliding-scale spots are also available.",
+        text: "Individual coaching is $125 per session, couples and family coaching are $185 per session, and group coaching ranges from $30 to $60. Limited sliding-scale spots are also available.",
       },
     },
     {
       "@type": "Question",
-      name: "Do you offer online therapy?",
+      name: "Do you offer online coaching?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Yes — True Self Me is a fully virtual practice providing secure telehealth appointments to clients across the United States.",
+        text: "Yes — True Self Me is a fully virtual coaching practice providing secure video sessions to clients across the United States.",
       },
     },
     {
@@ -101,7 +94,7 @@ export default function Home() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(medicalBusinessSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(professionalServiceSchema) }}
       />
       <script
         type="application/ld+json"
