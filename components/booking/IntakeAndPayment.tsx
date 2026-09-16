@@ -185,7 +185,7 @@ export default function IntakeAndPayment({
         </span>
         <span className="inline-flex items-center gap-2 text-sm font-semibold text-[#1A1A1A]">
           <Clock className="h-4 w-4 text-[#A8532B]" aria-hidden="true" />
-          {formatTimeIn("America/Chicago", slotInstant(slot.dateISO, slot.slotCSTHour))} CST
+          {formatTimeIn(slotInstant(slot.dateISO, slot.slotCSTHour))} CST
         </span>
         <span className="text-sm text-[#1A1A1A]/70">50 mins</span>
         <span className="inline-flex items-center gap-2 text-sm text-[#1A1A1A]/70">

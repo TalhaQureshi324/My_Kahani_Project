@@ -1,38 +1,134 @@
 "use client";
 
 import { useState } from "react";
-import { CheckCircle2, Clock, Lock } from "lucide-react";
+import { ArrowRight, CalendarDays, CheckCircle2, Clock, Lock } from "lucide-react";
 import CustomScheduler, {
   formatDateLong,
   formatTimeIn,
-  slotInstant,
+  type SlotOption,
 } from "./CustomScheduler";
-import IntakeAndPayment from "./IntakeAndPayment";
 import BookingConfirmation from "./BookingConfirmation";
 
 /**
  * The booking interaction shell: a four-stage state machine with a
  * persistent stepper (left) and a dynamic stage container (right).
- * Stage 1 is the in-house scheduler; stages 2–3 are the streamlined
- * intake with Authorize.net Accept.js card-on-file vaulting.
+ * Stage 1 — live availability (in-house scheduler).
+ * Stage 2 — streamlined intake (first/last name, email, phone).
+ * Stage 3 — review & confirm (converts the hold into a confirmed
+ *           booking via the database-checked update).
+ * Stage 4 — confirmation + .ics calendar download.
+ *
+ * Card-on-file (Authorize.net Accept.js) plugs into the review stage
+ * in the payments milestone; IntakeAndPayment.tsx is already prepared
+ * for it.
  */
 
 const STAGES = [
   { id: 1, label: "Select Date & Time" },
   { id: 2, label: "Your Details" },
-  { id: 3, label: "Card on File" },
+  { id: 3, label: "Review & Confirm" },
   { id: 4, label: "Confirmation" },
 ] as const;
 
+type Hold = { booking_id: string; expires_at: string };
+
 export default function BookingFlow() {
   const [stage, setStage] = useState<1 | 2 | 3 | 4>(1);
-  const [slot, setSlot] = useState({ dateISO: "", slotCSTHour: null as number | null });
-  const [fields, setFields] = useState({ name: "", email: "", mobile: "" });
+  const [selected, setSelected] = useState<SlotOption | null>(null);
+  const [hold, setHold] = useState<Hold | null>(null);
+  const [holdError, setHoldError] = useState<string | null>(null);
+  const [continuing, setContinuing] = useState(false);
+  const [fields, setFields] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+  });
   const [bookingId, setBookingId] = useState<string | null>(null);
+
+  const detailsValid =
+    fields.firstName.trim() !== "" &&
+    fields.lastName.trim() !== "" &&
+    /.+@.+\..+/.test(fields.email) &&
+    fields.phone.trim() !== "";
+
+  /** Creates the 10-minute database hold for the chosen slot. */
+  async function createHold(slot: SlotOption) {
+    setHoldError(null);
+    setContinuing(true);
+    try {
+      const res = await fetch("/api/booking/hold", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slot_start: slot.start, slot_end: slot.end }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        setHoldError(
+          data.error ?? "Could not reserve that time. Please choose another slot.",
+        );
+        return;
+      }
+      setHold({
+        booking_id: data.booking_id,
+        expires_at: data.hold.expires_at,
+      });
+      setStage(2);
+    } catch {
+      setHoldError("Network error. Please try again.");
+    } finally {
+      setContinuing(false);
+    }
+  }
+
+  /** Converts the hold into a confirmed booking with client details. */
+  async function confirmBooking() {
+    if (!hold || !detailsValid) return;
+    setHoldError(null);
+    setContinuing(true);
+    try {
+      const res = await fetch("/api/booking/confirm", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          booking_id: hold.booking_id,
+          first_name: fields.firstName,
+          last_name: fields.lastName,
+          email: fields.email,
+          phone: fields.phone,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        // Expired/confirmed holds send the visitor back to stage 1.
+        setHoldError(
+          data.error ??
+            "Could not confirm your booking. Please choose a time again.",
+        );
+        setStage(1);
+        setSelected(null);
+        setHold(null);
+        return;
+      }
+      setBookingId(data.booking_id);
+      setStage(4);
+    } catch {
+      setHoldError("Network error. Please try again.");
+    } finally {
+      setContinuing(false);
+    }
+  }
+
+  const slotLabel =
+    selected !== null
+      ? `${formatDateLong(chicagoDateOf(selected.start))} at ${formatTimeIn(
+          selected.start,
+        )} your time`
+      : "";
 
   return (
     <div className="grid gap-10 md:grid-cols-[260px_minmax(0,1fr)] md:gap-12">
-      {/* Left rail — stepper, session summary, cancellation terms */}
+      {/* Left rail — stepper, session summary, hold status, terms */}
       <aside className="space-y-8">
         <ol className="space-y-1">
           {STAGES.map(({ id, label }) => {
@@ -74,11 +170,10 @@ export default function BookingFlow() {
           <p className="mt-3 text-sm font-semibold text-[#1A1A1A]">
             Initial consultation — 50 minutes
           </p>
-          {slot.slotCSTHour !== null ? (
+          {selected ? (
             <p className="mt-1 inline-flex items-center gap-1.5 text-sm text-[#1A1A1A]/75">
-              <Clock className="h-3.5 w-3.5 text-[#A8532B]" aria-hidden="true" />
-              {formatDateLong(slot.dateISO)} ·{" "}
-              {formatTimeIn("America/Chicago", slotInstant(slot.dateISO, slot.slotCSTHour))} CST
+              <CalendarDays className="h-3.5 w-3.5 text-[#A8532B]" aria-hidden="true" />
+              {slotLabel}
             </p>
           ) : (
             <p className="mt-1 text-sm text-[#1A1A1A]/60">
@@ -92,9 +187,10 @@ export default function BookingFlow() {
         </div>
 
         <p className="border-t border-black/[0.08] pt-6 text-xs leading-relaxed text-[#1A1A1A]/55">
-          Free cancellation up to 24 hours before your session. Your card is
-          kept securely on file and is only charged for missed or late-cancelled
-          appointments, in line with our practice policy.
+          Free cancellation up to 24 hours before your session. Your card would
+          be kept securely on file (once payments are enabled) and only charged
+          for missed or late-cancelled appointments, in line with our practice
+          policy.
         </p>
       </aside>
 
@@ -109,36 +205,217 @@ export default function BookingFlow() {
             </p>
             <div className="mt-6">
               <CustomScheduler
-                value={slot}
-                onChange={setSlot}
-                onContinue={() => setStage(2)}
+                selected={selected}
+                onSelect={setSelected}
+                onContinue={() => selected && createHold(selected)}
+                continuing={continuing}
+                error={holdError}
               />
             </div>
           </div>
         )}
 
-        {(stage === 2 || stage === 3) && slot.slotCSTHour !== null && (
-          <IntakeAndPayment
-            stage={stage}
-            slot={{ dateISO: slot.dateISO, slotCSTHour: slot.slotCSTHour }}
-            fields={fields}
-            onFieldChange={setFields}
-            onDetailsNext={() => setStage(3)}
-            onBack={() => setStage(2)}
-            onBooked={(id) => {
-              setBookingId(id);
-              setStage(4);
-            }}
-          />
+        {stage === 2 && (
+          <div className="flex h-full flex-col">
+            <h3 className="font-display text-2xl text-[#5D1F13]">Your details</h3>
+            <p className="mt-2 max-w-md text-sm leading-relaxed text-[#1A1A1A]/60">
+              Just the essentials — we keep intake light for a first
+              conversation.
+            </p>
+            <div className="mt-6 space-y-5">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label
+                    htmlFor="bf-first"
+                    className="mb-2 block text-xs font-bold uppercase tracking-[0.16em] text-[#1A1A1A]/60"
+                  >
+                    First name
+                  </label>
+                  <input
+                    id="bf-first"
+                    type="text"
+                    autoComplete="given-name"
+                    required
+                    value={fields.firstName}
+                    onChange={(e) =>
+                      setFields((f) => ({ ...f, firstName: e.target.value }))
+                    }
+                    className="w-full rounded-md border border-black/10 bg-[#F3EDE5] px-4 py-3 text-[#1A1A1A] placeholder:text-[#1A1A1A]/40 focus:border-[#A8532B] focus:outline-none focus:ring-1 focus:ring-[#A8532B]"
+                    placeholder="First name"
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="bf-last"
+                    className="mb-2 block text-xs font-bold uppercase tracking-[0.16em] text-[#1A1A1A]/60"
+                  >
+                    Last name
+                  </label>
+                  <input
+                    id="bf-last"
+                    type="text"
+                    autoComplete="family-name"
+                    required
+                    value={fields.lastName}
+                    onChange={(e) =>
+                      setFields((f) => ({ ...f, lastName: e.target.value }))
+                    }
+                    className="w-full rounded-md border border-black/10 bg-[#F3EDE5] px-4 py-3 text-[#1A1A1A] placeholder:text-[#1A1A1A]/40 focus:border-[#A8532B] focus:outline-none focus:ring-1 focus:ring-[#A8532B]"
+                    placeholder="Last name"
+                  />
+                </div>
+              </div>
+              <div>
+                <label
+                  htmlFor="bf-email"
+                  className="mb-2 block text-xs font-bold uppercase tracking-[0.16em] text-[#1A1A1A]/60"
+                >
+                  Email
+                </label>
+                <input
+                  id="bf-email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  value={fields.email}
+                  onChange={(e) =>
+                    setFields((f) => ({ ...f, email: e.target.value }))
+                  }
+                  className="w-full rounded-md border border-black/10 bg-[#F3EDE5] px-4 py-3 text-[#1A1A1A] placeholder:text-[#1A1A1A]/40 focus:border-[#A8532B] focus:outline-none focus:ring-1 focus:ring-[#A8532B]"
+                  placeholder="you@example.com"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="bf-phone"
+                  className="mb-2 block text-xs font-bold uppercase tracking-[0.16em] text-[#1A1A1A]/60"
+                >
+                  Phone
+                </label>
+                <input
+                  id="bf-phone"
+                  type="tel"
+                  autoComplete="tel"
+                  required
+                  value={fields.phone}
+                  onChange={(e) =>
+                    setFields((f) => ({ ...f, phone: e.target.value }))
+                  }
+                  className="w-full rounded-md border border-black/10 bg-[#F3EDE5] px-4 py-3 text-[#1A1A1A] placeholder:text-[#1A1A1A]/40 focus:border-[#A8532B] focus:outline-none focus:ring-1 focus:ring-[#A8532B]"
+                  placeholder="(555) 555-0100"
+                />
+              </div>
+            </div>
+
+            <div className="mt-8 flex items-center justify-between border-t border-black/[0.08] pt-6">
+              <button
+                type="button"
+                onClick={() => setStage(1)}
+                className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-bold text-[#1A1A1A]/60 transition-colors hover:text-[#1A1A1A]"
+              >
+                Back
+              </button>
+              <button
+                type="button"
+                onClick={() => setStage(3)}
+                disabled={!detailsValid}
+                className="inline-flex items-center gap-2 rounded-full bg-[#5D1F13] px-6 py-3 text-sm font-bold text-[#F5EFE6] shadow-[0_6px_20px_-8px_rgba(93,31,19,0.7)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#4A1811] disabled:pointer-events-none disabled:opacity-40"
+              >
+                Review & Confirm
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </button>
+            </div>
+          </div>
         )}
 
-        {stage === 4 && slot.slotCSTHour !== null && (
+        {stage === 3 && (
+          <div className="flex h-full flex-col">
+            <h3 className="font-display text-2xl text-[#5D1F13]">
+              Review & Confirm
+            </h3>
+            <div className="mt-6 space-y-3 rounded-xl border border-black/[0.08] bg-[#F3EDE5] px-5 py-4 text-sm">
+              <p className="flex items-center justify-between gap-4">
+                <span className="inline-flex items-center gap-2 text-[#1A1A1A]/60">
+                  <CalendarDays className="h-4 w-4 text-[#A8532B]" aria-hidden="true" />
+                  Date & time
+                </span>
+                <span className="font-semibold text-[#1A1A1A]">
+                  {formatDateLong(chicagoDateOf(selected!.start))} ·{" "}
+                  {formatTimeIn(selected!.start)} your time
+                </span>
+              </p>
+              <p className="flex items-center justify-between gap-4">
+                <span className="inline-flex items-center gap-2 text-[#1A1A1A]/60">
+                  <Clock className="h-4 w-4 text-[#A8532B]" aria-hidden="true" />
+                  Duration / format
+                </span>
+                <span className="font-semibold text-[#1A1A1A]">
+                  50 minutes · Virtual video
+                </span>
+              </p>
+              <p className="flex items-center justify-between gap-4">
+                <span className="text-[#1A1A1A]/60">Name</span>
+                <span className="font-semibold text-[#1A1A1A]">
+                  {fields.firstName} {fields.lastName}
+                </span>
+              </p>
+              <p className="flex items-center justify-between gap-4">
+                <span className="text-[#1A1A1A]/60">Email</span>
+                <span className="font-semibold text-[#1A1A1A]">{fields.email}</span>
+              </p>
+              <p className="flex items-center justify-between gap-4">
+                <span className="text-[#1A1A1A]/60">Phone</span>
+                <span className="font-semibold text-[#1A1A1A]">{fields.phone}</span>
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={confirmBooking}
+              disabled={continuing}
+              className="mt-8 inline-flex items-center gap-2 self-start rounded-full bg-[#5D1F13] px-8 py-3.5 text-sm font-bold text-[#F5EFE6] shadow-[0_6px_20px_-8px_rgba(93,31,19,0.7)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#4A1811] disabled:pointer-events-none disabled:opacity-50"
+            >
+              <Lock className="h-4 w-4" aria-hidden="true" />
+              {continuing ? "Confirming…" : "Confirm booking"}
+            </button>
+          </div>
+        )}
+
+        {stage === 4 && selected && (
           <BookingConfirmation
-            bookingId={bookingId ?? "TSM-PREVIEW"}
-            slot={{ dateISO: slot.dateISO, slotCSTHour: slot.slotCSTHour }}
+            bookingId={bookingId ?? "TSM-PENDING"}
+            slot={{
+              dateISO: chicagoDateOf(selected.start),
+              slotCSTHour: chicagoHour(selected.start),
+            }}
           />
         )}
       </div>
     </div>
+  );
+}
+
+/** Chicago calendar date (YYYY-MM-DD) of a UTC instant. */
+function chicagoDateOf(instant: Date | string): string {
+  const d = typeof instant === "string" ? new Date(instant) : instant;
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Chicago",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(d);
+  const get = (t: string) => parts.find((x) => x.type === t)?.value ?? "01";
+  return `${get("year")}-${get("month")}-${get("day")}`;
+}
+
+/** CST/CDT wall hour (0–23) of a UTC instant. */
+function chicagoHour(instant: Date | string): number {
+  const d = typeof instant === "string" ? new Date(instant) : instant;
+  return Number(
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: "America/Chicago",
+      hour: "numeric",
+      hour12: false,
+    }).format(d),
   );
 }

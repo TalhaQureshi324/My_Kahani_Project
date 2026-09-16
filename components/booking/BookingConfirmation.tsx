@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { ArrowDownToLine, CalendarDays, CheckCircle2, Clock, MonitorPlay, UserRound } from "lucide-react";
-import { formatDateLong, formatTimeIn, slotInstant } from "./CustomScheduler";
+import { formatDateLong, formatTimeInTZ, slotInstant } from "./CustomScheduler";
 
 /**
  * Stage 4 — confirmation view: checkmark badge, booking details box,
@@ -52,7 +52,7 @@ export default function BookingConfirmation({
             Time
           </span>
           <span className="font-semibold text-[#1A1A1A]">
-            {formatTimeIn(localTz ?? "America/Chicago", instant)}
+            {formatTimeInTZ(localTz ?? "America/Chicago", instant)}
             {localTz ? <span className="ml-1 font-normal text-[#1A1A1A]/55">({localTz})</span> : null}
           </span>
         </p>
