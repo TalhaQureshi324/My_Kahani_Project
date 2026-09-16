@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { uploadOfflineConversion } from "@/lib/adsConversion";
 
 /**
  * Booking vaulting endpoint. Receives the Accept.js opaque card token
@@ -174,6 +175,12 @@ export async function POST(request: Request) {
     await appendFile(".data/bookings.jsonl", JSON.stringify(appointment) + "\n", "utf8");
   } catch {
     // Read-only filesystem (serverless) — the log above is the record.
+  }
+
+  // Google Ads offline conversion — fire-and-forget for gclid-attributed
+  // bookings. Logged inside; failures never touch the client response.
+  if (gclid) {
+    void uploadOfflineConversion({ gclid, bookingId });
   }
 
   return NextResponse.json({

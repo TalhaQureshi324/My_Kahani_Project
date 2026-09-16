@@ -8,6 +8,7 @@ import CustomScheduler, {
   slotInstant,
 } from "./CustomScheduler";
 import IntakeAndPayment from "./IntakeAndPayment";
+import BookingConfirmation from "./BookingConfirmation";
 
 /**
  * The booking interaction shell: a four-stage state machine with a
@@ -131,26 +132,11 @@ export default function BookingFlow() {
           />
         )}
 
-        {stage === 4 && (
-          <div className="flex h-full flex-col items-center justify-center gap-4 text-center">
-            <CheckCircle2 className="h-12 w-12 text-[#5D1F13]" aria-hidden="true" />
-            <p className="font-display text-3xl text-[#5D1F13]">You&apos;re booked.</p>
-            <p className="max-w-md text-sm leading-relaxed text-[#1A1A1A]/70">
-              {fields.name.trim() !== ""
-                ? `Thank you, ${fields.name.trim().split(" ")[0]}. `
-                : ""}
-              A confirmation with your .ics calendar file will arrive by email,
-              and we&apos;ll see you at your 50-minute consultation.
-            </p>
-            {bookingId && (
-              <p className="rounded-full bg-[#5D1F13]/[0.06] px-4 py-1.5 text-xs font-bold text-[#5D1F13]">
-                Booking reference {bookingId}
-              </p>
-            )}
-            <p className="rounded-full bg-[#5D1F13]/[0.06] px-4 py-1.5 text-xs font-bold text-[#5D1F13]">
-              Cash-pay · Card on file · No upfront charge
-            </p>
-          </div>
+        {stage === 4 && slot.slotCSTHour !== null && (
+          <BookingConfirmation
+            bookingId={bookingId ?? "TSM-PREVIEW"}
+            slot={{ dateISO: slot.dateISO, slotCSTHour: slot.slotCSTHour }}
+          />
         )}
       </div>
     </div>
