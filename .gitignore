@@ -51,3 +51,4 @@ next-env.d.ts
 *.pptx
 .pptx_extract/
 .verify_*.mjs
+.dbg*
