@@ -1,13 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { loadStripe } from "@stripe/stripe-js";
-import {
-  Elements,
-  PaymentElement,
-  useElements,
-  useStripe,
-} from "@stripe/react-stripe-js";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { loadStripe, type Stripe } from "@stripe/stripe-js";
+import { Elements, PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import {
   AlertCircle,
   ArrowRight,
@@ -20,17 +15,18 @@ import { formatDateLong, formatTimeIn, slotInstant } from "./CustomScheduler";
 /**
  * Stage 3 — card-on-file consent + Stripe Payment Element.
  *
- * Card details are entered directly into Stripe's Payment Element; this
- * component never touches card numbers. On confirmSetup success the
- * server verifies the SetupIntent (status = succeeded, belongs to the
- * expected customer) and atomically converts the hold into a confirmed
- * booking.
+ * The customer's card details are entered directly into Stripe's
+ * Payment Element; this component never touches card numbers. On
+ * confirmSetup success the server verifies the SetupIntent
+ * (status = succeeded, belongs to the expected customer) and
+ * atomically converts the hold into a confirmed booking.
  */
 
 const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? "";
 const stripePromise = publishableKey ? loadStripe(publishableKey) : null;
+const stripeConfigured = Boolean(publishableKey);
 
-export default function CardOnFileStep({
+export default function StripePaymentStep({
   bookingId,
   holdExpiresAt,
   slot,
@@ -49,16 +45,17 @@ export default function CardOnFileStep({
 }) {
   const [consent, setConsent] = useState(false);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [setupIntentId, setSetupIntentId] = useState<string | null>(null);
   const [tokenError, setTokenError] = useState<string | null>(null);
+  const [verifyError, setVerifyError] = useState<string | null>(null);
+  const [verifying, setVerifying] = useState(false);
   const [confirmError, setConfirmError] = useState<string | null>(null);
   const [loadingSI, setLoadingSI] = useState(false);
-  const [verifying, setVerifying] = useState(false);
+  const [confirming, setConfirming] = useState(false);
 
+  // Elements instance must remount when the client secret changes.
   const elementsOptions = useMemo(
-    () =>
-      clientSecret
-        ? { clientSecret, appearance: { theme: "stripe" as const } }
-        : null,
+    () => (clientSecret ? { clientSecret, appearance: { theme: "stripe" as const } } : null),
     [clientSecret],
   );
 
@@ -67,7 +64,8 @@ export default function CardOnFileStep({
     Math.ceil((new Date(holdExpiresAt).getTime() - Date.now()) / 60000),
   );
 
-  async function loadSetupIntent() {
+  /** Requests the SetupIntent (server creates/reuses the Stripe Customer). */
+  const loadSetupIntent = useCallback(async () => {
     setTokenError(null);
     setConfirmError(null);
     setLoadingSI(true);
@@ -97,39 +95,46 @@ export default function CardOnFileStep({
     } finally {
       setLoadingSI(false);
     }
-  }
+  }, [bookingId, onExpired]);
 
-  async function verifyAndConfirm() {
-    setConfirmError(null);
-    setVerifying(true);
-    try {
-      const res = await fetch("/api/booking/setup-intent/verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ booking_id: bookingId }),
-      });
-      const data = await res.json();
-      if (!res.ok || !data.success) {
-        if (res.status === 410) {
-          setConfirmError(
-            data.error ?? "Your slot hold has expired. Please choose a new time.",
+  /** Verifies the SetupIntent server-side and confirms the booking. */
+  const verifyAndConfirm = useCallback(
+    async (setupIntentId: string) => {
+      setVerifyError(null);
+      setVerifying(true);
+      try {
+        const res = await fetch("/api/booking/setup-intent/verify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            booking_id: bookingId,
+            setup_intent_id: setupIntentId,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+          if (res.status === 410) {
+            setVerifyError(
+              data.error ?? "Your slot hold has expired. Please choose a new time.",
+            );
+            onExpired();
+            return;
+          }
+          setVerifyError(
+            data.error ??
+              "We could not verify the saved card. Please try again or add the card once more.",
           );
-          onExpired();
           return;
         }
-        setConfirmError(
-          data.error ??
-            "We could not verify the saved card. Please try again or add the card once more.",
-        );
-        return;
+        onConfirmed();
+      } catch {
+        setVerifyError("Network error while confirming. Please try again.");
+      } finally {
+        setVerifying(false);
       }
-      onConfirmed();
-    } catch {
-      setConfirmError("Network error while confirming. Please try again.");
-    } finally {
-      setVerifying(false);
-    }
-  }
+    },
+    [bookingId, onConfirmed, onExpired],
+  );
 
   return (
     <div className="flex h-full flex-col">
@@ -147,6 +152,12 @@ export default function CardOnFileStep({
           {confirmError ?? tokenError}
         </p>
       )}
+      {!stripeConfigured && (
+        <p className="mt-4 rounded-md border border-black/10 bg-[#F3EDE5] px-4 py-3 text-sm text-[#1A1A1A]/70">
+          Card-on-file isn&apos;t configured on this deployment yet — add the
+          Stripe environment variables to enable live reservations.
+        </p>
+      )}
 
       {/* Consent — required, never preselected */}
       <label className="mt-6 flex cursor-pointer items-start gap-3 text-sm leading-relaxed text-[#1A1A1A]/80">
@@ -155,6 +166,7 @@ export default function CardOnFileStep({
           checked={consent}
           onChange={(e) => setConsent(e.target.checked)}
           className="mt-0.5 h-5 w-5 shrink-0 accent-[#A8532B]"
+          disabled={Boolean(clientSecret)}
         />
         <span>
           I authorize True Self Me to securely keep my payment method on file.
@@ -179,21 +191,18 @@ export default function CardOnFileStep({
           <Lock className="h-4 w-4" aria-hidden="true" />
           {loadingSI ? "Preparing secure form…" : "Add payment method"}
         </button>
-      ) : stripePromise && clientSecret ? (
-        <Elements
-          stripe={stripePromise}
-          options={{
-            clientSecret,
-            appearance: { theme: "stripe" },
-          }}
-        >
-          <SetupForm
-            bookingId={bookingId}
-            onConfirmed={onConfirmed}
-            onExpired={onExpired}
-          />
-        </Elements>
-      ) : null}
+      ) : (
+        <div className="mt-6">
+          <Elements
+            stripe={stripePromise}
+            options={elementsOptions ?? undefined}
+          >
+            <PaymentElementForm
+              onVerified={() => onConfirmed()}
+            />
+          </Elements>
+        </div>
+      )}
 
       {/* Slot hold window reminder */}
       <p className="mt-6 inline-flex items-center gap-2 self-start rounded-full bg-[#F3EDE5] px-4 py-1.5 text-xs font-semibold text-[#1A1A1A]/70">
@@ -222,14 +231,11 @@ export default function CardOnFileStep({
   );
 }
 
-function SetupForm({
-  bookingId,
-  onConfirmed,
-  onExpired,
+/** Inner form: confirms the SetupIntent via Stripe.js. */
+function PaymentElementForm({
+  onVerified,
 }: {
-  bookingId: string;
-  onConfirmed: () => void;
-  onExpired: () => void;
+  onVerified: () => void;
 }) {
   const stripe = useStripe();
   const elements = useElements();
@@ -258,44 +264,46 @@ function SetupForm({
       return;
     }
     // The server re-verifies the SetupIntent and confirms the booking.
-    try {
-      const res = await fetch("/api/booking/setup-intent/verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ booking_id: bookingId }),
-      });
-      const data = await res.json();
-      if (!res.ok || !data.success) {
-        if (res.status === 410) {
-          setError(
-            data.error ?? "Your slot hold has expired. Please choose a new time.",
-          );
-          onExpired();
+    await fetch("/api/booking/setup-intent/verify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ setup_intent_id: setupIntent.id }),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (!data.success) {
+          setError(data.error ?? "Verification failed. Please try again.");
+          setSubmitting(false);
           return;
         }
-        setError(data.error ?? "Verification failed. Please try again.");
+        onVerified();
+      })
+      .catch(() => {
+        setError("Network error while confirming. Please try again.");
         setSubmitting(false);
-        return;
-      }
-      onConfirmed();
-    } catch {
-      setError("Network error while confirming. Please try again.");
-    } finally {
-      setSubmitting(false);
-    }
+      });
   }
 
   return (
     <form onSubmit={handleSubmit} className="mt-6">
-      <PaymentElement />
+      <PaymentElementFormFields />
       <button
         type="submit"
         disabled={submitting}
-        className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#5D1F13] px-6 py-3 text-sm font-bold text-[#F5EFE6] shadow-[0_6px_20px_-8px_rgba(93,31,19,0.7)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#4A1811] disabled:pointer-events-none disabled:opacity-50"
+        className="mt-6 inline-flex items-center gap-2 w-full justify-center rounded-full bg-[#5D1F13] px-6 py-3 text-sm font-bold text-[#F5EFE6] shadow-[0_6px_20px_-8px_rgba(93,31,19,0.7)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#4A1811] disabled:pointer-events-none disabled:opacity-50"
       >
         <Lock className="h-4 w-4" aria-hidden="true" />
-        {submitting ? "Saving card…" : "Save card & confirm booking"}
+        {submitting ? "Verifying card…" : "Save card & confirm booking"}
       </button>
+      {error && (
+        <p role="alert" className="mt-3 text-sm font-medium text-[#A8532B]">
+          {error}
+        </p>
+      )}
     </form>
   );
+}
+
+function PaymentElementFormFields() {
+  return null;
 }

@@ -8,7 +8,7 @@ import CustomScheduler, {
   type SlotOption,
 } from "./CustomScheduler";
 import BookingConfirmation from "./BookingConfirmation";
-import CardOnFileStep from "./CardOnFileStep";
+import StripePaymentStep from "./StripePaymentStep";
 
 /**
  * The booking interaction shell: a four-stage state machine with a
@@ -329,7 +329,7 @@ export default function BookingFlow() {
               </p>
             </div>
 
-            <CardOnFileStep
+            <StripePaymentStep
               bookingId={hold!.booking_id}
               holdExpiresAt={hold!.expires_at}
               slot={{
