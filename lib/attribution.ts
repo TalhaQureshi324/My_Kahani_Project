@@ -70,12 +70,9 @@ export function buildAttribution(
 ): AttributionRecord | null {
   const sp = new URLSearchParams(search);
   const record = {} as AttributionRecord;
-  let hasCampaignParam = false;
 
   for (const key of ATTRIBUTION_PARAMS) {
-    const value = sanitizeParamValue(sp.get(key));
-    record[key] = value;
-    if (value) hasCampaignParam = true;
+    record[key] = sanitizeParamValue(sp.get(key));
   }
 
   record.landing_page = sanitizeParamValue(landingPage) ?? "/";
@@ -83,10 +80,13 @@ export function buildAttribution(
   record.first_seen_at = now.toISOString();
   record.last_seen_at = now.toISOString();
 
-  // A landing with no attribution parameters is still a valid first
-  // touch (direct / organic) — return it, flagged only by its page.
-  void hasCampaignParam;
   return record;
+}
+
+/** Whether a record carries at least one paid/campaign parameter. */
+export function hasCampaignParams(a: AttributionRecord | null): boolean {
+  if (!a) return false;
+  return ATTRIBUTION_PARAMS.some((k) => a[k] !== null);
 }
 
 /** First-touch wins: keep the existing record unless there is none. */
@@ -222,13 +222,12 @@ export function captureAttribution(): {
 
   // Last touch only moves on a NEW campaign landing — parameterless
   // navigations (internal links, direct /book) must not clear it.
-  const incomingHasCampaign = ATTRIBUTION_PARAMS.some(
-    (k) => incoming?.[k] !== null && incoming?.[k] !== undefined,
-  );
   let lastTouch = parseAttribution(readCookie(ATTRIBUTION_LAST_COOKIE), now);
-  if (incoming && incomingHasCampaign) {
-    lastTouch = incoming;
-    writeCookie(ATTRIBUTION_LAST_COOKIE, serializeAttribution(lastTouch));
+  if (incoming && hasCampaignParams(incoming)) {
+    lastTouch = mergeLastTouch(lastTouch, incoming);
+    if (lastTouch) {
+      writeCookie(ATTRIBUTION_LAST_COOKIE, serializeAttribution(lastTouch));
+    }
   }
 
   // Legacy single-value cookie kept in sync for older code paths.

@@ -28,6 +28,15 @@ export async function GET(request: Request) {
     );
   }
 
+  // TEMPORARY diagnostic — hostname only, never secrets. Remove after testing.
+  const supabaseUrl = process.env.SUPABASE_URL;
+  console.log(
+    "SUPABASE_URL configured:",
+    Boolean(supabaseUrl),
+    "| SUPABASE hostname:",
+    supabaseUrl ? new URL(supabaseUrl).hostname : "NOT_CONFIGURED",
+  );
+
   const url = new URL(request.url);
   const tz = url.searchParams.get("tz") ?? "America/Chicago";
   const today = todayChicago();
