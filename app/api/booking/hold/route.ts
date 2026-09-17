@@ -2,6 +2,12 @@ import { NextResponse } from "next/server";
 import { isDatabaseConfigured, getSupabaseAdmin } from "@/lib/supabase";
 import { generateSlots, HOLD_MINUTES, addDaysISO, todayChicago } from "@/lib/scheduling";
 import type { AvailabilityRule, AvailabilityException } from "@/lib/scheduling";
+import { SESSION_PRICE_CENTS, SESSION_CURRENCY, PRICING_SOURCE } from "@/lib/pricing";
+import {
+  generateBookingReference,
+  generateManageToken,
+  hashManageToken,
+} from "@/lib/bookingTokens";
 
 /**
  * POST /api/booking/hold
@@ -30,7 +36,7 @@ export async function POST(request: Request) {
     );
   }
 
-  let body: { slot_start?: string; slot_end?: string };
+  let body: { slot_start?: string; slot_end?: string; timezone?: string };
   try {
     body = await request.json();
   } catch {
@@ -110,16 +116,36 @@ export async function POST(request: Request) {
 
   const expiresAt = new Date(Date.now() + HOLD_MINUTES * 60000).toISOString();
 
-  const { data: booking, error: insertError } = await supabase
-    .from("bookings")
-    .insert({
-      status: "held",
-      slot_start: startDate.toISOString(),
-      slot_end: endDate.toISOString(),
-      expires_at: expiresAt,
-    })
-    .select("id, expires_at")
-    .single();
+  // Human-friendly public reference + price snapshot (agreed at booking
+  // time; historical bookings never re-read current pricing).
+  const bookingReference = generateBookingReference();
+  const manageToken = generateManageToken();
+  const manageTokenHash = hashManageToken(manageToken);
+  const clientTz = body.timezone ?? "America/Chicago";
+
+  let booking: { id: string; booking_reference: string } | null = null;
+  let insertError: { message: string } | null = null;
+  // Retry on the (astronomically unlikely) reference collision.
+  for (let attempt = 0; attempt < 3 && !booking; attempt++) {
+    const { data, error } = await supabase
+      .from("bookings")
+      .insert({
+        status: "held",
+        booking_reference: attempt === 0 ? bookingReference : generateBookingReference(),
+        slot_start: startDate.toISOString(),
+        slot_end: endDate.toISOString(),
+        expires_at: expiresAt,
+        session_price_cents: SESSION_PRICE_CENTS,
+        session_currency: SESSION_CURRENCY,
+        pricing_source: PRICING_SOURCE,
+        client_timezone: clientTz,
+        manage_token_hash: manageTokenHash,
+      })
+      .select("id, booking_reference")
+      .single();
+    booking = data ?? null;
+    insertError = error ?? null;
+  }
 
   if (insertError || !booking) {
     const conflict = /23P01|exclusion/.test(insertError?.message ?? "");
@@ -141,6 +167,13 @@ export async function POST(request: Request) {
   return NextResponse.json({
     success: true,
     booking_id: booking.id,
+    booking_reference: booking.booking_reference,
+    manage_token: manageToken,
+    pricing: {
+      cents: SESSION_PRICE_CENTS,
+      currency: SESSION_CURRENCY,
+      source: PRICING_SOURCE,
+    },
     hold: {
       slot_start: startDate.toISOString(),
       slot_end: endDate.toISOString(),

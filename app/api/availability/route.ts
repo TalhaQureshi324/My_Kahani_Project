@@ -60,14 +60,21 @@ export async function GET(request: Request) {
   ]);
 
   if (rulesRes.error || exceptionsRes.error || bookingsRes.error) {
+    // Migration not yet applied (tables missing) or transient failure —
+    // surface the graceful "not connected" state to the scheduler.
     console.error("[availability] query failed", {
       rules: rulesRes.error?.message,
       exceptions: exceptionsRes.error?.message,
       bookings: bookingsRes.error?.message,
     });
     return NextResponse.json(
-      { error: "Could not load availability." },
-      { status: 500 },
+      {
+        configured: false,
+        slots: [],
+        error:
+          "Online scheduling is not connected yet. Please contact us to book.",
+      },
+      { status: 503 },
     );
   }
 

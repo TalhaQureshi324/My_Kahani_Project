@@ -1,47 +1,11 @@
 /**
- * Zero-dependency RFC 5545 calendar generator for booked consultations.
- * Slot times are defined in the practice's timezone (America/Chicago)
- * and exported as UTC (DTSTART/DTEND …Z) so every calendar client —
- * Apple Calendar, Outlook, Google Calendar — renders them correctly.
+ * Zero-dependency RFC 5545 calendar generation for booked coaching
+ * sessions. Slot times are stored in UTC (timestamptz) and exported as
+ * RFC 5545 UTC timestamps so every calendar client renders them
+ * correctly regardless of DST.
  */
 
-const PRACTICE_TZ = "America/Chicago";
 const DURATION_MINUTES = 50;
-
-function tzOffsetMinutes(timeZone: string, utcMs: number): number {
-  const dtf = new Intl.DateTimeFormat("en-US", {
-    timeZone,
-    hour12: false,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-  });
-  const parts: Record<string, number> = {};
-  for (const p of dtf.formatToParts(new Date(utcMs))) {
-    if (p.type !== "literal") parts[p.type] = Number(p.value);
-  }
-  const asUTC = Date.UTC(
-    parts.year,
-    parts.month - 1,
-    parts.day,
-    parts.hour % 24,
-    parts.minute,
-    parts.second,
-  );
-  return (asUTC - utcMs) / 60000;
-}
-
-/** UTC instant of a wall-clock hour on dateISO in the practice timezone. */
-export function slotUtc(dateISO: string, hourCST: number): Date {
-  const [y, m, d] = dateISO.split("-").map(Number);
-  const naive = Date.UTC(y, m - 1, d, hourCST);
-  const off1 = tzOffsetMinutes(PRACTICE_TZ, naive);
-  const off2 = tzOffsetMinutes(PRACTICE_TZ, naive - off1 * 60000);
-  return new Date(naive - off2 * 60000);
-}
 
 /** RFC 5545 UTC timestamp: YYYYMMDDTHHMMSSZ */
 function icsUtc(d: Date): string {
@@ -59,23 +23,27 @@ function icsUtc(d: Date): string {
 
 /** Escape text values per RFC 5545 §3.3.11. */
 function icsEscape(s: string): string {
-  return s.replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
+  return s
+    .replace(/\\/g, "\\\\")
+    .replace(/;/g, "\\;")
+    .replace(/,/g, "\\,")
+    .replace(/\r?\n/g, "\\n");
 }
 
 export type ConsultationIcsInput = {
-  bookingId: string;
-  dateISO: string;
-  hourCST: number;
+  reference: string; // public booking reference (also the event UID)
+  slotStartUTC: string | Date;
+  slotEndUTC: string | Date;
 };
 
-/** Builds the RFC 5545 payload for a booked consultation. */
+/** Builds the RFC 5545 payload for a booked coaching session. */
 export function buildConsultationIcs({
-  bookingId,
-  dateISO,
-  hourCST,
+  reference,
+  slotStartUTC,
+  slotEndUTC,
 }: ConsultationIcsInput): string {
-  const start = slotUtc(dateISO, hourCST);
-  const end = new Date(start.getTime() + DURATION_MINUTES * 60000);
+  const start = new Date(slotStartUTC);
+  const end = new Date(slotEndUTC);
   const stamp = icsUtc(new Date());
 
   return [
@@ -85,21 +53,21 @@ export function buildConsultationIcs({
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
     "BEGIN:VEVENT",
-    `UID:${icsEscape(`${bookingId}@trueselfme.com`)}`,
+    `UID:${icsEscape(`${reference}@trueselfme.com`)}`,
     `DTSTAMP:${stamp}`,
     `DTSTART:${icsUtc(start)}`,
     `DTEND:${icsUtc(end)}`,
-    `SUMMARY:${icsEscape("Consultation — True Self Me")}`,
+    `SUMMARY:${icsEscape("True Self Me Coaching Session")}`,
     `DESCRIPTION:${icsEscape(
-      "50-minute virtual consultation with Fahd Alam. Video link will be dispatched prior to appointment.",
+      "50-minute virtual coaching session with Fahd Alam. Video link will be dispatched prior to appointment.",
     )}`,
     `LOCATION:${icsEscape("Virtual — video link to follow")}`,
     `STATUS:CONFIRMED`,
-    "BEGIN:VALARM",
-    "TRIGGER:-PT1H",
-    "ACTION:DISPLAY",
-    `DESCRIPTION:${icsEscape("True Self Me consultation in 1 hour")}`,
-    "END:VALARM",
+    `BEGIN:VALARM`,
+    `TRIGGER:-PT1H`,
+    `ACTION:DISPLAY`,
+    `DESCRIPTION:${icsEscape("True Self Me coaching session in 1 hour")}`,
+    `END:VALARM`,
     "END:VEVENT",
     "END:VCALENDAR",
   ].join("\r\n");
