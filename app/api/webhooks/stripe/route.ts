@@ -120,7 +120,7 @@ export async function POST(request: Request) {
       }
       break;
     }
-    case "setup_intent.failed": {
+    case "setup_intent.setup_failed": {
       if (bookingId) {
         await supabase
           .from("bookings")

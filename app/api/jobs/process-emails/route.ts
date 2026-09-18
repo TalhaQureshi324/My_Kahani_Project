@@ -7,11 +7,12 @@ import {
 } from "@/lib/email/templates";
 
 /**
- * POST /api/jobs/process-emails   (cron-compatible)
+ * POST|GET /api/jobs/process-emails   (cron-compatible)
  *
  * Auth: Vercel Cron natively sends `Authorization: Bearer $CRON_SECRET`;
  * external schedulers can send `x-cron-secret: <CRON_SECRET>` instead.
  * Both are accepted; the secret must be configured or the worker 503s.
+ * Vercel Cron invokes the path with GET, so both methods are served.
  *
  * Outbox worker: claims up to 10 pending notification_jobs whose run_at
  * has passed, renders the template, sends via the provider abstraction,
@@ -23,7 +24,15 @@ import {
 
 const MAX_ATTEMPTS = 5;
 
+export async function GET(request: Request) {
+  return processEmails(request);
+}
+
 export async function POST(request: Request) {
+  return processEmails(request);
+}
+
+async function processEmails(request: Request) {
   const secret = process.env.CRON_SECRET ?? "";
   if (!secret) {
     return NextResponse.json({ error: "Worker disabled." }, { status: 503 });
