@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { isDatabaseConfigured, getSupabaseAdmin } from "@/lib/supabase";
 import Stripe from "stripe";
 import { getStripe, stripeWebhookSecret } from "@/lib/stripe";
+import { enqueueSessionPaid } from "@/lib/ads/conversionOutbox";
 
 /**
  * POST /api/webhooks/stripe
@@ -29,6 +30,8 @@ type StripeEventLike = {
       last_setup_error?: { message?: string };
       last_payment_error?: { code?: string; message?: string };
       amount_due?: number;
+      amount_received?: number;
+      amount?: number;
       metadata?: Record<string, string>;
     };
   };
@@ -95,6 +98,8 @@ export async function POST(request: Request) {
   // side, so we read only the fields this handler needs.
   const obj = (looseEvent.data.object ?? {}) as {
     id?: string;
+    amount_received?: number;
+    amount?: number;
     metadata?: Record<string, string>;
     payment_method?: string | { id?: string };
     last_setup_error?: { message?: string };
@@ -144,6 +149,25 @@ export async function POST(request: Request) {
             stripe_payment_intent_id: obj.id,
           })
           .eq("id", bookingId);
+        // Phase 7: queue the Google session_paid conversion with the
+        // ACTUAL collected amount. Fire-and-forget — payment success is
+        // already committed and must not depend on Google.
+        try {
+          const collectedCents =
+            typeof obj.amount_received === "number"
+              ? obj.amount_received
+              : typeof obj.amount === "number"
+                ? obj.amount
+                : null;
+          await enqueueSessionPaid(supabase, bookingId, collectedCents);
+        } catch (conversionError) {
+          console.error(
+            "[stripe-webhook] session_paid enqueue failed",
+            conversionError instanceof Error
+              ? conversionError.message
+              : conversionError,
+          );
+        }
       }
       break;
     }

@@ -8,6 +8,10 @@ import {
   generateManageToken,
   hashManageToken,
 } from "@/lib/bookingTokens";
+import {
+  readAttributionFromCookieHeader,
+  resolveAttribution,
+} from "@/lib/attribution";
 
 /**
  * POST /api/booking/hold
@@ -116,6 +120,14 @@ export async function POST(request: Request) {
 
   const expiresAt = new Date(Date.now() + HOLD_MINUTES * 60000).toISOString();
 
+  // First-party attribution: read server-side from the capture cookies
+  // (never trust a client-posted copy) and persisted for conversion
+  // attribution. Absent cookies ⇒ organic booking, still fully valid.
+  const { firstTouch, lastTouch } = readAttributionFromCookieHeader(
+    request.headers.get("cookie"),
+  );
+  const attributionRecord = resolveAttribution(firstTouch, lastTouch);
+
   // Human-friendly public reference + price snapshot (agreed at booking
   // time; historical bookings never re-read current pricing).
   const bookingReference = generateBookingReference();
@@ -140,6 +152,8 @@ export async function POST(request: Request) {
         pricing_source: PRICING_SOURCE,
         client_timezone: clientTz,
         manage_token_hash: manageTokenHash,
+        gclid: attributionRecord?.gclid ?? null,
+        attribution: attributionRecord,
       })
       .select("id, booking_reference")
       .single();

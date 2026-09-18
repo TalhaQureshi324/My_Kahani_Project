@@ -174,6 +174,39 @@ export function readAttributionFromCookieHeader(
   };
 }
 
+/**
+ * Resolves the attribution to persist on a booking. Click ids and
+ * campaign params prefer the LAST touch (most recent campaign landing);
+ * the original landing page, referrer and first_seen_at come from the
+ * FIRST touch. Null when neither cookie carried a usable record.
+ */
+export function resolveAttribution(
+  firstTouch: AttributionRecord | null,
+  lastTouch: AttributionRecord | null,
+): AttributionRecord | null {
+  if (!firstTouch && !lastTouch) return null;
+  const pick = <K extends keyof AttributionRecord>(
+    key: K,
+  ): AttributionRecord[K] =>
+    (lastTouch?.[key] ?? firstTouch?.[key] ?? null) as AttributionRecord[K];
+  return {
+    gclid: pick("gclid"),
+    gbraid: pick("gbraid"),
+    wbraid: pick("wbraid"),
+    utm_source: pick("utm_source"),
+    utm_medium: pick("utm_medium"),
+    utm_campaign: pick("utm_campaign"),
+    utm_term: pick("utm_term"),
+    utm_content: pick("utm_content"),
+    landing_page: firstTouch?.landing_page ?? lastTouch?.landing_page ?? "",
+    referrer: firstTouch?.referrer ?? lastTouch?.referrer ?? "",
+    first_seen_at:
+      firstTouch?.first_seen_at ??
+      lastTouch?.first_seen_at ??
+      new Date().toISOString(),
+  };
+}
+
 /* ── client-side capture (browser only) ───────────────────────── */
 
 function writeCookie(name: string, value: string): void {

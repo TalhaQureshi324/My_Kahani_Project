@@ -3,6 +3,7 @@ import { rateLimit, clientIp } from "@/lib/rateLimit";
 import { isDatabaseConfigured, getSupabaseAdmin } from "@/lib/supabase";
 import { getStripe } from "@/lib/stripe";
 import { hashManageToken } from "@/lib/bookingTokens";
+import { enqueueSessionPaid } from "@/lib/ads/conversionOutbox";
 
 /**
  * POST /api/booking/manage/[token]/complete-payment
@@ -83,6 +84,23 @@ export async function POST(
         paid_at: new Date().toISOString(),
       })
       .eq("id", booking.id);
+    // Phase 7: queue the Google session_paid conversion with the ACTUAL
+    // collected amount. Fire-and-forget — payment success must not
+    // depend on Google.
+    try {
+      await enqueueSessionPaid(
+        supabase,
+        booking.id,
+        intent.amount_received ?? intent.amount ?? null,
+      );
+    } catch (conversionError) {
+      console.error(
+        "[complete-payment] session_paid enqueue failed",
+        conversionError instanceof Error
+          ? conversionError.message
+          : conversionError,
+      );
+    }
     return NextResponse.json({ success: true, status: "paid" });
   }
   if (intent.status === "requires_payment_method") {

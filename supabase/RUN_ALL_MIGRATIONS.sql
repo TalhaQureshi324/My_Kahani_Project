@@ -468,3 +468,45 @@ alter table stripe_events         enable row level security;
 -- The Stripe migration replaced Authorize.Net entirely; the only surviving
 -- ANET-era table is unused by any current code. Drop it (idempotent).
 drop table if exists authorize_net_events;
+
+-- ============================================================================
+-- 14. conversion_outbox (migration 0006 — Phase 7) ----------------------------
+-- Durable queue for Google Ads Data Manager API conversion uploads.
+-- ============================================================================
+do $$ begin
+  create type conversion_delivery_status as enum (
+    'pending', 'processing', 'sent', 'skipped', 'dead_letter'
+  );
+exception when duplicate_object then null; end $$;
+
+create table if not exists conversion_outbox (
+  id                uuid primary key default gen_random_uuid(),
+  booking_id        uuid not null references bookings(id) on delete cascade,
+  event_type        text not null,
+  transaction_id    text not null,
+  event_timestamp   timestamptz not null,
+  conversion_value  numeric(10, 2),
+  currency          text not null default 'USD',
+  gclid             text,
+  gbraid            text,
+  wbraid            text,
+  hashed_identifiers jsonb,
+  ads_user_data_consent       text not null default 'denied',
+  ads_personalization_consent text not null default 'denied',
+  status            conversion_delivery_status not null default 'pending',
+  attempt_count     integer not null default 0,
+  next_attempt_at   timestamptz not null default now(),
+  last_attempt_at   timestamptz,
+  google_request_id text,
+  error_code        text,
+  error_message     text,
+  created_at        timestamptz not null default now(),
+  sent_at           timestamptz
+);
+create unique index if not exists conversion_outbox_booking_event_uniq
+  on conversion_outbox (booking_id, event_type);
+create index if not exists conversion_outbox_claim_idx
+  on conversion_outbox (status, next_attempt_at);
+create index if not exists conversion_outbox_status_created_idx
+  on conversion_outbox (status, created_at);
+alter table conversion_outbox enable row level security;

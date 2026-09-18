@@ -3,6 +3,7 @@ import { rateLimit, clientIp } from "@/lib/rateLimit";
 import { isDatabaseConfigured, getSupabaseAdmin } from "@/lib/supabase";
 import { getStripe } from "@/lib/stripe";
 import { hashManageToken } from "@/lib/bookingTokens";
+import { enqueueBookingConfirmed } from "@/lib/ads/conversionOutbox";
 
 /**
  * POST /api/booking/setup-intent/verify
@@ -252,6 +253,18 @@ export async function POST(request: Request) {
 
   if (jobsError) {
     console.error("[setup-verify] notification jobs failed", jobsError.message);
+  }
+
+  // Phase 7: queue the Google booking_confirmed conversion. Fire-and-
+  // forget relative to this request — the booking is already committed,
+  // and Google must never gate booking success.
+  try {
+    await enqueueBookingConfirmed(supabase, bookingId);
+  } catch (conversionError) {
+    console.error(
+      "[setup-verify] conversion outbox enqueue failed",
+      conversionError instanceof Error ? conversionError.message : conversionError,
+    );
   }
 
   return NextResponse.json({
