@@ -10,6 +10,9 @@
     "booking:check": "node scripts/booking-check.mjs",
     "test": "node --experimental-strip-types --test tests/attribution.test.mjs tests/scheduling.test.mjs"
   },
+  "allowScripts": {
+    "unrs-resolver@1.12.2": true
+  },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
     "@stripe/react-stripe-js": "^3.11.0",
@@ -28,7 +31,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "eslint": "^9",
+    "eslint": "^9.39.5",
     "eslint-config-next": "16.3.3",
     "tailwindcss": "^4",
     "typescript": "^5"

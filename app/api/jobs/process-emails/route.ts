@@ -7,7 +7,11 @@ import {
 } from "@/lib/email/templates";
 
 /**
- * POST /api/jobs/process-emails   (cron-compatible; header x-cron-secret)
+ * POST /api/jobs/process-emails   (cron-compatible)
+ *
+ * Auth: Vercel Cron natively sends `Authorization: Bearer $CRON_SECRET`;
+ * external schedulers can send `x-cron-secret: <CRON_SECRET>` instead.
+ * Both are accepted; the secret must be configured or the worker 503s.
  *
  * Outbox worker: claims up to 10 pending notification_jobs whose run_at
  * has passed, renders the template, sends via the provider abstraction,
@@ -24,7 +28,10 @@ export async function POST(request: Request) {
   if (!secret) {
     return NextResponse.json({ error: "Worker disabled." }, { status: 503 });
   }
-  if (request.headers.get("x-cron-secret") !== secret) {
+  const bearer = request.headers.get("authorization") ?? "";
+  const headerOk = request.headers.get("x-cron-secret") === secret;
+  const bearerOk = bearer === `Bearer ${secret}`;
+  if (!headerOk && !bearerOk) {
     return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
   }
 
