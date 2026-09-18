@@ -2,7 +2,7 @@ import type { OutgoingEmail } from "./provider";
 
 /**
  * Email templates for the booking lifecycle. Safe fields only — never
- * card numbers, Authorize.net ids, gclid or clinical information.
+ * card numbers, payment provider ids, gclid or clinical information.
  */
 
 export type BookingEmailData = {

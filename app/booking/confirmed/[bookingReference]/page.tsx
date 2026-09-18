@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
  *
  * Shareable confirmation view addressed by the public booking
  * reference. Shows only safe fields: reference, status, slot times,
- * masked card, practitioner. Never exposes Authorize.net profile ids,
+ * masked card, practitioner. Never exposes payment provider profile ids,
  * database ids, attribution or email addresses.
  */
 export default async function BookingConfirmedPage({

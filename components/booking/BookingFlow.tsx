@@ -15,7 +15,7 @@ import StripePaymentStep from "./StripePaymentStep";
  * persistent stepper (left) and a dynamic stage container (right).
  * Stage 1 — live availability (in-house scheduler).
  * Stage 2 — streamlined intake (first/last name, email, phone).
- * Stage 3 — card-on-file consent + Authorize.net-hosted payment
+ * Stage 3 — card-on-file consent + Stripe-hosted payment
  *           profile form (server-verified), which also performs the
  *           database-checked hold → confirmed conversion.
  * Stage 4 — confirmation + .ics calendar download.

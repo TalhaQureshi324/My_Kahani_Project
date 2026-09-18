@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
  * Self-service booking management, addressed by a high-entropy
  * capability token. Only the SHA-256 hash is stored, so the token in
  * the URL is the sole key to the booking. Shows safe fields only —
- * never Authorize.net ids, database ids or attribution data.
+ * never payment provider ids, database ids or attribution data.
  */
 export default async function ManageBookingPage({
   params,
