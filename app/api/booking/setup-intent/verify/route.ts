@@ -239,16 +239,16 @@ export async function POST(request: Request) {
     run_at: new Date().toISOString(),
   };
 
+  // Plain insert — the booking_operations marker above already guarantees
+  // one execution per booking, and the partial unique index
+  // notification_jobs_live_uniq cannot be targeted by an ON CONFLICT clause.
   const { error: jobsError } = await supabase
     .from("notification_jobs")
-    .upsert(
-      [
-        confirmationJob,
-        reminderJob("reminder_24h", 24),
-        reminderJob("reminder_2h", 2),
-      ],
-      { onConflict: "booking_id,type" },
-    );
+    .insert([
+      confirmationJob,
+      reminderJob("reminder_24h", 24),
+      reminderJob("reminder_2h", 2),
+    ]);
 
   if (jobsError) {
     console.error("[setup-verify] notification jobs failed", jobsError.message);

@@ -2,17 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { ArrowDownToLine, CalendarDays, CheckCircle2, Clock, MonitorPlay, UserRound } from "lucide-react";
-import { formatDateLong, formatTimeInTZ, slotInstant } from "./CustomScheduler";
+import { formatDateLong, formatTimeIn, formatTimeInTZ, slotInstant } from "./CustomScheduler";
 
 /**
  * Stage 4 — confirmation view: checkmark badge, booking details box,
  * the .ics calendar download, and the card-on-file reassurance note.
  */
 export default function BookingConfirmation({
-  bookingId,
+  bookingReference,
   slot,
 }: {
-  bookingId: string;
+  bookingReference: string;
   slot: { dateISO: string; slotCSTHour: number };
 }) {
   const instant = slotInstant(slot.dateISO, slot.slotCSTHour);
@@ -43,7 +43,7 @@ export default function BookingConfirmation({
             Date
           </span>
           <span className="font-semibold text-[#1A1A1A]">
-            {formatDateLong(slot.dateISO)}
+            {formatDateLong(slot.dateISO)} · {formatTimeIn(instant)} CT
           </span>
         </p>
         <p className="flex items-center justify-between gap-4">
@@ -52,7 +52,16 @@ export default function BookingConfirmation({
             Time
           </span>
           <span className="font-semibold text-[#1A1A1A]">
-            {formatTimeInTZ(localTz ?? "America/Chicago", instant)}
+            {localTz
+              ? new Intl.DateTimeFormat("en-US", {
+                  timeZone: localTz,
+                  month: "short",
+                  day: "numeric",
+                  hour: "numeric",
+                  minute: "2-digit",
+                  hour12: true,
+                }).format(instant)
+              : formatTimeInTZ("America/Chicago", instant)}
             {localTz ? <span className="ml-1 font-normal text-[#1A1A1A]/55">({localTz})</span> : null}
           </span>
         </p>
@@ -84,7 +93,7 @@ export default function BookingConfirmation({
       </div>
 
       <a
-        href={`/api/booking/${encodeURIComponent(bookingId)}/calendar?date=${slot.dateISO}&hour=${slot.slotCSTHour}`}
+        href={`/api/bookings/${encodeURIComponent(bookingReference)}/calendar`}
         className="inline-flex items-center gap-2 rounded-full bg-[#5D1F13] px-6 py-3 text-sm font-bold text-[#F5EFE6] shadow-[0_6px_20px_-8px_rgba(93,31,19,0.7)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#4A1811]"
       >
         <ArrowDownToLine className="h-4 w-4" aria-hidden="true" />

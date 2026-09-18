@@ -1,68 +1,59 @@
 /**
- * Booking credentials self-check — zero dependencies.
- *
- * Run AFTER filling your Authorize.Net credentials in .env.local and
- * restarting the server:
+ * Stripe-era booking self-check — zero dependencies.
  *
  *   npm run booking:check            # checks http://localhost:3000
  *   npm run booking:check http://localhost:4827
  *
- * What it tells you:
- *   503 "not configured"             → .env.local missing or server not restarted
- *   E00007 "invalid authentication"  → API Login ID / Transaction Key are wrong
- *   token-related error (E00114 etc.) → credentials are VALID ✅ (only our test
- *                                       token is fake — now try the real
- *                                       booking flow in the browser)
- *   success + bookingId              → full end-to-end vault worked
+ * Verifies the pieces a live booking depends on:
+ *   1. Server reachable + database connected (availability endpoint answers).
+ *   2. Stripe keys present in .env.local (publishable + secret, both test/live
+ *      consistently).
+ *
+ * The full card-on-file flow (hold → details → SetupIntent → Payment Element
+ * → verify → confirmed) is exercised manually in the browser with Stripe's
+ * 4242 4242 4242 4242 test card.
  */
 
 const base = process.argv[2] ?? "http://localhost:3000";
 
-const res = await fetch(`${base}/api/booking/authorize`, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    fullName: "Booking Check",
-    email: "booking-check@trueselfme.test",
-    phone: "5125550143",
-    gclid: null,
-    opaqueToken: {
-      dataDescriptor: "COMMON.ACCEPT.INAPP.PAYMENT",
-      dataValue: "booking-check-invalid-token",
-    },
-    slotDetails: {
-      dateISO: new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10),
-      slotCSTHour: 9,
-      durationMinutes: 50,
-      format: "Virtual Video Consultation",
-    },
-  }),
-});
-
-const data = await res.json().catch(() => ({}));
-const text = String(data.error ?? "");
-
-if (res.status === 503) {
-  console.error("❌ Not configured — fill your Authorize.Net credentials in .env.local and restart the server.");
-  process.exit(1);
+// 1. Availability (proves server + Supabase connection).
+let availabilityOk = false;
+try {
+  const from = new Date().toISOString().slice(0, 10);
+  const to = new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10);
+  const res = await fetch(`${base}/api/availability?from=${from}&to=${to}`);
+  availabilityOk = res.ok;
+  if (!res.ok) {
+    console.error(`❌ /api/availability answered ${res.status} — check Supabase env vars and that the migrations ran.`);
+  }
+} catch {
+  console.error(`❌ Server not reachable at ${base} — is \`npm run dev\` running?`);
 }
-if (res.status === 400) {
-  console.error("❌ Route rejected the request payload:", text);
-  process.exit(1);
-}
-if (/invalid authentication values/i.test(text)) {
-  console.error("❌ Credentials are INVALID (E00007). Double-check AUTHORIZENET_API_LOGIN_ID and AUTHORIZENET_TRANSACTION_KEY in .env.local, restart, and re-run.");
-  process.exit(1);
-}
-if (res.status === 502) {
-  console.log("✅ Credentials are VALID — Authorize.Net accepted the request and only rejected our deliberately fake card token (" + text + ").");
-  console.log("   Your .env.local is correct. Open the booking flow in the browser and make a real test-card reservation.");
-  process.exit(0);
-}
-if (data.success) {
-  console.log("✅ Full end-to-end vault succeeded — bookingId:", data.bookingId);
-  process.exit(0);
+if (availabilityOk) {
+  console.log("✅ Server reachable and Supabase availability query works.");
 }
 
-console.log("Unrecognised response:", res.status, text || "(no error text)");
-process.exit(1);
+// 2. Stripe env sanity (read directly from .env.local).
+import { readFileSync } from "node:fs";
+let env = {};
+try {
+  for (const line of readFileSync(".env.local", "utf8").split("\n")) {
+    const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/);
+    if (m) env[m[1]] = m[2].replace(/^["']|["']$/g, "");
+  }
+} catch {
+  console.error("❌ .env.local not found in this directory.");
+}
+const pk = env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? "";
+const sk = env.STRIPE_SECRET_KEY ?? "";
+const mode = (k) => (k.startsWith("pk_test") || k.startsWith("sk_test") ? "test" : k.startsWith("pk_live") || k.startsWith("sk_live") ? "live" : "?");
+if (!pk || !sk) {
+  console.error("❌ Missing NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY or STRIPE_SECRET_KEY in .env.local.");
+} else if (mode(pk) !== mode(sk)) {
+  console.error(`❌ Key mode mismatch: publishable is ${mode(pk)}, secret is ${mode(sk)}. Both must be test (or both live).`);
+} else {
+  console.log(`✅ Stripe keys present and consistent (${mode(sk)} mode).`);
+  console.log("   Card-on-file flow: use test card 4242 4242 4242 4242, any future expiry, any CVC.");
+}
+
+if (!availabilityOk || !pk || !sk || mode(pk) !== mode(sk)) process.exit(1);

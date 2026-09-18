@@ -28,7 +28,7 @@ const STAGES = [
   { id: 4, label: "Confirmation" },
 ] as const;
 
-type Hold = { booking_id: string; expires_at: string };
+type Hold = { booking_id: string; expires_at: string; manage_token: string };
 
 export default function BookingFlow() {
   const [stage, setStage] = useState<1 | 2 | 3 | 4>(1);
@@ -42,7 +42,7 @@ export default function BookingFlow() {
     email: "",
     phone: "",
   });
-  const [bookingId, setBookingId] = useState<string | null>(null);
+  const [bookingRef, setBookingRef] = useState<string | null>(null);
 
   const detailsValid =
     fields.firstName.trim() !== "" &&
@@ -70,6 +70,7 @@ export default function BookingFlow() {
       setHold({
         booking_id: data.booking_id,
         expires_at: data.hold.expires_at,
+        manage_token: data.manage_token,
       });
       setStage(2);
     } catch {
@@ -83,7 +84,7 @@ export default function BookingFlow() {
     selected !== null
       ? `${formatDateLong(chicagoDateOf(selected.start))} at ${formatTimeIn(
           selected.start,
-        )} your time`
+        )} Central Time`
       : "";
 
   return (
@@ -301,7 +302,7 @@ export default function BookingFlow() {
                 </span>
                 <span className="font-semibold text-[#1A1A1A]">
                   {formatDateLong(chicagoDateOf(selected!.start))} ·{" "}
-                  {formatTimeIn(selected!.start)} your time
+                  {formatTimeIn(selected!.start)} Central Time
                 </span>
               </p>
               <p className="flex items-center justify-between gap-4">
@@ -332,11 +333,21 @@ export default function BookingFlow() {
             <CardOnFileStep
               bookingId={hold!.booking_id}
               holdExpiresAt={hold!.expires_at}
+              manageToken={hold!.manage_token}
+              details={{
+                firstName: fields.firstName.trim(),
+                lastName: fields.lastName.trim(),
+                email: fields.email.trim(),
+                phone: fields.phone.trim(),
+              }}
               slot={{
                 dateISO: chicagoDateOf(selected!.start),
                 slotCSTHour: chicagoHour(selected!.start),
               }}
-              onConfirmed={() => setStage(4)}
+              onConfirmed={(ref) => {
+                setBookingRef(ref);
+                setStage(4);
+              }}
               onExpired={() => {
                 setHoldError(
                   "Your slot hold has expired. Please choose a new time to continue.",
@@ -350,9 +361,9 @@ export default function BookingFlow() {
           </div>
         )}
 
-        {stage === 4 && selected && (
+        {stage === 4 && selected && bookingRef && (
           <BookingConfirmation
-            bookingId={bookingId ?? "TSM-PENDING"}
+            bookingReference={bookingRef}
             slot={{
               dateISO: chicagoDateOf(selected.start),
               slotCSTHour: chicagoHour(selected.start),

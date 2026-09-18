@@ -33,6 +33,8 @@ const stripePromise = publishableKey ? loadStripe(publishableKey) : null;
 export default function CardOnFileStep({
   bookingId,
   holdExpiresAt,
+  manageToken,
+  details,
   slot,
   onConfirmed,
   onExpired,
@@ -41,8 +43,15 @@ export default function CardOnFileStep({
 }: {
   bookingId: string;
   holdExpiresAt: string;
+  manageToken: string;
+  details: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+  };
   slot: { dateISO: string; slotCSTHour: number };
-  onConfirmed: () => void;
+  onConfirmed: (bookingReference: string) => void;
   onExpired: () => void;
   onBack: () => void;
   continuing?: boolean;
@@ -75,7 +84,14 @@ export default function CardOnFileStep({
       const res = await fetch("/api/booking/setup-intent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ booking_id: bookingId, consent_accepted: true }),
+        body: JSON.stringify({
+          booking_id: bookingId,
+          consent_accepted: true,
+          first_name: details.firstName,
+          last_name: details.lastName,
+          email: details.email,
+          phone: details.phone,
+        }),
       });
       const data = await res.json();
       if (!res.ok || !data.success) {
@@ -96,38 +112,6 @@ export default function CardOnFileStep({
       setTokenError("Network error. Please try again.");
     } finally {
       setLoadingSI(false);
-    }
-  }
-
-  async function verifyAndConfirm() {
-    setConfirmError(null);
-    setVerifying(true);
-    try {
-      const res = await fetch("/api/booking/setup-intent/verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ booking_id: bookingId }),
-      });
-      const data = await res.json();
-      if (!res.ok || !data.success) {
-        if (res.status === 410) {
-          setConfirmError(
-            data.error ?? "Your slot hold has expired. Please choose a new time.",
-          );
-          onExpired();
-          return;
-        }
-        setConfirmError(
-          data.error ??
-            "We could not verify the saved card. Please try again or add the card once more.",
-        );
-        return;
-      }
-      onConfirmed();
-    } catch {
-      setConfirmError("Network error while confirming. Please try again.");
-    } finally {
-      setVerifying(false);
     }
   }
 
@@ -189,10 +173,10 @@ export default function CardOnFileStep({
         >
           <SetupForm
             bookingId={bookingId}
+            manageToken={manageToken}
             onConfirmed={onConfirmed}
             onExpired={onExpired}
-          />
-        </Elements>
+          />        </Elements>
       ) : null}
 
       {/* Slot hold window reminder */}
@@ -224,11 +208,13 @@ export default function CardOnFileStep({
 
 function SetupForm({
   bookingId,
+  manageToken,
   onConfirmed,
   onExpired,
 }: {
   bookingId: string;
-  onConfirmed: () => void;
+  manageToken: string;
+  onConfirmed: (bookingReference: string) => void;
   onExpired: () => void;
 }) {
   const stripe = useStripe();
@@ -262,7 +248,11 @@ function SetupForm({
       const res = await fetch("/api/booking/setup-intent/verify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ booking_id: bookingId }),
+        body: JSON.stringify({
+          booking_id: bookingId,
+          setup_intent_id: setupIntent?.id,
+          manage_token: manageToken,
+        }),
       });
       const data = await res.json();
       if (!res.ok || !data.success) {
@@ -277,7 +267,7 @@ function SetupForm({
         setSubmitting(false);
         return;
       }
-      onConfirmed();
+      onConfirmed(data.booking_reference as string);
     } catch {
       setError("Network error while confirming. Please try again.");
     } finally {
@@ -288,6 +278,14 @@ function SetupForm({
   return (
     <form onSubmit={handleSubmit} className="mt-6">
       <PaymentElement />
+      {error && (
+        <p
+          role="alert"
+          className="mt-4 rounded-md border border-[#A8532B]/40 bg-[#A8532B]/10 px-4 py-3 text-sm font-medium text-[#5D1F13]"
+        >
+          {error}
+        </p>
+      )}
       <button
         type="submit"
         disabled={submitting}

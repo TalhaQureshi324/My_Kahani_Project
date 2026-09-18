@@ -3,21 +3,11 @@ import { rateLimit, clientIp } from "@/lib/rateLimit";
 import { isDatabaseConfigured, getSupabaseAdmin } from "@/lib/supabase";
 import { getStripe } from "@/lib/stripe";
 
-/**
- * POST /api/booking/setup-intent
- * Body: { booking_id, consent_accepted: true }
- *
- * Validates the hold + consent + details, persists the consent audit
- * fields, creates/reuses the Stripe Customer, creates a SetupIntent
- * (usage: off_session) bound to that customer, and returns the
- * client_secret for the Payment Element. No charge is created.
- */
+const CANCELLATION_POLICY_VERSION = "2026-09-v1";
 
 function fail(message: string, status = 400) {
   return NextResponse.json({ success: false, error: message }, { status });
 }
-
-const CANCELLATION_POLICY_VERSION = "2026-09-v1";
 
 export async function POST(request: Request) {
   const rl = rateLimit(`setup-intent:${clientIp(request)}`, 20, 60_000);
@@ -34,7 +24,14 @@ export async function POST(request: Request) {
     );
   }
 
-  let body: { booking_id?: string; consent_accepted?: boolean };
+  let body: {
+    booking_id?: string;
+    consent_accepted?: boolean;
+    first_name?: string;
+    last_name?: string;
+    email?: string;
+    phone?: string;
+  };
   try {
     body = await request.json();
   } catch {
@@ -42,8 +39,15 @@ export async function POST(request: Request) {
   }
 
   const bookingId = body.booking_id ?? "";
+  const firstName = (body.first_name ?? "").trim();
+  const lastName = (body.last_name ?? "").trim();
+  const email = (body.email ?? "").trim();
+  const phone = (body.phone ?? "").trim();
   if (!bookingId || body.consent_accepted !== true) {
     return fail("Missing booking reference or consent.");
+  }
+  if (!firstName || !lastName || !/.+@.+\..+/.test(email) || !phone) {
+    return fail("Missing or invalid booking details (name, email, phone).");
   }
 
   const supabase = getSupabaseAdmin();
@@ -97,39 +101,43 @@ export async function POST(request: Request) {
     }
   }
 
-  // Server-side validation of the details captured on stage 2.
-  if (!booking.first_name || !booking.last_name || !booking.email) {
-    return fail("Booking details are incomplete. Please go back and resubmit them.");
+  // Persist the streamlined intake details + upsert the internal customer
+  // (the Stripe Customer and emails need them).
+  const { error: detailError } = await supabase
+    .from("bookings")
+    .update({
+      first_name: firstName,
+      last_name: lastName,
+      email,
+      phone,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", bookingId);
+  if (detailError) {
+    console.error("[setup-intent] detail persist failed", detailError.message);
   }
 
-  // Resolve/create the internal customer record.
-  let customerId: string = booking.customer_id ?? "";
-  if (!customerId) {
-    const { data: existing } = await supabase
+  const { data: existingCustomer } = await supabase
+    .from("customers")
+    .select("id")
+    .eq("email", email)
+    .maybeSingle();
+  let customerId: string;
+  if (existingCustomer) {
+    customerId = existingCustomer.id;
+  } else {
+    const { data: created, error: createError } = await supabase
       .from("customers")
+      .insert({ email, first_name: firstName, last_name: lastName, phone })
       .select("id")
-      .eq("email", booking.email)
-      .maybeSingle();
-    if (existing) {
-      customerId = existing.id;
-    } else {
-      const { data: created, error: createError } = await supabase
-        .from("customers")
-        .insert({
-          email: booking.email,
-          first_name: booking.first_name,
-          last_name: booking.last_name,
-        })
-        .select("id")
-        .single();
-      if (createError || !created) {
-        console.error("[setup-intent] customer create failed", createError?.message);
-        return fail("Could not save your details. Please try again.", 500);
-      }
-      customerId = created.id;
+      .single();
+    if (createError || !created) {
+      console.error("[setup-intent] customer create failed", createError?.message);
+      return fail("Could not save your details. Please try again.", 500);
     }
-    await supabase.from("bookings").update({ customer_id: customerId }).eq("id", bookingId);
+    customerId = created.id;
   }
+  await supabase.from("bookings").update({ customer_id: customerId }).eq("id", bookingId);
 
   // Reuse or create the Stripe Customer (idempotent per internal customer).
   let stripeCustomerId = booking.stripe_customer_id ?? null;
