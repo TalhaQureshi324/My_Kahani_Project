@@ -61,11 +61,7 @@ create table if not exists customers (
   updated_at  timestamptz not null default now()
 );
 alter table customers
-  add column if not exists authorize_net_customer_profile_id text,
   add column if not exists stripe_customer_id                text;
-create unique index if not exists customers_anet_profile_uniq
-  on customers (authorize_net_customer_profile_id)
-  where authorize_net_customer_profile_id is not null;
 create unique index if not exists customers_stripe_customer_uniq
   on customers (stripe_customer_id) where stripe_customer_id is not null;
 
@@ -104,8 +100,6 @@ alter table bookings
   add column if not exists cancellation_fee_eligible                boolean,
   add column if not exists rescheduled_from                         timestamptz,
   add column if not exists rescheduled_count                        integer not null default 0,
-  add column if not exists authorize_net_customer_profile_id        text,
-  add column if not exists authorize_net_payment_profile_id         text,
   add column if not exists card_brand                               text,
   add column if not exists card_last4                               text,
   add column if not exists card_saved_at                            timestamptz,
@@ -227,16 +221,6 @@ create table if not exists booking_operations (
   status      text not null default 'done',
   created_at  timestamptz not null default now(),
   unique (booking_id, operation)
-);
-
--- 8. authorize_net_events (webhook idempotency) ----------------------------------
-create table if not exists authorize_net_events (
-  id           uuid primary key default gen_random_uuid(),
-  event_id     text not null unique,
-  event_type   text not null,
-  payload      jsonb,
-  received_at  timestamptz not null default now(),
-  processed_at timestamptz
 );
 
 -- 9. Lifecycle SQL functions ----------------------------------------------------
@@ -384,5 +368,4 @@ alter table availability_exceptions enable row level security;
 alter table slot_holds            enable row level security;
 alter table conversion_events     enable row level security;
 alter table notification_jobs     enable row level security;
-alter table authorize_net_events  enable row level security;
 alter table booking_operations    enable row level security;
