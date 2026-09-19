@@ -83,6 +83,31 @@ export async function POST(
   }
 
   const row = (data ?? [])[0];
+
+  // Transactional cancellation email (queued — provider failures retry
+  // via the email worker; never blocks the cancellation itself).
+  const { data: contact } = await supabase
+    .from("bookings")
+    .select("email, first_name")
+    .eq("manage_token_hash", tokenHash)
+    .maybeSingle();
+  if (contact?.email) {
+    await supabase.from("notification_jobs").insert({
+      booking_id: row?.booking_id ?? null,
+      type: "booking_cancelled",
+      payload: {
+        to_email: contact.email,
+        first_name: contact.first_name ?? "",
+        booking_reference: row?.booking_reference ?? "",
+        slot_start: row?.slot_start ?? "",
+        client_timezone: "America/Chicago",
+        fee_eligible: row?.fee_eligible ? "true" : "false",
+      },
+      status: "pending",
+      run_at: new Date().toISOString(),
+    });
+  }
+
   return NextResponse.json({
     success: true,
     booking_reference: row?.booking_reference ?? null,

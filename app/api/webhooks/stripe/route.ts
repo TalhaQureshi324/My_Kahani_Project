@@ -3,6 +3,7 @@ import { isDatabaseConfigured, getSupabaseAdmin } from "@/lib/supabase";
 import Stripe from "stripe";
 import { getStripe, stripeWebhookSecret } from "@/lib/stripe";
 import { enqueueSessionPaid } from "@/lib/ads/conversionOutbox";
+import { generateManageToken, hashManageToken } from "@/lib/bookingTokens";
 
 /**
  * POST /api/webhooks/stripe
@@ -32,10 +33,34 @@ type StripeEventLike = {
       amount_due?: number;
       amount_received?: number;
       amount?: number;
+      amount_refunded?: number;
       metadata?: Record<string, string>;
     };
   };
 };
+
+function fmtUsd(cents: number | null | undefined): string {
+  if (cents == null) return "your payment amount";
+  return `$${(cents / 100).toFixed(2)}`;
+}
+
+/**
+ * Fresh secure re-entry link for payment-recovery emails. The webhook
+ * only holds the token HASH, so it mints a new token and re-points the
+ * booking at it — the customer gets a working link, old links retire.
+ */
+async function freshManageUrl(
+  supabase: ReturnType<typeof getSupabaseAdmin>,
+  bookingId: string,
+  siteUrl: string,
+): Promise<string> {
+  const token = generateManageToken();
+  await supabase
+    .from("bookings")
+    .update({ manage_token_hash: hashManageToken(token) })
+    .eq("id", bookingId);
+  return `${siteUrl}/booking/manage/${token}`;
+}
 
 export async function POST(request: Request) {
   if (!isDatabaseConfigured) {
@@ -100,6 +125,7 @@ export async function POST(request: Request) {
     id?: string;
     amount_received?: number;
     amount?: number;
+    amount_refunded?: number;
     metadata?: Record<string, string>;
     payment_method?: string | { id?: string };
     last_setup_error?: { message?: string };
@@ -168,6 +194,70 @@ export async function POST(request: Request) {
               : conversionError,
           );
         }
+        // Transactional receipt email (queued; webhook-driven so both the
+        // off-session charge and the 3DS recovery flow land here exactly
+        // once).
+        const { data: contact } = await supabase
+          .from("bookings")
+          .select("email, first_name, booking_reference")
+          .eq("id", bookingId)
+          .maybeSingle();
+        if (contact?.email) {
+          const collectedCents =
+            typeof obj.amount_received === "number"
+              ? obj.amount_received
+              : typeof obj.amount === "number"
+                ? obj.amount
+                : null;
+          await supabase.from("notification_jobs").insert({
+            booking_id: bookingId,
+            type: "payment_succeeded",
+            payload: {
+              to_email: contact.email,
+              first_name: contact.first_name ?? "",
+              booking_reference: contact.booking_reference ?? "",
+              amount: fmtUsd(collectedCents),
+            },
+            status: "pending",
+            run_at: new Date().toISOString(),
+          });
+        }
+      }
+      break;
+    }
+    case "payment_intent.requires_action": {
+      // Off-session charge needs customer authentication (3DS). Email a
+      // secure re-entry link — never the client_secret or Stripe ids.
+      if (bookingId) {
+        await supabase
+          .from("bookings")
+          .update({
+            payment_status: "requires_customer_action",
+            last_payment_attempt_at: new Date().toISOString(),
+          })
+          .eq("id", bookingId);
+        const { data: contact } = await supabase
+          .from("bookings")
+          .select("email, first_name, booking_reference")
+          .eq("id", bookingId)
+          .maybeSingle();
+        if (contact?.email) {
+          const siteUrl =
+            process.env.NEXT_PUBLIC_SITE_URL ?? new URL(request.url).origin;
+          const manageUrl = await freshManageUrl(supabase, bookingId, siteUrl);
+          await supabase.from("notification_jobs").insert({
+            booking_id: bookingId,
+            type: "payment_action_required",
+            payload: {
+              to_email: contact.email,
+              first_name: contact.first_name ?? "",
+              booking_reference: contact.booking_reference ?? "",
+              manage_url: manageUrl,
+            },
+            status: "pending",
+            run_at: new Date().toISOString(),
+          });
+        }
       }
       break;
     }
@@ -183,6 +273,28 @@ export async function POST(request: Request) {
             last_payment_attempt_at: new Date().toISOString(),
           })
           .eq("id", bookingId);
+        const { data: contact } = await supabase
+          .from("bookings")
+          .select("email, first_name, booking_reference")
+          .eq("id", bookingId)
+          .maybeSingle();
+        if (contact?.email) {
+          const siteUrl =
+            process.env.NEXT_PUBLIC_SITE_URL ?? new URL(request.url).origin;
+          const manageUrl = await freshManageUrl(supabase, bookingId, siteUrl);
+          await supabase.from("notification_jobs").insert({
+            booking_id: bookingId,
+            type: "payment_failed",
+            payload: {
+              to_email: contact.email,
+              first_name: contact.first_name ?? "",
+              booking_reference: contact.booking_reference ?? "",
+              manage_url: manageUrl,
+            },
+            status: "pending",
+            run_at: new Date().toISOString(),
+          });
+        }
       }
       break;
     }
@@ -195,6 +307,31 @@ export async function POST(request: Request) {
             refunded_at: new Date().toISOString(),
           })
           .eq("id", bookingId);
+        const { data: contact } = await supabase
+          .from("bookings")
+          .select("email, first_name, booking_reference")
+          .eq("id", bookingId)
+          .maybeSingle();
+        if (contact?.email) {
+          const refundCents =
+            typeof obj.amount_refunded === "number"
+              ? obj.amount_refunded
+              : typeof obj.amount === "number"
+                ? obj.amount
+                : null;
+          await supabase.from("notification_jobs").insert({
+            booking_id: bookingId,
+            type: "refund_completed",
+            payload: {
+              to_email: contact.email,
+              first_name: contact.first_name ?? "",
+              booking_reference: contact.booking_reference ?? "",
+              amount: fmtUsd(refundCents),
+            },
+            status: "pending",
+            run_at: new Date().toISOString(),
+          });
+        }
       }
       break;
     }

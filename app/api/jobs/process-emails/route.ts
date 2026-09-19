@@ -4,7 +4,17 @@ import { sendEmail, type OutgoingEmail } from "@/lib/email/provider";
 import {
   bookingConfirmationEmail,
   reminderEmail,
+  rescheduleEmail,
+  cancellationEmail,
+  leadWelcomeEmail,
+  leadNurtureEmail2,
+  leadNurtureEmail3,
+  paymentSucceededEmail,
+  paymentFailedEmail,
+  paymentActionRequiredEmail,
+  refundCompletedEmail,
 } from "@/lib/email/templates";
+import { canSendNurture, type LeadRecord } from "@/lib/leads";
 
 /**
  * POST|GET /api/jobs/process-emails   (cron-compatible)
@@ -60,6 +70,7 @@ async function processEmails(request: Request) {
 
   let sent = 0;
   let failed = 0;
+  let cancelled = 0;
   const results: Array<{ id: string; type: string; status: string }> = [];
 
   for (const job of jobs ?? []) {
@@ -81,9 +92,14 @@ async function processEmails(request: Request) {
       ics_url?: string;
       client_timezone?: string;
       slot_start?: string;
+      lead_id?: string;
+      book_url?: string;
+      unsubscribe_url?: string;
+      amount?: string;
     };
     const to = payload.to_email ?? "";
     const isReminder = job.type.startsWith("reminder");
+    const isLeadNurture = job.type.startsWith("lead_email_");
 
     const hoursUntil = payload.slot_start
       ? Math.max(
@@ -94,36 +110,36 @@ async function processEmails(request: Request) {
         )
       : 0;
 
-    let email: OutgoingEmail;
-    if (job.type === "booking_confirmation") {
-      email = bookingConfirmationEmail({
-        firstName: payload.first_name ?? "",
-        bookingReference: payload.booking_reference ?? "",
-        slotStartISO: payload.slot_start ?? "",
-        clientTimezone: payload.client_timezone ?? "America/Chicago",
-        durationMinutes: 50,
-        manageUrl: payload.manage_url ?? "",
-        icsUrl: payload.ics_url ?? "",
-      });
-    } else if (isReminder) {
-      email = reminderEmail({
-        firstName: payload.first_name ?? "",
-        bookingReference: payload.booking_reference ?? "",
-        slotStartISO: payload.slot_start ?? "",
-        clientTimezone: payload.client_timezone ?? "America/Chicago",
-        hoursUntil: hoursUntil,
-        manageUrl: payload.manage_url ?? "",
-        icsUrl: payload.ics_url ?? "",
-        durationMinutes: 50,
-      });
-    } else {
-      email = {
-        to,
-        subject: "True Self Me",
-        html: "<p>Notification</p>",
-        text: "Notification",
-      };
+    // Marketing nurture re-checks the lead at SEND time: a booking or an
+    // unsubscribe since the job was queued cancels it here. Transactional
+    // types never consult the lead record — marketing opt-out does not
+    // affect them.
+    if (isLeadNurture) {
+      const leadId = payload.lead_id;
+      let sendable = false;
+      if (leadId) {
+        const { data: lead } = await supabase
+          .from("leads")
+          .select("id, status, email_consent, unsubscribed_at")
+          .eq("id", leadId)
+          .maybeSingle();
+        if (lead && canSendNurture(lead as LeadRecord)) sendable = true;
+      }
+      if (!sendable) {
+        await supabase
+          .from("notification_jobs")
+          .update({
+            status: "cancelled",
+            last_error: "nurture_cancelled_lead_state",
+          })
+          .eq("id", job.id);
+        cancelled += 1;
+        results.push({ id: job.id, type: job.type, status: "cancelled" });
+        continue;
+      }
     }
+
+    const email = renderEmail(job.type, payload, to);
 
     const result = await sendEmail({ ...email, to });
 
@@ -145,5 +161,109 @@ async function processEmails(request: Request) {
     else failed++;
   }
 
-  return NextResponse.json({ processed: results.length, sent, failed });
+  return NextResponse.json({ processed: results.length, sent, failed, cancelled });
+}
+
+/**
+ * Template selection for every job type the queue carries. Transactional
+ * types (booking lifecycle + payment notices) are rendered regardless of
+ * marketing state; only lead_email_* jobs are gated upstream.
+ */
+function renderEmail(
+  type: string,
+  payload: Record<string, string | undefined>,
+  to: string,
+): OutgoingEmail {
+  void to;
+  const firstName = payload.first_name ?? "";
+  const bookingReference = payload.booking_reference ?? "";
+  const manageUrl = payload.manage_url ?? "";
+  const clientTimezone = payload.client_timezone ?? "America/Chicago";
+
+  switch (type) {
+    case "booking_confirmation":
+      return bookingConfirmationEmail({
+        firstName,
+        bookingReference,
+        slotStartISO: payload.slot_start ?? "",
+        clientTimezone,
+        durationMinutes: 50,
+        manageUrl,
+        icsUrl: payload.ics_url ?? "",
+      });
+    case "reminder_24h":
+      return reminderEmail({
+        firstName,
+        bookingReference,
+        slotStartISO: payload.slot_start ?? "",
+        clientTimezone,
+        hoursUntil: 24,
+        manageUrl,
+        icsUrl: payload.ics_url ?? "",
+        durationMinutes: 50,
+      });
+    case "reminder_2h":
+      return reminderEmail({
+        firstName,
+        bookingReference,
+        slotStartISO: payload.slot_start ?? "",
+        clientTimezone,
+        hoursUntil: 2,
+        manageUrl,
+        icsUrl: payload.ics_url ?? "",
+        durationMinutes: 50,
+      });
+    case "reschedule":
+    case "booking_rescheduled":
+      return rescheduleEmail({
+        firstName,
+        bookingReference,
+        slotStartISO: payload.new_slot_start ?? payload.slot_start ?? "",
+        clientTimezone,
+        durationMinutes: 50,
+        manageUrl,
+        icsUrl: payload.ics_url ?? "",
+      });
+    case "booking_cancelled":
+      return cancellationEmail({
+        firstName,
+        bookingReference,
+        slotStartISO: payload.slot_start ?? "",
+        clientTimezone,
+        feeEligible: payload.fee_eligible === "true",
+      });
+    case "payment_succeeded":
+      return paymentSucceededEmail({ firstName, amount: payload.amount ?? "", bookingReference });
+    case "payment_failed":
+      return paymentFailedEmail({ firstName, bookingReference, manageUrl });
+    case "payment_action_required":
+      return paymentActionRequiredEmail({ firstName, bookingReference, manageUrl });
+    case "refund_completed":
+      return refundCompletedEmail({ firstName, amount: payload.amount ?? "", bookingReference });
+    case "lead_email_1":
+      return leadWelcomeEmail({
+        firstName,
+        bookUrl: payload.book_url ?? "",
+        unsubscribeUrl: payload.unsubscribe_url ?? "",
+      });
+    case "lead_email_2":
+      return leadNurtureEmail2({
+        firstName,
+        bookUrl: payload.book_url ?? "",
+        unsubscribeUrl: payload.unsubscribe_url ?? "",
+      });
+    case "lead_email_3":
+      return leadNurtureEmail3({
+        firstName,
+        bookUrl: payload.book_url ?? "",
+        unsubscribeUrl: payload.unsubscribe_url ?? "",
+      });
+    default:
+      return {
+        to: "",
+        subject: "True Self Me",
+        html: "<p>Notification</p>",
+        text: "Notification",
+      };
+  }
 }

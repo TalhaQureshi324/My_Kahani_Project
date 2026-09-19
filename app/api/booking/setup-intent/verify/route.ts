@@ -4,6 +4,7 @@ import { isDatabaseConfigured, getSupabaseAdmin } from "@/lib/supabase";
 import { getStripe } from "@/lib/stripe";
 import { hashManageToken } from "@/lib/bookingTokens";
 import { enqueueBookingConfirmed } from "@/lib/ads/conversionOutbox";
+import { stopNurtureForEmail } from "@/lib/leads";
 
 /**
  * POST /api/booking/setup-intent/verify
@@ -264,6 +265,17 @@ export async function POST(request: Request) {
     console.error(
       "[setup-verify] conversion outbox enqueue failed",
       conversionError instanceof Error ? conversionError.message : conversionError,
+    );
+  }
+
+  // Phase 8: the business event that stops lead nurture. The same email
+  // booking marks the lead 'booked' and cancels pending marketing jobs.
+  try {
+    await stopNurtureForEmail(supabase, booking.email);
+  } catch (leadError) {
+    console.error(
+      "[setup-verify] lead nurture stop failed",
+      leadError instanceof Error ? leadError.message : leadError,
     );
   }
 

@@ -14,6 +14,7 @@ import PotentialLimitlessBanner from "@/components/sections/PotentialLimitlessBa
 import RightGuidance from "@/components/sections/RightGuidance";
 import Pricing from "@/components/sections/Pricing";
 import TheDadBlockSection from "@/components/sections/TheDadBlockSection";
+import LeadCaptureSection from "@/components/sections/LeadCaptureSection";
 import ContactSection from "@/components/sections/ContactSection";
 import { site } from "@/lib/site";
 
@@ -116,6 +117,7 @@ export default function Home() {
       <RightGuidance />
       <Pricing />
       <TheDadBlockSection />
+      <LeadCaptureSection />
       <ContactSection />
     </>
   );

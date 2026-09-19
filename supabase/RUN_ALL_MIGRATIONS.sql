@@ -510,3 +510,39 @@ create index if not exists conversion_outbox_claim_idx
 create index if not exists conversion_outbox_status_created_idx
   on conversion_outbox (status, created_at);
 alter table conversion_outbox enable row level security;
+
+-- ============================================================================
+-- 15. leads (migration 0007 — Phase 8) ----------------------------------------
+-- Non-booking visitors; marketing nurture with separate consent, stopped
+-- by booking confirmation, cancellable by unsubscribe at any time.
+-- ============================================================================
+do $$ begin
+  create type lead_status as enum (
+    'new', 'nurturing', 'booked', 'unsubscribed', 'invalid', 'archived'
+  );
+exception when duplicate_object then null; end $$;
+
+create table if not exists leads (
+  id                 uuid primary key default gen_random_uuid(),
+  first_name         text not null,
+  email              text not null unique,
+  phone              text,
+  email_consent      boolean not null default true,
+  sms_consent        boolean not null default false,
+  status             lead_status not null default 'new',
+  booked_at          timestamptz,
+  unsubscribed_at    timestamptz,
+  gclid              text,
+  attribution        jsonb,
+  unsubscribe_token  text not null unique,
+  created_at         timestamptz not null default now(),
+  updated_at         timestamptz not null default now()
+);
+create index if not exists leads_status_idx on leads (status, created_at);
+
+alter table notification_jobs
+  add column if not exists lead_id uuid references leads(id) on delete cascade;
+create index if not exists notification_jobs_lead_idx
+  on notification_jobs (lead_id) where lead_id is not null;
+
+alter table leads enable row level security;
