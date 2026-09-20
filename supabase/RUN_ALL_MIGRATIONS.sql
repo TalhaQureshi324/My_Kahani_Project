@@ -546,3 +546,20 @@ create index if not exists notification_jobs_lead_idx
   on notification_jobs (lead_id) where lead_id is not null;
 
 alter table leads enable row level security;
+
+-- ============================================================================
+-- 16. conversion_outbox lead support (migration 0008 — Phase 10) --------------
+-- Paid lead conversions have no booking: booking_id nullable + lead_id.
+-- ============================================================================
+alter table conversion_outbox alter column booking_id drop not null;
+alter table conversion_outbox
+  add column if not exists lead_id uuid references leads(id) on delete cascade;
+drop index if exists conversion_outbox_booking_event_uniq;
+create unique index if not exists conversion_outbox_dedupe_uniq
+  on conversion_outbox (
+    event_type,
+    coalesce(booking_id::text, ''),
+    coalesce(lead_id::text, '')
+  );
+create index if not exists conversion_outbox_lead_idx
+  on conversion_outbox (lead_id) where lead_id is not null;

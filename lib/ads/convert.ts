@@ -28,6 +28,7 @@ export const ACCOUNT_TYPE_GOOGLE_ADS = "ACCOUNT_TYPE_GOOGLE_ADS";
 /** Event names — these map to conversion actions configured in Google Ads. */
 export const EVENT_BOOKING_CONFIRMED = "booking_confirmed";
 export const EVENT_SESSION_PAID = "session_paid";
+export const EVENT_LEAD = "lead";
 
 /** Consent statuses exactly as the API expects them. */
 export const CONSENT_GRANTED = "CONSENT_GRANTED";
@@ -164,7 +165,9 @@ export type BookingSnapshot = {
 };
 
 export type OutboxInsert = {
-  booking_id: string;
+  booking_id: string | null;
+  /** Set for lead rows (booking conversions leave this null). */
+  lead_id?: string | null;
   event_type: string;
   transaction_id: string;
   event_timestamp: string;
@@ -298,12 +301,77 @@ export function buildSessionPaidOutbox(
   };
 }
 
+/**
+ * lead — the SECONDARY conversion for paid visitors who are not ready to
+ * book. Only meaningful when the lead arrived with a Google click id
+ * (gclid/gbraid/wbraid): without one there is nothing to attribute, so
+ * organic leads return null and are never enqueued. Hashed user
+ * identifiers ride along only with ad-user-data consent. Value comes
+ * from GOOGLE_ADS_LEAD_CONVERSION_VALUE_CENTS when configured.
+ */
+export function buildLeadOutbox(
+  lead: {
+    id: string;
+    first_name: string;
+    email: string | null;
+    phone: string | null;
+    status: string;
+    gclid?: string | null;
+    attribution?: BookingAttribution | string | null;
+  },
+  configuredValueCents: number | null,
+): OutboxInsert | null {
+  if (lead.status !== "new" && lead.status !== "nurturing") return null;
+  const attribution = parseAttributionJson(lead.attribution);
+  const clickIds = {
+    gclid: lead.gclid ?? attribution?.gclid ?? null,
+    gbraid: attribution?.gbraid ?? null,
+    wbraid: attribution?.wbraid ?? null,
+  };
+  const hasClick = Boolean(clickIds.gclid || clickIds.gbraid || clickIds.wbraid);
+  if (!hasClick) return null;
+
+  const consent = resolveConsent();
+  const hashed =
+    consent.userData === "granted"
+      ? {
+          email: hashedEmail(lead.email) ?? undefined,
+          phone: hashedPhone(lead.phone) ?? undefined,
+        }
+      : {};
+  const identifiers =
+    hashed.email || hashed.phone
+      ? {
+          ...(hashed.email ? { email: hashed.email } : {}),
+          ...(hashed.phone ? { phone: hashed.phone } : {}),
+        }
+      : null;
+
+  return {
+    booking_id: null,
+    lead_id: lead.id,
+    event_type: EVENT_LEAD,
+    transaction_id: `lead:${lead.id}`,
+    event_timestamp: new Date().toISOString(),
+    conversion_value:
+      configuredValueCents != null && configuredValueCents > 0
+        ? Math.round(configuredValueCents) / 100
+        : null,
+    currency: "USD",
+    ...clickIds,
+    hashed_identifiers: identifiers,
+    ads_user_data_consent: consent.userData,
+    ads_personalization_consent: consent.personalization,
+  };
+}
+
 /* ── Data Manager API request building ────────────────────────────────── */
 
 export type GoogleAdsConversionConfig = {
   accountId: string; // Google Ads customer id, digits only
   confirmedActionId: string | null;
   paidActionId: string | null;
+  leadActionId: string | null;
 };
 
 export type OutboxRow = OutboxInsert & {
@@ -343,7 +411,9 @@ export function buildIngestRequest(
     const actionForType =
       row.event_type === EVENT_SESSION_PAID
         ? config.paidActionId
-        : config.confirmedActionId;
+        : row.event_type === EVENT_LEAD
+          ? config.leadActionId
+          : config.confirmedActionId;
     if (!actionForType || !isUploadable(row)) {
       skipped.push(row);
       continue;
@@ -361,6 +431,16 @@ export function buildIngestRequest(
         accountId: config.accountId,
       },
       productDestinationId: config.confirmedActionId,
+    });
+  }
+  if (config.leadActionId && uploadable.some(isLead)) {
+    destinations.push({
+      reference: EVENT_LEAD,
+      operatingAccount: {
+        accountType: ACCOUNT_TYPE_GOOGLE_ADS,
+        accountId: config.accountId,
+      },
+      productDestinationId: config.leadActionId,
     });
   }
   if (config.paidActionId && uploadable.some(isPaid)) {
@@ -431,6 +511,9 @@ function isConfirmed(row: OutboxRow): boolean {
 }
 function isPaid(row: OutboxRow): boolean {
   return row.event_type === EVENT_SESSION_PAID;
+}
+function isLead(row: OutboxRow): boolean {
+  return row.event_type === EVENT_LEAD;
 }
 
 function toConsentStatus(value: ConsentValue): string {

@@ -48,11 +48,15 @@ function conversionConfig(): GoogleAdsConversionConfig | null {
     process.env.GOOGLE_ADS_BOOKING_CONFIRMED_ACTION_ID ?? "";
   const paidActionId =
     process.env.GOOGLE_ADS_SESSION_PAID_ACTION_ID ?? "";
-  if (!accountId || (!confirmedActionId && !paidActionId)) return null;
+  const leadActionId = process.env.GOOGLE_ADS_LEAD_ACTION_ID ?? "";
+  if (!accountId || (!confirmedActionId && !paidActionId && !leadActionId)) {
+    return null;
+  }
   return {
     accountId,
     confirmedActionId: confirmedActionId || null,
     paidActionId: paidActionId || null,
+    leadActionId: leadActionId || null,
   };
 }
 

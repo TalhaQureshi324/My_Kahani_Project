@@ -22,6 +22,8 @@ import {
   isUploadable,
   EVENT_BOOKING_CONFIRMED,
   EVENT_SESSION_PAID,
+  EVENT_LEAD,
+  buildLeadOutbox,
 } from "../lib/ads/convert.ts";
 
 /** Stubs auth success (real signable key) so tests reach the API call. */
@@ -431,4 +433,113 @@ test("backoff: exponential-ish schedule capped at MAX_ATTEMPTS", () => {
   assert.equal(MAX_ATTEMPTS, 5);
   const next = nextAttemptAtFor(1, new Date("2026-09-18T00:00:00Z"));
   assert.equal(next.toISOString(), "2026-09-18T00:01:00.000Z");
+});
+
+/* ── Phase 10: lead conversion ───────────────────────────────────────── */
+
+test("lead conversion: gclid lead builds stable-transaction row", () => {
+  delete process.env.ADS_CONSENT_DEFAULT;
+  const lead = {
+    id: "lead-uuid-1",
+    first_name: "Dana",
+    email: "dana@example.com",
+    phone: null,
+    status: "new",
+    gclid: "GCLIDLEAD1",
+    attribution: null,
+  };
+  const row = buildLeadOutbox(lead, null);
+  assert.ok(row, "paid lead must enqueue");
+  assert.equal(row.event_type, EVENT_LEAD);
+  assert.equal(row.lead_id, "lead-uuid-1");
+  assert.equal(row.booking_id, null);
+  assert.equal(row.transaction_id, "lead:lead-uuid-1");
+  const again = buildLeadOutbox(lead, null);
+  assert.equal(again.transaction_id, row.transaction_id, "retries keep the id");
+  assert.equal(row.gclid, "GCLIDLEAD1");
+  assert.equal(row.ads_user_data_consent, "denied");
+  assert.equal(row.hashed_identifiers, null);
+});
+
+test("lead conversion: organic lead (no click id) is never enqueued", () => {
+  delete process.env.ADS_CONSENT_DEFAULT;
+  const organic = {
+    id: "lead-uuid-2",
+    first_name: "Sam",
+    email: "sam@example.com",
+    phone: null,
+    status: "new",
+    gclid: null,
+    attribution: { utm_source: "newsletter", landing_page: "/", first_seen_at: "" },
+  };
+  assert.equal(buildLeadOutbox(organic, 5000), null);
+  // Non-lead statuses never enqueue either.
+  assert.equal(
+    buildLeadOutbox({ ...organic, gclid: "G1", status: "booked" }, null),
+    null,
+  );
+});
+
+test("lead conversion: hashed identifiers only with consent", () => {
+  process.env.ADS_CONSENT_DEFAULT = "granted";
+  const row = buildLeadOutbox(
+    {
+      id: "lead-uuid-3",
+      first_name: "Dana",
+      email: "dana@example.com",
+      phone: "+15555550100",
+      status: "new",
+      gclid: "G1",
+      attribution: null,
+    },
+    null,
+  );
+  assert.match(row.hashed_identifiers.email ?? "", /^[0-9a-f]{64}$/);
+  assert.match(row.hashed_identifiers.phone ?? "", /^[0-9a-f]{64}$/);
+  const text = JSON.stringify(buildIngestRequest([{ ...row, id: "r", status: "pending" }], {
+    accountId: "1",
+    confirmedActionId: null,
+    paidActionId: null,
+    leadActionId: "777",
+  }).body);
+  assert.equal(text.includes("dana@example.com"), false);
+  delete process.env.ADS_CONSENT_DEFAULT;
+});
+
+test("lead conversion: routes to its own conversion action via destinationReferences", () => {
+  delete process.env.ADS_CONSENT_DEFAULT;
+  const lead = {
+    id: "lead-uuid-4",
+    first_name: "D",
+    email: "d@example.com",
+    phone: null,
+    status: "new",
+    gclid: "G2",
+    attribution: null,
+  };
+  const row = buildLeadOutbox(lead, null);
+  const { body } = buildIngestRequest([{ ...row, id: "r", status: "pending" }], {
+    accountId: "1234567890",
+    confirmedActionId: null,
+    paidActionId: null,
+    leadActionId: "555",
+  });
+  const b = body;
+  assert.equal(b.destinations[0].productDestinationId, "555");
+  assert.equal(b.events[0].destinationReferences[0], "lead");
+});
+
+test("lead conversion: configured value flows through, unconfigured omits", () => {
+  delete process.env.ADS_CONSENT_DEFAULT;
+  const lead = {
+    id: "lead-uuid-5",
+    first_name: "D",
+    email: "d@example.com",
+    phone: null,
+    status: "new",
+    gclid: "G3",
+    attribution: null,
+  };
+  assert.equal(buildLeadOutbox(lead, 2000)?.conversion_value, 20);
+  assert.equal(buildLeadOutbox(lead, null)?.conversion_value, null);
 });

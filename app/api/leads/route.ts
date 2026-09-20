@@ -13,6 +13,7 @@ import {
   nurtureSchedule,
   containsCrisisTerms,
 } from "@/lib/leads";
+import { enqueueLead } from "@/lib/ads/conversionOutbox";
 import { sendEmail } from "@/lib/email/provider";
 import { emergencyInfoEmail } from "@/lib/email/templates";
 
@@ -167,6 +168,18 @@ export async function POST(request: Request) {
     run_at: step.runAt.toISOString(),
   }));
   await supabase.from("notification_jobs").insert(jobs);
+
+  // Phase 10: paid lead conversion — enqueued only when the lead arrived
+  // with a Google click id; organic leads are never uploaded. Fire-and-
+  // forget: capture success must not depend on Google.
+  try {
+    await enqueueLead(supabase, lead.id);
+  } catch (conversionError) {
+    console.error(
+      "[leads] lead conversion enqueue failed",
+      conversionError instanceof Error ? conversionError.message : conversionError,
+    );
+  }
 
   return ok();
 }
