@@ -563,3 +563,101 @@ create unique index if not exists conversion_outbox_dedupe_uniq
   );
 create index if not exists conversion_outbox_lead_idx
   on conversion_outbox (lead_id) where lead_id is not null;
+
+-- ============================================================================
+-- 17. Google Ads automation guardrails (migration 0009 — Phase 11) -----------
+-- Deterministic, bounded, auditable, reversible. Dry-run by default.
+-- ============================================================================
+do $$ begin
+  create type ads_run_mode as enum ('dry_run', 'live');
+exception when duplicate_object then null; end $$;
+do $$ begin
+  create type ads_run_status as enum ('running', 'completed', 'failed');
+exception when duplicate_object then null; end $$;
+do $$ begin
+  create type ads_alert_severity as enum ('info', 'warning', 'critical');
+exception when duplicate_object then null; end $$;
+do $$ begin
+  create type search_term_class as enum (
+    'safe', 'negative_confident', 'ambiguous', 'crisis'
+  );
+exception when duplicate_object then null; end $$;
+
+create table if not exists ads_automation_runs (
+  id            uuid primary key default gen_random_uuid(),
+  rule_batch    text not null,
+  window_start  timestamptz not null,
+  mode          ads_run_mode not null default 'dry_run',
+  status        ads_run_status not null default 'running',
+  summary       jsonb,
+  error         text,
+  started_at    timestamptz not null default now(),
+  finished_at   timestamptz
+);
+create unique index if not exists ads_runs_batch_window_uniq
+  on ads_automation_runs (rule_batch, window_start);
+
+create table if not exists ads_automation_actions (
+  id                uuid primary key default gen_random_uuid(),
+  run_id            uuid references ads_automation_runs(id) on delete cascade,
+  entity            text not null,
+  entity_ref        text,
+  action            text not null,
+  previous_value    jsonb,
+  new_value         jsonb,
+  rule              text not null,
+  reason            text not null,
+  dry_run           boolean not null default true,
+  executed          boolean not null default false,
+  provider_response jsonb,
+  rollback_info     jsonb,
+  created_at        timestamptz not null default now()
+);
+create index if not exists ads_actions_run_idx on ads_automation_actions (run_id);
+
+create table if not exists ads_alerts (
+  id           uuid primary key default gen_random_uuid(),
+  run_id       uuid references ads_automation_runs(id) on delete set null,
+  severity     ads_alert_severity not null,
+  type         text not null,
+  message      text not null,
+  payload      jsonb,
+  acknowledged boolean not null default false,
+  acknowledged_at timestamptz,
+  created_at   timestamptz not null default now()
+);
+create index if not exists ads_alerts_open_idx
+  on ads_alerts (acknowledged, severity, created_at);
+
+create table if not exists search_term_reviews (
+  id            uuid primary key default gen_random_uuid(),
+  term          text not null,
+  matched_ad_group text,
+  metrics       jsonb,
+  classification text not null,
+  status        text not null default 'pending',
+  rule          text,
+  reason        text,
+  created_at    timestamptz not null default now(),
+  decided_at    timestamptz
+);
+create unique index if not exists search_term_reviews_term_uniq
+  on search_term_reviews (term);
+create index if not exists search_term_reviews_status_idx
+  on search_term_reviews (status, created_at);
+
+alter table ads_automation_runs    enable row level security;
+alter table ads_automation_actions enable row level security;
+alter table ads_alerts             enable row level security;
+alter table search_term_reviews    enable row level security;
+
+-- Site health samples (worker probe history for outage windows)
+create table if not exists ads_site_health (
+  id           uuid primary key default gen_random_uuid(),
+  landing_ok   boolean not null,
+  scheduler_ok boolean not null,
+  checked_at   timestamptz not null default now()
+);
+create index if not exists ads_site_health_checked_idx
+  on ads_site_health (checked_at desc);
+alter table ads_site_health enable row level security;

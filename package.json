@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "booking:check": "node scripts/booking-check.mjs",
-    "test": "node --experimental-strip-types --test tests/attribution.test.mjs tests/scheduling.test.mjs tests/conversions.test.mjs tests/leads.test.mjs tests/landing.test.mjs tests/googleAds.test.mjs"
+    "test": "node --experimental-strip-types --test tests/attribution.test.mjs tests/scheduling.test.mjs tests/conversions.test.mjs tests/leads.test.mjs tests/landing.test.mjs tests/googleAds.test.mjs tests/automation.test.mjs"
   },
   "allowScripts": {
     "unrs-resolver@1.12.2": true
