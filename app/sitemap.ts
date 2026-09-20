@@ -21,5 +21,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.6,
     },
+    ...["coaching-for-dads", "career-coaching", "relationship-coaching"].map(
+      (slug) => ({
+        url: `${site.url}/${slug}`,
+        lastModified: new Date(),
+        changeFrequency: "monthly" as const,
+        priority: 0.9,
+      }),
+    ),
   ];
 }
