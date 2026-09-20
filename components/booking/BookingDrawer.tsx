@@ -1,8 +1,18 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
-import BookingFlow from "./BookingFlow";
+
+/**
+ * Lazy client-only load: pages that merely include the site layout
+ * (e.g. Google Ads landing pages) must not download or evaluate the
+ * booking module graph — it pulls in the Stripe.js loader. The chunk
+ * is fetched on first drawer open.
+ */
+const BookingFlow = dynamic(() => import("./BookingFlow"), {
+  ssr: false,
+});
 
 /**
  * Slide-over booking sheet: fixed right-hand panel over a darkened
