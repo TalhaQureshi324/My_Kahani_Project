@@ -28,7 +28,19 @@ import { formatDateLong, formatTimeIn, slotInstant } from "./CustomScheduler";
  */
 
 const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? "";
-const stripePromise = publishableKey ? loadStripe(publishableKey) : null;
+
+/**
+ * Stripe.js must load ONLY when this payment step actually mounts —
+ * never on pages that merely include the booking module graph in their
+ * layout (module-level loadStripe() would inject js.stripe.com on every
+ * landing page). useMemo defers the script injection to first mount.
+ */
+function useStripePromise() {
+  return useMemo(
+    () => (publishableKey ? loadStripe(publishableKey) : null),
+    [],
+  );
+}
 
 export default function CardOnFileStep({
   bookingId,
@@ -56,6 +68,7 @@ export default function CardOnFileStep({
   onBack: () => void;
   continuing?: boolean;
 }) {
+  const stripePromise = useStripePromise();
   const [consent, setConsent] = useState(false);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [tokenError, setTokenError] = useState<string | null>(null);
