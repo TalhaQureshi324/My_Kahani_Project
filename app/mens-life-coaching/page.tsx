@@ -11,7 +11,7 @@ import LandingPage from "@/components/landing/LandingPage";
 const page = getLandingPage("mens-life-coaching")!;
 
 export const metadata: Metadata = {
-  title: page.meta.title,
+  title: { absolute: page.meta.title },
   description: page.meta.description,
   alternates: { canonical: `${site.url}/mens-life-coaching` },
   robots: { index: false, follow: false },

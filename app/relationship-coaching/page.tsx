@@ -6,7 +6,7 @@ import LandingPage from "@/components/landing/LandingPage";
 const page = getLandingPage("relationship-coaching")!;
 
 export const metadata: Metadata = {
-  title: page.meta.title,
+  title: { absolute: page.meta.title },
   description: page.meta.description,
   alternates: { canonical: `${site.url}/relationship-coaching` },
   robots: { index: !page.noindex, follow: true },
