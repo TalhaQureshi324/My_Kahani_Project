@@ -22,6 +22,7 @@ export const mainNav: NavItem[] = [
       { label: "Events", href: "/the-dad-block/events" },
     ],
   },
+  { label: "Book", href: "/book" },
 ];
 
 export const cta = { label: "Work with me", href: "/#contact" };
