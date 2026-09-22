@@ -15,13 +15,11 @@ function ServiceCard({
   iconAlt,
   badge,
   description,
-  compact,
 }: {
   icon: string;
   iconAlt: string;
   badge: string;
   description: string;
-  compact?: boolean;
 }) {
   return (
     <div className="flex flex-col items-center text-center">
@@ -30,16 +28,14 @@ function ServiceCard({
         alt={iconAlt}
         width={141}
         height={141}
-        className="h-[141px] w-[141px] object-contain"
+        className="mb-4 h-[141px] w-[141px] object-contain md:mb-6"
       />
-      <h3
-        className={`mt-6 inline-block w-fit whitespace-nowrap rounded-none bg-black px-1 py-0 text-center font-display font-semibold uppercase leading-none tracking-tight text-[#F5EBE6] ${
-          compact ? "text-[18px] lg:text-[25px]" : "text-[20px] lg:text-[28px]"
-        }`}
-      >
+      {/* No nowrap / fixed widths — long titles wrap to two balanced lines
+          inside their own grid column; min-h keeps sibling rows aligned. */}
+      <h3 className="mb-3 flex min-h-[3rem] items-center justify-center text-balance font-serif text-lg font-bold uppercase leading-snug tracking-wide text-white md:mb-4 md:text-xl">
         {badge}
       </h3>
-      <p className="mt-4 text-[24px] leading-relaxed text-[#F5EBE6]">
+      <p className="text-base leading-relaxed text-[#F5EBE6] md:text-lg">
         {description}
       </p>
     </div>
@@ -62,7 +58,7 @@ export default function CounselingServices() {
         </h2>
 
         {/* Row 1 — three columns */}
-        <div className="mt-14 grid gap-12 sm:gap-10 md:grid-cols-3">
+        <div className="mt-14 grid grid-cols-1 items-start gap-8 md:grid-cols-3 lg:gap-12">
           {items.slice(0, 3).map((item) => (
             <ServiceCard key={item.badge} {...item} />
           ))}
@@ -75,7 +71,7 @@ export default function CounselingServices() {
         />
 
         {/* Row 2 — two centered columns */}
-        <div className="mx-auto grid max-w-4xl gap-12 sm:gap-10 md:grid-cols-2">
+        <div className="mx-auto grid max-w-4xl grid-cols-1 items-start gap-8 md:grid-cols-2 lg:gap-12">
           {items.slice(3).map((item) => (
             <ServiceCard key={item.badge} {...item} />
           ))}
