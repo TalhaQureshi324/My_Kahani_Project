@@ -24,20 +24,28 @@ function ServiceCard({
 }) {
   return (
     <div className="flex flex-col items-center text-center">
-      <Image
-        src={icon}
-        alt={iconAlt}
-        width={141}
-        height={141}
-        className="mb-4 h-[141px] w-[141px] object-contain"
-      />
-      {/* Single-line black label badge — strictly one line, never wraps. */}
-      <div className="mb-4 flex justify-center">
-        <h3 className="inline-block whitespace-nowrap bg-black px-3 py-1 font-serif text-sm font-bold uppercase tracking-wider text-white shadow-sm sm:text-base lg:text-lg">
+      {/* Spray / Doodle Icon */}
+      <div className="mb-4">
+        <Image
+          src={icon}
+          alt={iconAlt}
+          width={141}
+          height={141}
+          className="h-[141px] w-[141px] object-contain"
+        />
+      </div>
+
+      {/* Exact fitted black highlight heading — hugs the text, sharp
+          corners, strictly one line. (h3 keeps document semantics; the
+          inline-block classes make it render as a fitted label.) */}
+      <div className="mb-3 flex justify-center">
+        <h3 className="inline-block whitespace-nowrap rounded-none bg-black px-2 py-0.5 font-serif text-xs font-bold uppercase leading-tight tracking-wider text-white sm:text-sm md:text-base lg:text-[17px]">
           {badge}
         </h3>
       </div>
-      <p className="mx-auto max-w-xs text-sm leading-relaxed text-[#F5EBE6] md:text-base">
+
+      {/* Description Body */}
+      <p className="mx-auto max-w-[280px] text-sm leading-relaxed text-[#F5EBE6] md:text-base">
         {description}
       </p>
     </div>
