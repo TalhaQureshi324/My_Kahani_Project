@@ -18,7 +18,7 @@ export default function TheDadBlockSection() {
     <section className="relative w-full scroll-mt-24 overflow-x-clip bg-[#A26838]">
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-[url('/new%20images/dad_block_background.png')] bg-repeat"
+        className="absolute inset-0 bg-[url('/New%20images/dad_block_background.png')] bg-repeat"
       />
 
       <div className="relative pt-16 pb-24 px-6 md:px-12">
