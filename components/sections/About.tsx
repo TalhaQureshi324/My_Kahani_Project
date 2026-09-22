@@ -12,7 +12,7 @@ export default function About() {
     <section id="about" className="relative scroll-mt-24 overflow-x-clip bg-[#5C3A26]">
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-[url('/images/aBOUT_TRUE_SELF_ME_BACKGROUND.webp')] bg-repeat"
+        className="absolute inset-0 bg-[url('/new%20images/aBOUT_TRUE_SELF_ME_BACKGROUND.png')] bg-repeat"
       />
       <div className="relative mx-auto grid max-w-7xl gap-14 px-5 py-20 sm:px-8 lg:grid-cols-2 lg:gap-20 lg:py-28">
         {/* Copy */}

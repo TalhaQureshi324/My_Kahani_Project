@@ -14,7 +14,7 @@ export default function AboutContinued() {
     <section className="relative bg-[#DED5C8]">
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-[url('/images/ABOUT_THE_PRACTICE_BACKGROUND.webp')] bg-repeat"
+        className="absolute inset-0 bg-[url('/new%20images/ABOUT_THE_PRACTICE_BACKGROUND.png')] bg-repeat"
       />
       <div className="relative mx-auto grid max-w-7xl gap-14 px-5 py-20 sm:px-8 lg:grid-cols-2 lg:gap-20 lg:py-24">
         {/* Inset portrait + grunge splash (mirrored column) */}

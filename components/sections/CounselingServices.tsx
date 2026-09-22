@@ -59,7 +59,7 @@ export default function CounselingServices() {
     <section id="services" className="relative scroll-mt-24 bg-[#A26838]">
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-[url('/images/counseling_services_background.webp')] bg-cover bg-center bg-no-repeat"
+        className="absolute inset-0 bg-[url('/new%20images/counseling_services_background.png')] bg-cover bg-center bg-no-repeat"
       />
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 pt-20 pb-4 md:pt-24 md:pb-6 lg:px-8">

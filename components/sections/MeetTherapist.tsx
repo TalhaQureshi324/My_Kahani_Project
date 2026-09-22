@@ -52,7 +52,7 @@ export default function MeetTherapist() {
         <div className="flex items-center px-8 py-12 sm:px-12 lg:py-24 lg:pr-14">
           <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl shadow-[0_30px_60px_-25px_rgba(0,0,0,0.55)]">
             <Image
-              src="/images/THERAPIST.jpg"
+              src="/new images/Therapist.jpeg"
               alt="Fahd Alam, coach and founder of True Self Me, seated for a conversation"
               fill
               sizes="(min-width: 1024px) 30vw, 80vw"

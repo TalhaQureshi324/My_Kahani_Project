@@ -15,7 +15,7 @@ import { specialties } from "@/lib/content";
  */
 
 const TEXTURE =
-  "bg-[#605C31] bg-[url('/images/areas_of_focus.webp')] bg-repeat";
+  "bg-[#605C31] bg-[url('/new%20images/areas_of_focus.png')] bg-repeat";
 
 type Item = (typeof specialties.items)[number];
 

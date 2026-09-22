@@ -43,7 +43,7 @@ export default function PotentialLimitlessBanner() {
       {/* Top wave — specialties texture clipped to the curve */}
       <div
         aria-hidden="true"
-        className="absolute left-0 top-0 block h-[90px] w-full bg-[#605C31] bg-[url('/images/areas_of_focus.webp')] bg-repeat"
+        className="absolute left-0 top-0 block h-[90px] w-full bg-[#605C31] bg-[url('/new%20images/areas_of_focus.png')] bg-repeat"
         style={{ clipPath: "url(#mural-wave-clip)" }}
       />
 
