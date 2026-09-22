@@ -5,9 +5,10 @@ import { counselingServices } from "@/lib/content";
 /**
  * Section 9 — Counseling services: kraft/terracotta field with the
  * supplied spray-paint texture background, serif display title, and a
- * 3-over-2 grid of service cards. Each card stacks a graffiti icon,
- * a solid black title badge, and a centered cream description; a thin
- * black rule divides the rows and an olive pill CTA closes the section.
+ * 3-over-2 grid of service cards. Each card stacks a graffiti icon, a
+ * single-line black label badge, and a centered cream description; a
+ * thin black rule divides the rows and an olive pill CTA closes the
+ * section.
  */
 
 function ServiceCard({
@@ -28,14 +29,15 @@ function ServiceCard({
         alt={iconAlt}
         width={141}
         height={141}
-        className="mb-4 h-[141px] w-[141px] object-contain md:mb-6"
+        className="mb-4 h-[141px] w-[141px] object-contain"
       />
-      {/* No nowrap / fixed widths — long titles wrap to two balanced lines
-          inside their own grid column; min-h keeps sibling rows aligned. */}
-      <h3 className="mb-3 flex min-h-[3rem] items-center justify-center text-balance font-serif text-lg font-bold uppercase leading-snug tracking-wide text-white md:mb-4 md:text-xl">
-        {badge}
-      </h3>
-      <p className="text-base leading-relaxed text-[#F5EBE6] md:text-lg">
+      {/* Single-line black label badge — strictly one line, never wraps. */}
+      <div className="mb-4 flex justify-center">
+        <h3 className="inline-block whitespace-nowrap bg-black px-3 py-1 font-serif text-sm font-bold uppercase tracking-wider text-white shadow-sm sm:text-base lg:text-lg">
+          {badge}
+        </h3>
+      </div>
+      <p className="mx-auto max-w-xs text-sm leading-relaxed text-[#F5EBE6] md:text-base">
         {description}
       </p>
     </div>
@@ -52,13 +54,13 @@ export default function CounselingServices() {
         className="absolute inset-0 bg-[url('/images/counseling_services_background.webp')] bg-cover bg-center bg-no-repeat"
       />
 
-      <div className="relative z-10 mx-auto max-w-6xl px-6 pt-20 pb-4 md:pt-24 md:pb-6">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 pt-20 pb-4 md:pt-24 md:pb-6 lg:px-8">
         <h2 className="text-center font-display text-3xl font-bold uppercase leading-[1.05] tracking-wide text-[#F5EBE6] md:text-5xl lg:text-6xl">
           {title}
         </h2>
 
         {/* Row 1 — three columns */}
-        <div className="mt-14 grid grid-cols-1 items-start gap-8 md:grid-cols-3 lg:gap-12">
+        <div className="mt-14 grid grid-cols-1 items-start gap-6 md:grid-cols-3 lg:gap-10">
           {items.slice(0, 3).map((item) => (
             <ServiceCard key={item.badge} {...item} />
           ))}
@@ -71,7 +73,7 @@ export default function CounselingServices() {
         />
 
         {/* Row 2 — two centered columns */}
-        <div className="mx-auto grid max-w-4xl grid-cols-1 items-start gap-8 md:grid-cols-2 lg:gap-12">
+        <div className="mx-auto flex max-w-5xl flex-col items-start justify-center gap-12 md:flex-row lg:gap-24">
           {items.slice(3).map((item) => (
             <ServiceCard key={item.badge} {...item} />
           ))}
