@@ -14,7 +14,7 @@ export default function Hero() {
       {/* textured backdrop */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-[#DED5C8] bg-[url('/images/HERO_SECTION_BACKGROUND.webp')] bg-repeat"
+        className="absolute inset-0 bg-[#DED5C8] bg-[url('/New%20images/HERO_SECTION_BACKGROUND.png')] bg-repeat"
       />
       {/* soft backdrop shapes */}
       <div

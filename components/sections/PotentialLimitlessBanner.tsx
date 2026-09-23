@@ -21,7 +21,7 @@ export default function PotentialLimitlessBanner() {
         }}
       >
         <Image
-          src="/images/potential_is_limitless.webp"
+          src="/New images/FULL_WIDTH.png"
           alt="Mural artwork with portraits and the message Your potential is limitless"
           width={1500}
           height={500}
