@@ -12,7 +12,7 @@ import { site } from "@/lib/site";
 export default function LocationMap() {
   return (
     <section
-      className="relative z-10 -mb-[25px] w-full overflow-hidden py-16 md:py-24"
+      className="relative z-10 -mb-[25px] -mt-[2px] w-full overflow-hidden py-16 md:py-24"
       style={{
         clipPath: "polygon(0 0, 100% 0, 100% calc(100% - 25px), 0 100%)",
       }}

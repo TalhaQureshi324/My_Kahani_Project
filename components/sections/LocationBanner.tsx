@@ -23,8 +23,10 @@ export default function LocationBanner() {
           className="object-cover object-left md:object-center"
         />
 
-        {/* Text block — enlarged and vertically centered in the red torn-paper body */}
-        <div className="absolute left-[6%] top-1/2 w-[46%] -translate-y-1/2 md:left-[7%] md:w-[27%]">
+        {/* Text block — enlarged and vertically centered in the red torn-paper
+            body. Desktop only: on mobile it duplicates the serif headline
+            below, so the headline is the single location block there. */}
+        <div className="absolute left-[6%] top-1/2 hidden w-[46%] -translate-y-1/2 md:left-[7%] md:block md:w-[27%]">
           <h2 className="font-sans text-[5vw] font-bold uppercase tracking-[0.12em] text-[#F7F1E6] md:text-[2.6vw]">
             {locationBanner.heading}
           </h2>
@@ -37,8 +39,9 @@ export default function LocationBanner() {
           </ul>
         </div>
 
-        {/* Serif headline pinned low in the bottom-right corner over the teal map */}
-        <h3 className="absolute bottom-[3%] right-[4%] text-left font-display text-[7vw] font-semibold uppercase leading-[1.05] text-[#F5EBE6] md:text-[3vw]">
+        {/* Serif headline — bottom-right over the map on desktop; on mobile it
+            sits over the red paper as the single authoritative location text */}
+        <h3 className="absolute bottom-[4%] left-[6%] right-[6%] text-left font-display text-[7vw] font-semibold uppercase leading-[1.05] text-[#F5EBE6] md:bottom-[3%] md:left-auto md:right-[4%] md:text-[3vw]">
           {locationBanner.headline.map((line) => (
             <span key={line} className="block">
               {line}
