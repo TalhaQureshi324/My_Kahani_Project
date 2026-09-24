@@ -128,7 +128,7 @@ export default function Testimonials() {
               </div>
 
               {/* Card Footer */}
-              <div className="mt-8 flex items-center justify-between border-t border-black/10 pt-4 text-xs font-semibold uppercase tracking-wider text-[#A8532B]">
+              <div className="mt-8 flex items-center justify-between gap-2 border-t border-black/10 pt-4 text-xs font-semibold uppercase tracking-wider text-[#A8532B]">
                 <span>{item.sub}</span>
                 <span>Verified Client</span>
               </div>
