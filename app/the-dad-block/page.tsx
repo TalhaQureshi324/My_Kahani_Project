@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, CalendarDays, Plus } from "lucide-react";
@@ -11,6 +12,9 @@ export const metadata: Metadata = {
 };
 
 export default function DadBlockPage() {
+  // TEMPORARILY DISABLED (Dad Block pause): redirect to home. The original
+  // page below is preserved — to re-enable, remove this redirect line.
+  redirect('/');
   return (
     <>
       {/* Hero */}

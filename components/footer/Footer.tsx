@@ -84,6 +84,7 @@ export default function Footer() {
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-cream/50">
               Programs
             </p>
+            {/* Temporarily disabled (Dad Block pause) — restore to re-link:
             <ul className="mt-5 space-y-3 text-sm">
               <li>
                 <Link
@@ -99,6 +100,9 @@ export default function Footer() {
                   {program.name} · Events
                 </Link>
               </li>
+            </ul>
+            */}
+            <ul className="mt-5 space-y-3 text-sm">
               <li>
                 <Link href="/#services" className="text-cream/75 transition-colors hover:text-terracotta-tint">
                   Group coaching cohorts

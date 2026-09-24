@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { CalendarDays, Clock, MapPin } from "lucide-react";
 import { SectionHeading } from "@/components/ui/primitives";
@@ -12,6 +13,9 @@ export const metadata: Metadata = {
 };
 
 export default function EventsPage() {
+  // TEMPORARILY DISABLED (Dad Block pause): redirect to home. The original
+  // page below is preserved — to re-enable, remove this redirect line.
+  redirect('/');
   return (
     <>
       {/* Hero */}

@@ -14,7 +14,8 @@ import Specialties from "@/components/sections/Specialties";
 import PotentialLimitlessBanner from "@/components/sections/PotentialLimitlessBanner";
 import RightGuidance from "@/components/sections/RightGuidance";
 import Pricing from "@/components/sections/Pricing";
-import TheDadBlockSection from "@/components/sections/TheDadBlockSection";
+// Temporarily disabled (Dad Block pause) — re-enable by uncommenting:
+// import TheDadBlockSection from "@/components/sections/TheDadBlockSection";
 import LeadCaptureSection from "@/components/sections/LeadCaptureSection";
 import ContactSection from "@/components/sections/ContactSection";
 import { site } from "@/lib/site";
@@ -118,7 +119,9 @@ export default function Home() {
       <PotentialLimitlessBanner />
       <RightGuidance />
       <Pricing />
+      {/* Temporarily disabled (Dad Block pause):
       <TheDadBlockSection />
+      */}
       <LeadCaptureSection />
       <ContactSection />
     </>
