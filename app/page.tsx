@@ -5,6 +5,7 @@ import MeetTherapist from "@/components/sections/MeetTherapist";
 import BioConclusion from "@/components/sections/BioConclusion";
 import BreakBanner from "@/components/sections/BreakBanner";
 import WhyWorkWithMe from "@/components/sections/WhyWorkWithMe";
+import Testimonials from "@/components/sections/Testimonials";
 import TherapyApproach from "@/components/sections/TherapyApproach";
 import CounselingServices from "@/components/sections/CounselingServices";
 import LocationBanner from "@/components/sections/LocationBanner";
@@ -108,6 +109,7 @@ export default function Home() {
       <BioConclusion />
       <BreakBanner />
       <WhyWorkWithMe />
+      <Testimonials />
       <TherapyApproach />
       <CounselingServices />
       <LocationBanner />
