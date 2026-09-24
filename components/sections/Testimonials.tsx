@@ -12,12 +12,12 @@ import Image from "next/image";
  * (checked at build time) — so the live site never shows a broken image.
  */
 
-const AVATAR_SRC = "/New images/person.jpg";
+const AVATAR_SRC = "/New images/person.jpeg";
 
 function avatarAvailable(): boolean {
   try {
     return fs.existsSync(
-      path.join(process.cwd(), "public", "New images", "person.jpg"),
+      path.join(process.cwd(), "public", "New images", "person.jpeg"),
     );
   } catch {
     return false;
