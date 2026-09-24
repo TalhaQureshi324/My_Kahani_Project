@@ -41,7 +41,7 @@ export default function LocationBanner() {
 
         {/* Serif headline — bottom-right over the map on desktop; on mobile it
             centers inside the red paper field as the single location text */}
-        <h3 className="absolute left-1/2 top-[35%] w-[88%] -translate-x-1/2 -translate-y-1/2 text-center font-display text-2xl font-semibold uppercase leading-[1.1] text-[#F5EBE6] sm:text-3xl md:bottom-[3%] md:left-auto md:right-[4%] md:top-auto md:w-auto md:-translate-x-0 md:-translate-y-0 md:text-left md:text-[3vw]">
+        <h3 className="absolute left-1/2 top-[38%] w-[88%] -translate-x-1/2 -translate-y-1/2 text-center font-display text-2xl font-semibold uppercase leading-[1.1] text-[#F5EBE6] sm:text-3xl md:bottom-[3%] md:left-auto md:right-[4%] md:top-auto md:w-auto md:-translate-x-0 md:-translate-y-0 md:text-left md:text-[3vw]">
           {locationBanner.headline.map((line) => (
             <span key={line} className="block">
               {line}
