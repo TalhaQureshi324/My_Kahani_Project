@@ -3,7 +3,7 @@ import { pricing } from "@/lib/content";
 
 /**
  * Section 15 — Pricing & accessibility: the supplied graphic
- * (pricing_background.webp — cream brick canvas, centered slate card,
+ * (pricing_background.png — cream brick canvas, centered slate card,
  * graffiti squiggles) is anchored from the top center and cropped by
  * the section's own height. The PRICING heading floats on the cream
  * brick canvas above the card (45px, black, display serif); the card's
@@ -18,7 +18,7 @@ export default function Pricing() {
     >
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-[url('/images/pricing_background.webp')] bg-cover bg-top bg-no-repeat"
+        className="absolute inset-0 bg-[url('/New%20images/pricing_background.png')] bg-cover bg-top bg-no-repeat"
       />
 
       <div className="relative mx-auto w-[88%] max-w-[860px] pb-[100px]">
