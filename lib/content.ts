@@ -229,7 +229,7 @@ export const specialties = {
   subheading: "Areas of focus",
   items: [
     {
-      img: "/images/1.webp",
+      img: "/New images/1.png",
       w: 400,
       h: 475,
       title: "Coaching for Dads",
