@@ -16,7 +16,7 @@ export default function RightGuidance() {
     <section className="relative -mt-[20px] w-full overflow-hidden bg-[#7B3B26]">
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-[url('/images/right_guidance_background.webp')] bg-cover bg-center bg-no-repeat"
+        className="absolute inset-0 bg-[url('/New%20images/right_guidance_background.png')] bg-cover bg-center bg-no-repeat"
       />
 
       <div className="relative flex w-full items-center justify-center px-6 py-28 md:py-36">
