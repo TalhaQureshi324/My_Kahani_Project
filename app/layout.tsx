@@ -5,6 +5,8 @@ import Navbar from "@/components/navbar/Navbar";
 import Footer from "@/components/footer/Footer";
 import BookingProvider from "@/components/booking/BookingProvider";
 import AttributionCapture from "@/components/tracking/AttributionCapture";
+import GAScript from "@/components/analytics/GAScript";
+import EngagementTracker from "@/components/analytics/EngagementTracker";
 import { site } from "@/lib/site";
 
 const display = Fraunces({
@@ -105,7 +107,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${display.variable} ${sans.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-cream font-sans text-ink">
+        <GAScript />
         <AttributionCapture />
+        <EngagementTracker />
         <BookingProvider>
           <Navbar />
           <main id="top" className="flex-1">

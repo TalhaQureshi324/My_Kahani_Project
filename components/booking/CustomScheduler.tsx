@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { chicagoWallTimeToUtc } from "@/lib/scheduling";
+import { trackEvent } from "@/lib/analytics";
 import {
   AlertCircle,
   ArrowRight,
@@ -58,6 +59,17 @@ export function formatTimeInTZ(timeZone: string, instant: Date | string): string
 }
 
 /** UTC instant of a Chicago wall hour on a calendar date. */
+/** Chicago calendar date (YYYY-MM-DD) of a UTC instant. */
+function chicagoDateOf(instant: Date | string): string {
+  const d = typeof instant === "string" ? new Date(instant) : instant;
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Chicago",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(d);
+}
+
 export function slotInstant(dateISO: string, hourCST: number): Date {
   return chicagoWallTimeToUtc(
     dateISO,
@@ -265,7 +277,10 @@ export default function CustomScheduler({
               aria-label={iso}
               onClick={() => {
                 const first = (byLocalDate.get(iso) ?? [])[0];
-                if (first) onSelect(first);
+                if (first) {
+                  onSelect(first);
+                  trackEvent({ action: "slot_selected", category: "booking", date: chicagoDateOf(first.start), time: formatTimeIn(first.start) });
+                }
               }}
               className={`mx-auto flex h-9 w-9 items-center justify-center rounded-full text-sm transition-colors ${
                 isSelected
@@ -351,7 +366,10 @@ export default function CustomScheduler({
                   key={slot.start}
                   type="button"
                   aria-pressed={isSelected}
-                  onClick={() => onSelect(slot)}
+                  onClick={() => {
+                      onSelect(slot);
+                      trackEvent({ action: "slot_selected", category: "booking", date: chicagoDateOf(slot.start), time: formatTimeIn(slot.start) });
+                    }}
                   className={`flex items-center justify-center gap-2 rounded-lg border px-3 py-2.5 text-sm transition-colors ${
                     isSelected
                       ? "border-[#A8532B] bg-[#A8532B]/10 font-semibold text-[#5D1F13]"

@@ -96,6 +96,7 @@ export default function Navbar() {
           {/* CTA + hamburger */}
           <div className="flex items-center gap-3">
             <BookingTrigger
+              location="navbar"
               aria-label="Book a coaching consultation with True Self Me"
               className="hidden rounded-full bg-terracotta px-5 py-2.5 text-sm font-bold tracking-wide text-cream shadow-[0_6px_20px_-8px_rgba(152,67,31,0.7)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-terracotta-deep sm:inline-flex"
             >

@@ -1,5 +1,6 @@
 "use client";
 
+import { trackEvent } from "@/lib/analytics";
 import {
   createContext,
   useCallback,
@@ -11,7 +12,7 @@ import {
 import BookingDrawer from "./BookingDrawer";
 
 type BookingContextValue = {
-  openBooking: () => void;
+  openBooking: (source?: string) => void;
   closeBooking: () => void;
 };
 
@@ -31,7 +32,10 @@ export function useBookingDrawer(): BookingContextValue {
  */
 export default function BookingProvider({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
-  const openBooking = useCallback(() => setOpen(true), []);
+  const openBooking = useCallback((source = "unknown") => {
+    setOpen(true);
+    trackEvent({ action: "booking_drawer_opened", category: "booking", source });
+  }, []);
   const closeBooking = useCallback(() => setOpen(false), []);
   const value = useMemo(
     () => ({ openBooking, closeBooking }),

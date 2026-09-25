@@ -17,7 +17,8 @@ export default function BioConclusion() {
             {bioConclusion.text}
           </p>
           <BookingTrigger
-            aria-label="Schedule an initial coaching session"
+            location="bio_conclusion"
+          aria-label="Schedule an initial coaching session"
             className="mt-10 inline-flex items-center justify-center gap-2 rounded-full bg-gold px-9 py-4 text-xs font-bold uppercase tracking-[0.2em] text-creamwarm border border-creamwarm/70 transition-all duration-200 hover:-translate-y-0.5 hover:bg-gold/90"
           >
             {bioConclusion.cta}

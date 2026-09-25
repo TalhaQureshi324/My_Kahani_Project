@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { ArrowDownToLine, CalendarDays, CheckCircle2, Clock, MonitorPlay, UserRound } from "lucide-react";
 import { formatDateLong, formatTimeIn, formatTimeInTZ, slotInstant } from "./CustomScheduler";
+import { trackEvent } from "@/lib/analytics";
 
 /**
  * Stage 4 — confirmation view: checkmark badge, booking details box,
@@ -94,6 +95,9 @@ export default function BookingConfirmation({
 
       <a
         href={`/api/bookings/${encodeURIComponent(bookingReference)}/calendar`}
+        onClick={() =>
+          trackEvent({ action: "ics_downloaded", category: "engagement", booking_id: bookingReference })
+        }
         className="inline-flex items-center gap-2 rounded-full bg-[#5D1F13] px-6 py-3 text-sm font-bold text-[#F5EFE6] shadow-[0_6px_20px_-8px_rgba(93,31,19,0.7)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#4A1811]"
       >
         <ArrowDownToLine className="h-4 w-4" aria-hidden="true" />

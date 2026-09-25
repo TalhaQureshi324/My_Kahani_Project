@@ -48,7 +48,8 @@ export default function Hero() {
           </p>
           <div className="mt-9 flex flex-wrap items-center gap-4">
             <BookingTrigger
-              aria-label="Schedule an initial coaching session"
+              location="hero"
+          aria-label="Schedule an initial coaching session"
               className="inline-flex items-center gap-2 rounded-full bg-terracotta px-6 py-3 text-sm font-bold tracking-wide text-cream shadow-[0_6px_20px_-8px_rgba(152,67,31,0.7)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-terracotta-deep"
             >
               {hero.primaryCta}

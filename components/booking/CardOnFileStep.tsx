@@ -16,6 +16,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { formatDateLong, formatTimeIn, slotInstant } from "./CustomScheduler";
+import { trackEvent } from "@/lib/analytics";
 
 /**
  * Stage 3 — card-on-file consent + Stripe Payment Element.
@@ -280,6 +281,8 @@ function SetupForm({
         setSubmitting(false);
         return;
       }
+      trackEvent({ action: "card_saved", category: "conversion" });
+      trackEvent({ action: "booking_confirmed_client", category: "conversion" });
       onConfirmed(data.booking_reference as string);
     } catch {
       setError("Network error while confirming. Please try again.");

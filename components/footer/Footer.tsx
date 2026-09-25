@@ -192,7 +192,8 @@ export default function Footer() {
               clear.
             </p>
             <BookingTrigger
-              aria-label="Book a coaching consultation with True Self Me"
+              location="footer"
+          aria-label="Book a coaching consultation with True Self Me"
               className="group mt-6 inline-flex h-[50px] items-center gap-2.5 rounded-full border border-cream/60 bg-transparent px-8 text-sm font-bold tracking-wide text-cream transition-all duration-300 hover:border-cream hover:bg-cream hover:text-night"
             >
               Book a consultation

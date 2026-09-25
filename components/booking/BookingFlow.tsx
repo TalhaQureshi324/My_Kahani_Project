@@ -9,6 +9,7 @@ import CustomScheduler, {
 } from "./CustomScheduler";
 import BookingConfirmation from "./BookingConfirmation";
 import CardOnFileStep from "./CardOnFileStep";
+import { trackEvent } from "@/lib/analytics";
 
 /**
  * The booking interaction shell: a four-stage state machine with a
@@ -278,7 +279,16 @@ export default function BookingFlow() {
               </button>
               <button
                 type="button"
-                onClick={() => setStage(3)}
+                onClick={() => {
+                  if (detailsValid) {
+                    trackEvent({
+                      action: "details_submitted",
+                      category: "booking",
+                      has_gclid: Boolean(document.cookie.match(/(?:^|;s*)tsm_attribution=[^}]*gclid/)),
+                    });
+                  }
+                  setStage(3);
+                }}
                 disabled={!detailsValid}
                 className="inline-flex items-center gap-2 rounded-full bg-[#5D1F13] px-6 py-3 text-sm font-bold text-[#F5EFE6] shadow-[0_6px_20px_-8px_rgba(93,31,19,0.7)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#4A1811] disabled:pointer-events-none disabled:opacity-40"
               >

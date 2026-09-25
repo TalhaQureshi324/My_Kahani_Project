@@ -162,7 +162,8 @@ export default function MobileDrawer({
         {/* Footer CTA */}
         <div className="shrink-0 border-t border-ink/10 p-5">
           <BookingTrigger
-            aria-label="Book a coaching consultation with True Self Me"
+            location="mobile_nav"
+          aria-label="Book a coaching consultation with True Self Me"
             onClick={onClose}
             className="flex w-full items-center justify-center gap-2 rounded-full bg-terracotta px-6 py-3.5 text-sm font-bold tracking-wide text-cream transition-colors hover:bg-terracotta-deep"
           >
