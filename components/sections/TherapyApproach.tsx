@@ -78,14 +78,17 @@ export default function TherapyApproach() {
           canvas, shown at native aspect), and the pattern strip — at
           least 390px (26% of canvas) — running from below the band to
           the bottom of the section, full-bleed to the right edge with
-          ~80% of each photo sitting on top of it. */}
+          ~80% of each photo sitting on top of it.
+          Both image layers are DESKTOP-ONLY: below md the fixed 390px
+          strip would cover the full mobile width behind the text, so
+          mobile gets the clean solid sand base instead. */}
       <div
         aria-hidden="true"
         className="absolute inset-0 z-0 bg-[#DED5C8]"
       />
       <div
         aria-hidden="true"
-        className="absolute inset-x-0 top-0 z-0"
+        className="absolute inset-x-0 top-0 z-0 hidden md:block"
         style={{
           height: "max(calc(var(--container-width) * 0.114), 120px)",
           backgroundImage: "url('/images/theraphy_section_background.webp')",
@@ -96,7 +99,7 @@ export default function TherapyApproach() {
       />
       <div
         aria-hidden="true"
-        className="absolute bottom-0 right-0 z-0"
+        className="absolute bottom-0 right-0 z-0 hidden md:block"
         style={{
           top: "max(calc(var(--container-width) * 0.114), 120px)",
           width: "max(calc(var(--container-width) * 0.26), 390px)",
@@ -158,11 +161,15 @@ export default function TherapyApproach() {
         ))}
       </div>
 
-      {/* Mobile <768px: stacked fluid layout, same typography */}
+      {/* Mobile <768px: stacked fluid layout, same typography. The heading
+          sits in a full-bleed olive bar (px-6 py-4) matching the desktop
+          band, over the clean solid sand base. */}
       <div className="relative z-10 mx-auto flex w-full max-w-[calc(1500px+8vw)] flex-col px-[4vw] pb-16 pt-6 md:hidden">
-        <p className="font-display text-3xl font-normal leading-[1.2] tracking-normal text-cream md:text-5xl lg:text-6xl">
-          {approaches.bannerTitle}
-        </p>
+        <div className="-mx-[4vw] mb-8 bg-[#6B6F38] px-6 py-4">
+          <p className="font-display text-2xl font-normal leading-[1.2] tracking-normal text-cream sm:text-3xl">
+            {approaches.bannerTitle}
+          </p>
+        </div>
         <p className={`${bodyText} mt-6`}>{approaches.intro}</p>
         <div className="mt-8 flex flex-col gap-6">
           {approaches.items.map((item) => (
