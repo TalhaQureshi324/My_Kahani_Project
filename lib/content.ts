@@ -237,7 +237,7 @@ export const specialties = {
       align: "right" as const,
     },
     {
-      img: "/images/2.webp",
+      img: "/New images/2.png",
       w: 350,
       h: 426,
       title: "Professional Coaching",
@@ -245,7 +245,7 @@ export const specialties = {
       align: "left" as const,
     },
     {
-      img: "/images/3.webp",
+      img: "/New images/3.png",
       w: 460,
       h: 260,
       title: "Men\u2019s Coaching",
@@ -253,7 +253,7 @@ export const specialties = {
       align: "right" as const,
     },
     {
-      img: "/images/4.webp",
+      img: "/New images/4.png",
       w: 390,
       h: 390,
       title: "Relationship & Couples Coaching",
@@ -261,7 +261,7 @@ export const specialties = {
       align: "left" as const,
     },
     {
-      img: "/images/5.webp",
+      img: "/New images/5.png",
       w: 460,
       h: 300,
       title: "Family/Parenting Coaching",
@@ -269,7 +269,7 @@ export const specialties = {
       align: "right" as const,
     },
     {
-      img: "/images/6.webp",
+      img: "/New images/6.png",
       w: 450,
       h: 204,
       title: "Teen Coaching (13+)",
@@ -277,7 +277,7 @@ export const specialties = {
       align: "center" as const,
     },
     {
-      img: "/images/7.webp",
+      img: "/New images/7.png",
       w: 400,
       h: 341,
       title: "Coaching for College Students",
@@ -285,7 +285,7 @@ export const specialties = {
       align: "right" as const,
     },
     {
-      img: "/images/8.webp",
+      img: "/New images/8.png",
       w: 390,
       h: 390,
       title: "Changing Multigenerational Patterns",
@@ -293,7 +293,7 @@ export const specialties = {
       align: "left" as const,
     },
     {
-      img: "/images/9.webp",
+      img: "/New images/9.png",
       w: 400,
       h: 312,
       title: "Cultural Identity & Belonging",
@@ -301,7 +301,7 @@ export const specialties = {
       align: "right" as const,
     },
     {
-      img: "/images/10.webp",
+      img: "/New images/10.png",
       w: 460,
       h: 182,
       title: "Career & Professional Coaching",
