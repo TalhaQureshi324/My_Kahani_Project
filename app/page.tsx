@@ -28,7 +28,7 @@ const professionalServiceSchema = {
     "Non-clinical coaching and mentorship services for individuals, couples, fathers, and community groups across the United States.",
   image: `${site.url}/og-image.jpg`,
   url: site.url,
-  telephone: "+1-512-555-0143",
+  telephone: "+1-469-935-1307",
   priceRange: "$30 - $185",
   address: {
     "@type": "PostalAddress",
