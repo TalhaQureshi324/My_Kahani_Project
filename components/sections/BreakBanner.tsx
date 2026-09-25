@@ -6,12 +6,12 @@ import Image from "next/image";
 export default function BreakBanner() {
   return (
     <section
-      aria-label="Austin, Texas — the community this practice calls home"
+      aria-label="Your story is still unfolding — a message from True Self Me"
       className="relative h-[46vh] min-h-[340px] w-full overflow-hidden"
     >
       <Image
-        src="/images/FULL_WIDTH.jpg"
-        alt="The Austin skyline at sunset seen from the river, with kayakers paddling beneath a graffiti-covered bridge"
+        src="/images/your_story_is_still_unfolding.png"
+        alt="Your story is still unfolding"
         fill
         className="object-cover"
         sizes="100vw"
