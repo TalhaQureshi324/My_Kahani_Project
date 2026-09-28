@@ -101,15 +101,10 @@ export default function CustomScheduler({
 
   // Visitor timezone (auto-detected; overridable).
   useEffect(() => {
-    try {
-      const detected =
-        Intl.DateTimeFormat().resolvedOptions().timeZone || "America/Chicago";
-      setVisitorTz(detected);
-      setDisplayTz(detected);
-    } catch {
-      setVisitorTz("America/Chicago");
-      setDisplayTz("America/Chicago");
-    }
+    // Default to Central Time (the practice's timezone); visitors can
+    // still switch to their local timezone via the (Change) button.
+    setVisitorTz("America/Chicago");
+    setDisplayTz("America/Chicago");
   }, []);
 
   // Load window: from today to the end of the viewed month.
@@ -321,9 +316,11 @@ export default function CustomScheduler({
           </select>
         ) : (
           <p>
-            Times shown in{" "}
+            Times shown in{" ".length ? " " : ""}
             <span className="font-semibold text-[#1A1A1A]">
-              {displayTz ?? "your timezone"}
+              {displayTz === "America/Chicago"
+                ? "Central Time (CST)"
+                : displayTz ?? "Central Time (CST)"}
             </span>{" "}
             <button
               type="button"

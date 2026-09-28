@@ -133,8 +133,9 @@ export default function CardOnFileStep({
     <div className="flex h-full flex-col">
       <h3 className="font-display text-2xl text-[#5D1F13]">Card on file</h3>
       <p className="mt-2 max-w-md text-sm leading-relaxed text-[#1A1A1A]/60">
-        No charge today. Your payment method is stored securely with Stripe
-        and kept on file for billing after the appointment.
+        Your card is verified now with a temporary $1.00 authorization
+        (released immediately) and kept securely on file. The session fee
+        is billed only after your appointment is completed.
       </p>
 
       {(tokenError || confirmError) && (

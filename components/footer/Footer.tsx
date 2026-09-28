@@ -20,7 +20,7 @@ import { site } from "@/lib/site";
 
 const EXPLORE_LINKS = [
   { label: "About", href: "/#about" },
-  { label: "Meet Fahd", href: "/#meet-fahd" },
+  { label: "Meet the Therapist", href: "/#meet-fahd" },
   { label: "Approach", href: "/#approach" },
   { label: "Services", href: "/#services" },
   { label: "Specialties", href: "/#specialties" },

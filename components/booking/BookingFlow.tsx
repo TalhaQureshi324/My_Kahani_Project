@@ -9,7 +9,9 @@ import CustomScheduler, {
 } from "./CustomScheduler";
 import BookingConfirmation from "./BookingConfirmation";
 import CardOnFileStep from "./CardOnFileStep";
+import PromoCodeInput, { promoDiscountCents, type AppliedPromo } from "./PromoCodeInput";
 import { trackEvent } from "@/lib/analytics";
+import { SESSION_PRICE_CENTS } from "@/lib/pricing.ts";
 
 /**
  * The booking interaction shell: a four-stage state machine with a
@@ -44,6 +46,7 @@ export default function BookingFlow() {
     phone: "",
   });
   const [bookingRef, setBookingRef] = useState<string | null>(null);
+  const [promo, setPromo] = useState<AppliedPromo | null>(null);
 
   const detailsValid =
     fields.firstName.trim() !== "" &&
@@ -142,17 +145,25 @@ export default function BookingFlow() {
               Held virtually, nationwide.
             </p>
           )}
-          <p className="mt-3 inline-flex items-center gap-2 rounded-full bg-[#5D1F13]/[0.06] px-3 py-1 text-xs font-bold text-[#5D1F13]">
-            <Lock className="h-3 w-3" aria-hidden="true" />
-            $0 due today
-          </p>
+          <div className="mt-3 space-y-1 rounded-lg bg-[#5D1F13]/[0.06] px-4 py-3 text-xs font-bold text-[#5D1F13]">
+            <p className="flex items-center justify-between">
+              <span className="text-[#1A1A1A]/60">Session Fee</span>
+              <span>${(SESSION_PRICE_CENTS / 100).toFixed(2)}</span>
+            </p>
+            <p className="flex items-center justify-between border-t border-[#5D1F13]/[0.12] pt-1">
+              <span className="inline-flex items-center gap-2 text-[#1A1A1A]/60">
+                <Lock className="h-3 w-3" aria-hidden="true" />
+                Due Today (Card Authorization)
+              </span>
+              <span>$0.00</span>
+            </p>
+          </div>
         </div>
 
         <p className="border-t border-black/[0.08] pt-6 text-xs leading-relaxed text-[#1A1A1A]/55">
-          Free cancellation up to 24 hours before your session. Your card would
-          be kept securely on file (once payments are enabled) and only charged
-          for missed or late-cancelled appointments, in line with our practice
-          policy.
+          Free cancellation up to 24 hours before your session. Your card is
+          authorized now and billed only after the session is completed, per
+          our practice policy.
         </p>
       </aside>
 
@@ -338,6 +349,14 @@ export default function BookingFlow() {
                 <span className="text-[#1A1A1A]/60">Phone</span>
                 <span className="font-semibold text-[#1A1A1A]">{fields.phone}</span>
               </p>
+            </div>
+
+            <div className="mt-4">
+              <PromoCodeInput
+                promo={promo}
+                onApply={setPromo}
+                onClear={() => setPromo(null)}
+              />
             </div>
 
             <CardOnFileStep

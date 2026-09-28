@@ -4,7 +4,7 @@ import { GeometricPattern } from "@/components/ui/doodles";
 import { therapist } from "@/lib/content";
 
 /**
- * Section 4 — Meet Fahd: rust compound grid —
+ * Section 4 — Meet the Therapist: rust compound grid —
  * [patterned mustard strip | editorial bio | inset portrait].
  */
 export default function MeetTherapist() {

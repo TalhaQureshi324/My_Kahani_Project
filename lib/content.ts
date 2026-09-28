@@ -57,8 +57,8 @@ export const aboutContinued = {
 };
 
 export const therapist = {
-  eyebrow: "Meet Fahd",
-  heading: "Meet Fahd",
+  eyebrow: "Meet the Therapist",
+  heading: "Meet the Therapist",
   name: "Fahd Alam",
   credential: "Coach & Mentor",
   supervisorLine:
