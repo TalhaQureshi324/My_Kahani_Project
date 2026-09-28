@@ -1,35 +1,13 @@
-import fs from "node:fs";
-import path from "node:path";
-import Image from "next/image";
-
 /**
- * Phase — Client Testimonials, editorial redesign: author avatars,
- * decorative serif quotation mark, warm parchment section, fitted black
- * role badges and a "Verified Client" footer per card.
- *
- * Avatar: points to /New images/person.jpg by default. Until that file
- * is added to the folder, a terracotta monogram circle renders instead
- * (checked at build time) — so the live site never shows a broken image.
+ * Client Testimonials: editorial cards with decorative serif quotation
+ * marks, warm parchment section, fitted black role badges and a
+ * "Verified Client" footer per card.
  */
-
-const AVATAR_SRC = "/New images/person.jpeg";
-
-function avatarAvailable(): boolean {
-  try {
-    return fs.existsSync(
-      path.join(process.cwd(), "public", "New images", "person.jpeg"),
-    );
-  } catch {
-    return false;
-  }
-}
-
 const testimonials = [
   {
     role: "DOCTOR",
     author: "Physician, 40s",
     sub: "Virtual Client • Texas",
-    avatar: AVATAR_SRC,
     paragraphs: [
       "“I spend most of my day being the person other people turn to. Patients need reassurance, colleagues need answers, family needs you to be present. After a while, I realized I had become very good at looking composed while feeling completely exhausted underneath.",
       "What surprised me about working with Fahd was how quickly I stopped feeling like I had to have the right words. Some conversations made me notice things I had been carrying for years without ever naming them.",
@@ -40,7 +18,6 @@ const testimonials = [
     role: "ENTREPRENEUR",
     author: "Founder & Entrepreneur, 30s",
     sub: "Virtual Client • Texas",
-    avatar: AVATAR_SRC,
     paragraphs: [
       "“When you build a business from nothing, it becomes personal. Every win feels like proof that you’re doing something right, and every setback somehow feels like a judgment on you. I didn’t realize how much of my identity had become tied to the business succeeding.",
       "I came to Fahd thinking I needed help dealing with stress. What we ended up talking about went much deeper than work.",
@@ -51,7 +28,6 @@ const testimonials = [
     role: "BUSINESS EXECUTIVE",
     author: "Senior Business Executive, 40s",
     sub: "Virtual Client • Texas",
-    avatar: AVATAR_SRC,
     paragraphs: [
       "“From the outside, things were going well. I had a senior position, a good income, and a family I loved. I couldn’t really explain why I felt so disconnected from all of it.",
       "Fahd never made me feel ungrateful for struggling. He listened, but he also asked the kind of questions that stayed with me after the session was over.",
@@ -61,8 +37,6 @@ const testimonials = [
 ];
 
 export default function Testimonials() {
-  const hasAvatar = avatarAvailable();
-
   return (
     <section id="testimonials" className="bg-[#F4ECE1] py-20 md:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -71,7 +45,7 @@ export default function Testimonials() {
             Client Experiences
           </span>
           <h2 className="font-serif text-3xl tracking-tight text-[#1A1A1A] md:text-5xl">
-            Reflections from Those Who&apos;ve Done the Work
+            Reflections from those who chose True Self Me
           </h2>
         </div>
 
@@ -89,34 +63,14 @@ export default function Testimonials() {
               </div>
 
               <div>
-                {/* Author Info & Avatar */}
-                <div className="mb-6 flex items-center gap-4">
-                  <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full border-2 border-[#A8532B] shadow-sm md:h-16 md:w-16">
-                    {hasAvatar ? (
-                      <Image
-                        alt={`Portrait representing ${item.author}`}
-                        className="object-cover"
-                        fill
-                        sizes="64px"
-                        src={item.avatar}
-                      />
-                    ) : (
-                      <span
-                        aria-hidden="true"
-                        className="flex h-full w-full items-center justify-center bg-[#A8532B]/15 font-serif text-xl font-bold text-[#A8532B]"
-                      >
-                        {item.author.charAt(0)}
-                      </span>
-                    )}
-                  </div>
-                  <div>
-                    <span className="inline-block bg-black px-2 py-0.5 font-serif text-xs font-bold uppercase tracking-wider text-white md:text-sm">
-                      {item.role}
-                    </span>
-                    <p className="mt-1 text-xs font-medium tracking-wide text-[#1A1A1A]/70 md:text-sm">
-                      {item.author}
-                    </p>
-                  </div>
+                {/* Role badge + author */}
+                <div className="mb-6">
+                  <span className="inline-block bg-black px-2 py-0.5 font-serif text-xs font-bold uppercase tracking-wider text-white md:text-sm">
+                    {item.role}
+                  </span>
+                  <p className="mt-1 text-xs font-medium tracking-wide text-[#1A1A1A]/70 md:text-sm">
+                    {item.author}
+                  </p>
                 </div>
 
                 {/* Quote Paragraphs */}
