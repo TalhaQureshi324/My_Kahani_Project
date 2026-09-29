@@ -121,7 +121,7 @@ Copy `.env.example` → `.env.local` (development) or `.env.production`
 | `SUPABASE_URL` | Supabase project REST endpoint |
 | `SUPABASE_SERVICE_ROLE_KEY` | Server-only service role key — never expose to the browser |
 | `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Stripe publishable key (`pk_test_…` or `pk_live_…`) |
-| `STRIPE_SECRET_KEY` | Stripe secret key (`sk_test_…` or `sk_live_…`) |
+| `STRIPE_SECRET_KEY` | Stripe **restricted key** (`rk_test_…` or `rk_live_…`) with write access to Customers, SetupIntents, PaymentIntents, PaymentMethods, and Webhooks |
 | `STRIPE_WEBHOOK_SECRET` | Signing secret (`whsec_…`) from your Stripe webhook endpoint |
 | `CRON_SECRET` | Shared secret for background worker endpoints |
 
