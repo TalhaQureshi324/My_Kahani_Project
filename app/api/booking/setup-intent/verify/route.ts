@@ -256,6 +256,48 @@ export async function POST(request: Request) {
     console.error("[setup-verify] notification jobs failed", jobsError.message);
   }
 
+  // Practitioner calendar invite: email Fahd a proper iMIP REQUEST .ics
+  // with ORGANIZER + ATTENDEE so Gmail surfaces the native calendar
+  // notification (Accept/Decline/Maybe) and the event lands on his
+  // Google Calendar. Fire-and-forget — booking success never depends
+  // on email delivery.
+  try {
+    const { buildPractitionerInviteIcs } = await import("@/lib/calendar");
+    const { sendEmail } = await import("@/lib/email/provider");
+    const ics = buildPractitionerInviteIcs({
+      reference: confirmedBooking.booking_reference,
+      slotStartUTC: slotStart,
+      slotEndUTC: slotEnd,
+      organizerName: "True Self Me",
+      organizerEmail: "bookings@trueselfme.com",
+      clientName: `${booking.first_name ?? ""} ${booking.last_name ?? ""}`.trim() || "Client",
+      clientEmail: booking.email ?? "",
+    });
+    await sendEmail({
+      to: "fahd.faiyaz@gmail.com",
+      subject: `New Booking: ${confirmedBooking.booking_reference} — ${booking.first_name ?? "Client"}`,
+      html: `<p>New coaching session booked.</p>
+<table cellpadding="6" style="font-size:14px">
+  <tr><td>Reference</td><td><strong>${confirmedBooking.booking_reference}</strong></td></tr>
+  <tr><td>Client</td><td>${booking.first_name ?? ""} ${booking.last_name ?? ""}</td></tr>
+  <tr><td>Email</td><td>${booking.email ?? ""}</td></tr>
+  
+  <tr><td>Card</td><td>${cardBrand ?? "—"} ****${cardLast4 ?? "????"}</td></tr>
+</table>
+<p>The calendar invitation is attached — accept it to add the session to your Google Calendar.</p>`,
+      text: `New coaching session booked.\n\nReference: ${confirmedBooking.booking_reference}\nClient: ${booking.first_name ?? ""} ${booking.last_name ?? ""}\nEmail: ${booking.email ?? ""}\n\nAccept the attached calendar invitation to add the session to your calendar.`,
+      icsInvite: {
+        filename: `${confirmedBooking.booking_reference}.ics`,
+        content: ics,
+      },
+    });
+  } catch (inviteError) {
+    console.error(
+      "[setup-verify] practitioner calendar invite failed",
+      inviteError instanceof Error ? inviteError.message : inviteError,
+    );
+  }
+
   // Phase 7: queue the Google booking_confirmed conversion. Fire-and-
   // forget relative to this request — the booking is already committed,
   // and Google must never gate booking success.

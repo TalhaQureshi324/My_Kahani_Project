@@ -12,6 +12,11 @@ export type OutgoingEmail = {
   subject: string;
   html: string;
   text: string;
+  /** Optional RFC 5545 calendar invitation (iMIP REQUEST). */
+  icsInvite?: {
+    filename: string;
+    content: string; // raw ICS text
+  };
 };
 
 export type SendResult = {
@@ -43,6 +48,21 @@ async function sendViaResend(email: OutgoingEmail): Promise<SendResult> {
         subject: email.subject,
         html: email.html,
         text: email.text,
+        // Calendar invite: Resend passes the Content-Type header through,
+        // which makes Gmail/Outlook render the native calendar banner.
+        ...(email.icsInvite
+          ? {
+              attachments: [
+                {
+                  filename: email.icsInvite.filename,
+                  content: Buffer.from(email.icsInvite.content).toString(
+                    "base64",
+                  ),
+                  content_type: "text/calendar; charset=UTF-8; method=REQUEST",
+                },
+              ],
+            }
+          : {}),
       }),
     });
     const data = await res.json().catch(() => ({}));

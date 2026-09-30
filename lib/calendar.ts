@@ -72,3 +72,64 @@ export function buildConsultationIcs({
     "END:VCALENDAR",
   ].join("\r\n");
 }
+
+export type PractitionerInviteIcsInput = ConsultationIcsInput & {
+  /** Practitioner (organizer) name and email. */
+  organizerName: string;
+  organizerEmail: string;
+  /** Client (attendee) display name and email. */
+  clientName: string;
+  clientEmail: string;
+};
+
+/**
+ * Builds a REQUEST-type .ics (iMIP/iTIP calendar invitation). When
+ * emailed with Content-Type "text/calendar; method=REQUEST", Gmail
+ * and Outlook automatically surface the Google Calendar notification
+ * banner (Accept / Decline / Maybe) and add the event to the
+ * practitioner's calendar on acceptance.
+ */
+export function buildPractitionerInviteIcs({
+  reference,
+  slotStartUTC,
+  slotEndUTC,
+  organizerName,
+  organizerEmail,
+  clientName,
+  clientEmail,
+}: PractitionerInviteIcsInput): string {
+  const start = new Date(slotStartUTC);
+  const end = new Date(slotEndUTC);
+  const stamp = icsUtc(new Date());
+
+  return [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//True Self Me//Consultation Booking//EN",
+    "CALSCALE:GREGORIAN",
+    "METHOD:REQUEST",
+    "BEGIN:VEVENT",
+    `UID:${icsEscape(`${reference}@trueselfme.com`)}`,
+    `DTSTAMP:${stamp}`,
+    `DTSTART:${icsUtc(start)}`,
+    `DTEND:${icsUtc(end)}`,
+    `SUMMARY:${icsEscape(`Coaching Session — ${clientName} (${reference})`)}`,
+    `DESCRIPTION:${icsEscape(
+      `50-minute virtual coaching session with ${clientName}. Client email: ${clientEmail}. Booking reference: ${reference}.`,
+    )}`,
+    `LOCATION:${icsEscape("Virtual — video link to follow")}`,
+    `STATUS:CONFIRMED`,
+    `TRANSP:OPAQUE`,
+    `SEQUENCE:0`,
+    `ORGANIZER;CN=${icsEscape(organizerName)}:mailto:${organizerEmail}`,
+    `ATTENDEE;CN=${icsEscape(clientName)};ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE:mailto:${clientEmail}`,
+    `ATTENDEE;CN=${icsEscape(organizerName)};ROLE=CHAIR;PARTSTAT=ACCEPTED:mailto:${organizerEmail}`,
+    `BEGIN:VALARM`,
+    `TRIGGER:-PT1H`,
+    `ACTION:DISPLAY`,
+    `DESCRIPTION:${icsEscape("Coaching session in 1 hour")}`,
+    `END:VALARM`,
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ].join("\r\n");
+}
