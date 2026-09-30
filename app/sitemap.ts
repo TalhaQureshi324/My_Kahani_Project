@@ -20,5 +20,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
         priority: 0.9,
       }),
     ),
+    ...["privacy", "terms"].map((slug) => ({
+      url: `${site.url}/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: "yearly" as const,
+      priority: 0.3,
+    })),
   ];
 }
