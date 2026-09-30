@@ -237,7 +237,7 @@ Live pricing is sourced from `lib/pricing.ts`:
 
 ```ts
 export const SESSION_PRICE_CENTS = 12500; // $125.00
-export const PRICING_SOURCE = "standard_individual_v1_2026-09";
+export const PRICING_SOURCE = "test_individual_v1_2026-09-30";
 ```
 
 Bookings snapshot the price at booking time (`session_price_cents` on the
