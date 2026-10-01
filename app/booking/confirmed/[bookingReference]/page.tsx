@@ -34,7 +34,7 @@ export default async function BookingConfirmedPage({
   const { data: booking } = await supabase
     .from("bookings")
     .select(
-      "booking_reference, status, slot_start, slot_end, first_name, card_brand, card_last4, client_timezone",
+      "booking_reference, status, slot_start, slot_end, first_name, card_brand, card_last4",
     )
     .eq("booking_reference", reference)
     .single();
@@ -80,7 +80,7 @@ export default async function BookingConfirmedPage({
             </span>
             <span className="font-semibold text-[#1A1A1A]">
               {new Intl.DateTimeFormat("en-US", {
-                timeZone: booking.client_timezone ?? "America/Chicago",
+                timeZone: "America/Chicago",
                 weekday: "long",
                 month: "long",
                 day: "numeric",
@@ -95,12 +95,14 @@ export default async function BookingConfirmedPage({
             </span>
             <span className="font-semibold text-[#1A1A1A]">
               {new Intl.DateTimeFormat("en-US", {
-                timeZone: booking.client_timezone ?? "America/Chicago",
+                timeZone: "America/Chicago",
                 hour: "numeric",
                 minute: "2-digit",
                 hour12: true,
               }).format(new Date(booking.slot_start))}{" "}
-              ({booking.client_timezone ?? "America/Chicago"})
+              <span className="font-normal text-[#1A1A1A]/55">
+                Central Time (CST)
+              </span>
             </span>
           </p>
           <p className="flex items-center justify-between gap-4">

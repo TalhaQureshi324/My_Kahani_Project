@@ -40,7 +40,7 @@ export async function POST(request: Request) {
     );
   }
 
-  let body: { slot_start?: string; slot_end?: string; timezone?: string };
+  let body: { slot_start?: string; slot_end?: string };
   try {
     body = await request.json();
   } catch {
@@ -133,7 +133,8 @@ export async function POST(request: Request) {
   const bookingReference = generateBookingReference();
   const manageToken = generateManageToken();
   const manageTokenHash = hashManageToken(manageToken);
-  const clientTz = body.timezone ?? "America/Chicago";
+  // Single-timezone practice: client_timezone is always Central Time.
+  const clientTz = "America/Chicago";
 
   let booking: { id: string; booking_reference: string } | null = null;
   let insertError: { message: string } | null = null;

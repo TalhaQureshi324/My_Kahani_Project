@@ -173,8 +173,8 @@ export default function BookingFlow() {
           <div className="flex h-full flex-col">
             <h3 className="font-display text-2xl text-[#5D1F13]">Pick your time</h3>
             <p className="mt-2 max-w-md text-sm leading-relaxed text-[#1A1A1A]/60">
-              Choose a date and an open slot — all times shown in Central Time
-              (CST), or your local timezone.
+              Choose a date and an open slot — all times shown in Central
+              Time (CST).
             </p>
             <div className="mt-6">
               <CustomScheduler

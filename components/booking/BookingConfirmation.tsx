@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { ArrowDownToLine, CalendarDays, CheckCircle2, Clock, MonitorPlay, UserRound } from "lucide-react";
-import { formatDateLong, formatTimeIn, formatTimeInTZ, slotInstant } from "./CustomScheduler";
+import { formatDateLong, formatTimeIn, slotInstant } from "./CustomScheduler";
 import { trackEvent } from "@/lib/analytics";
 
 /**
  * Stage 4 — confirmation view: checkmark badge, booking details box,
  * the .ics calendar download, and the card-on-file reassurance note.
+ * All times render in Central Time, the practice's single timezone.
  */
 export default function BookingConfirmation({
   bookingReference,
@@ -17,15 +17,6 @@ export default function BookingConfirmation({
   slot: { dateISO: string; slotCSTHour: number };
 }) {
   const instant = slotInstant(slot.dateISO, slot.slotCSTHour);
-  const [localTz, setLocalTz] = useState<string | null>(null);
-
-  useEffect(() => {
-    try {
-      setLocalTz(Intl.DateTimeFormat().resolvedOptions().timeZone || null);
-    } catch {
-      /* keep null */
-    }
-  }, []);
 
   return (
     <div className="flex h-full flex-col items-center justify-center gap-5 text-center">
@@ -44,7 +35,7 @@ export default function BookingConfirmation({
             Date
           </span>
           <span className="font-semibold text-[#1A1A1A]">
-            {formatDateLong(slot.dateISO)} · {formatTimeIn(instant)} CT
+            {formatDateLong(slot.dateISO)}
           </span>
         </p>
         <p className="flex items-center justify-between gap-4">
@@ -53,17 +44,10 @@ export default function BookingConfirmation({
             Time
           </span>
           <span className="font-semibold text-[#1A1A1A]">
-            {localTz
-              ? new Intl.DateTimeFormat("en-US", {
-                  timeZone: localTz,
-                  month: "short",
-                  day: "numeric",
-                  hour: "numeric",
-                  minute: "2-digit",
-                  hour12: true,
-                }).format(instant)
-              : formatTimeInTZ("America/Chicago", instant)}
-            {localTz ? <span className="ml-1 font-normal text-[#1A1A1A]/55">({localTz})</span> : null}
+            {formatTimeIn(instant)}{" "}
+            <span className="font-normal text-[#1A1A1A]/55">
+              Central Time (CST)
+            </span>
           </span>
         </p>
         <p className="flex items-center justify-between gap-4">

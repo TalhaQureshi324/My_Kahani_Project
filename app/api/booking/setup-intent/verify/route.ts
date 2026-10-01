@@ -169,7 +169,7 @@ export async function POST(request: Request) {
     })
     .eq("id", bookingId)
     .eq("status", "held")
-    .select("id, slot_start, slot_end, client_timezone, booking_reference")
+    .select("id, slot_start, slot_end, booking_reference")
     .single();
 
   if (confirmError || !confirmedBooking) {
@@ -197,7 +197,9 @@ export async function POST(request: Request) {
     { onConflict: "booking_id,operation" },
   );
 
-  const clientTz = confirmedBooking.client_timezone ?? "America/Chicago";
+  // Single-timezone practice: every client-facing time renders in
+  // Central Time regardless of any stored client timezone.
+  const clientTz = "America/Chicago";
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ?? new URL(request.url).origin;
   const manageUrl = `${siteUrl}/booking/manage/${manageToken}`;

@@ -15,10 +15,9 @@ import {
 
 /**
  * Stage 1 — month calendar (current + next month) fed by the live
- * availability API. Slots are UTC instants from the server; dates are
- * grouped in the visitor's own timezone and rendered converted.
- * The practitioner's availability is defined in America/Chicago on
- * the server — never hardcoded CST.
+ * availability API. Slots are UTC instants from the server; every
+ * date and time is rendered in Central Time (America/Chicago), the
+ * practice's single timezone.
  */
 
 const WEEKDAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
@@ -44,14 +43,9 @@ export function formatDateLong(bookingIdOrDate: string): string {
 
 /** Chicago wall-time label for a UTC instant. */
 export function formatTimeIn(instant: Date | string): string {
-  return formatTimeInTZ("America/Chicago", instant);
-}
-
-/** Time label in an arbitrary timezone. */
-export function formatTimeInTZ(timeZone: string, instant: Date | string): string {
   const d = typeof instant === "string" ? new Date(instant) : instant;
   return new Intl.DateTimeFormat("en-US", {
-    timeZone,
+    timeZone: "America/Chicago",
     hour: "numeric",
     minute: "2-digit",
     hour12: true,
@@ -95,17 +89,6 @@ export default function CustomScheduler({
   const [slots, setSlots] = useState<ApiSlot[] | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [configured, setConfigured] = useState(true);
-  const [visitorTz, setVisitorTz] = useState<string | null>(null);
-  const [displayTz, setDisplayTz] = useState<string | null>(null);
-  const [tzChanging, setTzChanging] = useState(false);
-
-  // Visitor timezone (auto-detected; overridable).
-  useEffect(() => {
-    // Default to Central Time (the practice's timezone); visitors can
-    // still switch to their local timezone via the (Change) button.
-    setVisitorTz("America/Chicago");
-    setDisplayTz("America/Chicago");
-  }, []);
 
   // Load window: from today to the end of the viewed month.
   const base = new Date(now.getFullYear(), now.getMonth() + monthOffset, 1);
@@ -147,14 +130,13 @@ export default function CustomScheduler({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [monthOffset, fromISO, toISO]);
 
-  // Group slots by the visitor's local calendar date.
+  // Group slots by the Central Time calendar date.
   const byLocalDate = useMemo(() => {
     const map = new Map<string, SlotOption[]>();
-    if (displayTz === null) return map;
     for (const s of slots ?? []) {
       const start = new Date(s.start);
       const localDate = new Intl.DateTimeFormat("en-CA", {
-        timeZone: displayTz,
+        timeZone: "America/Chicago",
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
@@ -164,7 +146,7 @@ export default function CustomScheduler({
       map.set(localDate, list);
     }
     return map;
-  }, [slots, displayTz]);
+  }, [slots]);
 
   const cells: (string | null)[] = [
     ...Array.from({ length: firstDow }, () => null),
@@ -176,7 +158,7 @@ export default function CustomScheduler({
 
   const selectedLocalDate = selected
     ? new Intl.DateTimeFormat("en-CA", {
-        timeZone: displayTz ?? "America/Chicago",
+        timeZone: "America/Chicago",
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
@@ -186,7 +168,7 @@ export default function CustomScheduler({
   const daySlots = selectedLocalDate ? (byLocalDate.get(selectedLocalDate) ?? []) : [];
   const timeFmt = (iso: string) =>
     new Intl.DateTimeFormat("en-US", {
-      timeZone: displayTz ?? "America/Chicago",
+      timeZone: "America/Chicago",
       hour: "numeric",
       minute: "2-digit",
       hour12: true,
@@ -195,27 +177,12 @@ export default function CustomScheduler({
 
   const selectedLocalLabel = selected
     ? new Intl.DateTimeFormat("en-US", {
-        timeZone: displayTz ?? "America/Chicago",
+        timeZone: "America/Chicago",
         weekday: "long",
         month: "short",
         day: "numeric",
       }).format(new Date(selected.start))
     : null;
-
-  const tzOptions = [
-    "America/New_York",
-    "America/Chicago",
-    "America/Denver",
-    "America/Los_Angeles",
-    "America/Phoenix",
-    "Europe/London",
-    "Europe/Berlin",
-    "Asia/Dubai",
-    "Asia/Kolkata",
-    "Asia/Singapore",
-    "Asia/Tokyo",
-    "Australia/Sydney",
-  ];
 
   return (
     <div>
@@ -291,46 +258,15 @@ export default function CustomScheduler({
         })}
       </div>
 
-      {/* Timezone line */}
+      {/* Timezone line — single timezone, no selector */}
       <div className="mt-5 flex items-center gap-2 text-sm text-[#1A1A1A]/70">
         <Clock className="h-4 w-4 text-[#A8532B]" aria-hidden="true" />
-        {tzChanging ? (
-          <select
-            aria-label="Select timezone"
-            value={displayTz ?? ""}
-            onChange={(e) => {
-              setDisplayTz(e.target.value);
-              setTzChanging(false);
-            }}
-            onBlur={() => setTzChanging(false)}
-            className="h-10 rounded-none border border-black/[0.08] bg-[#F3EDE5] px-3 text-sm text-[#1A1A1A] focus:outline-none focus:ring-1 focus:ring-[#A8532B]"
-          >
-            {(visitorTz && !tzOptions.includes(visitorTz)
-              ? [visitorTz, ...tzOptions]
-              : tzOptions
-            ).map((id) => (
-              <option key={id} value={id}>
-                {id.split("/").pop()?.replace(/_/g, " ")}
-              </option>
-            ))}
-          </select>
-        ) : (
-          <p>
-            Times shown in{" ".length ? " " : ""}
-            <span className="font-semibold text-[#1A1A1A]">
-              {displayTz === "America/Chicago"
-                ? "Central Time (CST)"
-                : displayTz ?? "Central Time (CST)"}
-            </span>{" "}
-            <button
-              type="button"
-              onClick={() => setTzChanging(true)}
-              className="font-semibold text-[#A8532B] underline-offset-2 hover:underline"
-            >
-              (Change)
-            </button>
-          </p>
-        )}
+        <p>
+          Times shown in{" "}
+          <span className="font-semibold text-[#1A1A1A]">
+            Central Time (CST)
+          </span>
+        </p>
       </div>
 
       {/* Slots for the selected day */}
@@ -352,7 +288,7 @@ export default function CustomScheduler({
       ) : (
         <>
           <p className="mt-5 text-xs font-bold uppercase tracking-[0.16em] text-[#1A1A1A]/55">
-            Open times — {selectedLocalDate ? new Intl.DateTimeFormat("en-US", { timeZone: displayTz ?? "America/Chicago", weekday: "long", month: "short", day: "numeric" }).format(new Date(selected!.start)) : "select a date"}
+            Open times — {selectedLocalDate ? new Intl.DateTimeFormat("en-US", { timeZone: "America/Chicago", weekday: "long", month: "short", day: "numeric" }).format(new Date(selected!.start)) : "select a date"}
           </p>
           <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
             {daySlots.map((slot) => {

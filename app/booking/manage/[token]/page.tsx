@@ -47,7 +47,7 @@ export default async function ManageBookingPage({
   const { data: booking } = await supabase
     .from("bookings")
     .select(
-      "booking_reference, status, slot_start, slot_end, first_name, last_name, client_timezone, card_brand, card_last4",
+      "booking_reference, status, slot_start, slot_end, first_name, last_name, card_brand, card_last4",
     )
     .eq("manage_token_hash", tokenHash)
     .single();
@@ -75,7 +75,6 @@ export default async function ManageBookingPage({
         slotEndISO: booking.slot_end,
         firstName: booking.first_name ?? "",
         lastName: booking.last_name ?? "",
-        clientTimezone: booking.client_timezone ?? "America/Chicago",
         cardBrand: booking.card_brand,
         cardLast4: booking.card_last4,
       }}

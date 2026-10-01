@@ -25,7 +25,6 @@ type BookingView = {
   slotEndISO: string;
   firstName: string;
   lastName: string;
-  clientTimezone: string;
   cardBrand: string | null;
   cardLast4: string | null;
 };
@@ -50,9 +49,10 @@ export default function ManageBookingClient({
   const [selected, setSelected] = useState<SlotOption | null>(null);
   const [slotError, setSlotError] = useState<string | null>(null);
 
+  // All times render in Central Time, the practice's single timezone.
   const slotLabel = (iso: string) =>
     new Intl.DateTimeFormat("en-US", {
-      timeZone: booking.clientTimezone,
+      timeZone: "America/Chicago",
       weekday: "long",
       month: "long",
       day: "numeric",
@@ -200,7 +200,7 @@ export default function ManageBookingClient({
             Choose a new time
           </h2>
           <p className="mt-2 text-sm text-[#1A1A1A]/60">
-            All times shown in your local timezone. Pick an open slot and
+            All times shown in Central Time (CST). Pick an open slot and
             confirm — your original appointment stays booked until the move
             succeeds.
           </p>

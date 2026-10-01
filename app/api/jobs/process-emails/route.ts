@@ -178,7 +178,8 @@ function renderEmail(
   const firstName = payload.first_name ?? "";
   const bookingReference = payload.booking_reference ?? "";
   const manageUrl = payload.manage_url ?? "";
-  const clientTimezone = payload.client_timezone ?? "America/Chicago";
+  // Single-timezone practice: emails always render in Central Time.
+  const clientTimezone = "America/Chicago";
 
   switch (type) {
     case "booking_confirmation":
