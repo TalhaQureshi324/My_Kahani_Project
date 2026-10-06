@@ -6,6 +6,7 @@ import Footer from "@/components/footer/Footer";
 import BookingProvider from "@/components/booking/BookingProvider";
 import AttributionCapture from "@/components/tracking/AttributionCapture";
 import GAScript from "@/components/analytics/GAScript";
+import ClarityScript from "@/components/analytics/ClarityScript";
 import FloatingBookingButton from "@/components/booking/FloatingBookingButton";
 import EngagementTracker from "@/components/analytics/EngagementTracker";
 import { site } from "@/lib/site";
@@ -109,6 +110,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="flex min-h-full flex-col bg-cream font-sans text-ink">
         <GAScript />
+        <ClarityScript />
         <AttributionCapture />
         <EngagementTracker />
         <BookingProvider>

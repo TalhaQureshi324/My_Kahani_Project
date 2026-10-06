@@ -175,6 +175,11 @@ export default function PrivacyPage() {
                   link: "https://policies.google.com/privacy",
                 },
                 {
+                  name: "Microsoft Clarity",
+                  what: "Anonymous session recordings and heatmaps",
+                  link: "https://privacy.microsoft.com/privacystatement",
+                },
+                {
                   name: "Google Ads",
                   what: "Advertising conversion attribution",
                   link: "https://policies.google.com/privacy",
