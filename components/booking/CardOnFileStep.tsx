@@ -17,6 +17,13 @@ import {
 } from "lucide-react";
 import { formatDateLong, formatTimeIn, slotInstant } from "./CustomScheduler";
 import { trackEvent } from "@/lib/analytics";
+import {
+  BUNDLE4_LABEL,
+  BUNDLE4_PRICE_CENTS,
+  BUNDLE4_SESSIONS,
+  priceCentsFor,
+  type BookingPackage,
+} from "@/lib/pricing";
 
 /**
  * Stage 3 — card-on-file consent + Stripe Payment Element.
@@ -49,6 +56,7 @@ export default function CardOnFileStep({
   manageToken,
   details,
   slot,
+  packageId = "single",
   onConfirmed,
   onExpired,
   onBack,
@@ -64,6 +72,7 @@ export default function CardOnFileStep({
     phone: string;
   };
   slot: { dateISO: string; slotCSTHour: number };
+  packageId?: BookingPackage;
   onConfirmed: (bookingReference: string) => void;
   onExpired: () => void;
   onBack: () => void;
@@ -134,9 +143,34 @@ export default function CardOnFileStep({
       <h3 className="font-display text-2xl text-[#5D1F13]">Card on file</h3>
       <p className="mt-2 max-w-md text-sm leading-relaxed text-[#1A1A1A]/60">
         Your card is verified now with a temporary $1.00 authorization
-        (released immediately) and kept securely on file. The session fee
-        is billed only after your appointment is completed.
+        (released immediately) and kept securely on file.{" "}
+        {packageId === "bundle4"
+          ? `The ${BUNDLE4_SESSIONS}-session package total of $${(BUNDLE4_PRICE_CENTS / 100).toFixed(2)} is billed following your sessions, per our practice policy.`
+          : "The session fee is billed only after your appointment is completed."}
       </p>
+
+      {packageId === "bundle4" && (
+        <p className="mt-4 flex items-center justify-between gap-4 rounded-xl border border-[#A8532B]/40 bg-[#A8532B]/[0.07] px-5 py-3 text-sm">
+          <span className="text-[#1A1A1A]/60">Session Package</span>
+          <span className="font-semibold text-[#5D1F13]">
+            {BUNDLE4_LABEL} ·{" "}
+            <span className="font-display text-base">
+              ${(BUNDLE4_PRICE_CENTS / 100).toFixed(2)}
+            </span>{" "}
+            <span className="font-normal text-[#1A1A1A]/55">
+              (${(BUNDLE4_PRICE_CENTS / 100 / BUNDLE4_SESSIONS).toFixed(2)}/session)
+            </span>
+          </span>
+        </p>
+      )}
+      {packageId === "single" && (
+        <p className="mt-4 flex items-center justify-between gap-4 rounded-xl border border-black/[0.08] bg-[#F3EDE5] px-5 py-3 text-sm">
+          <span className="text-[#1A1A1A]/60">Session Fee</span>
+          <span className="font-semibold text-[#5D1F13]">
+            ${(priceCentsFor(packageId) / 100).toFixed(2)}
+          </span>
+        </p>
+      )}
 
       {(tokenError || confirmError) && (
         <p

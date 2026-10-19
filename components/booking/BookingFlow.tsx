@@ -11,7 +11,14 @@ import BookingConfirmation from "./BookingConfirmation";
 import CardOnFileStep from "./CardOnFileStep";
 import PromoCodeInput, { promoDiscountCents, type AppliedPromo } from "./PromoCodeInput";
 import { trackEvent } from "@/lib/analytics";
-import { SESSION_PRICE_CENTS } from "@/lib/pricing.ts";
+import {
+  BUNDLE4_LABEL,
+  BUNDLE4_PRICE_CENTS,
+  BUNDLE4_SESSIONS,
+  priceCentsFor,
+  packageLabel,
+  type BookingPackage,
+} from "@/lib/pricing.ts";
 
 /**
  * The booking interaction shell: a four-stage state machine with a
@@ -33,9 +40,15 @@ const STAGES = [
 
 type Hold = { booking_id: string; expires_at: string; manage_token: string };
 
-export default function BookingFlow() {
+export default function BookingFlow({
+  initialPackage = "single",
+}: {
+  /** Tier preselected by a promotional CTA (banner / welcome modal). */
+  initialPackage?: BookingPackage;
+}) {
   const [stage, setStage] = useState<1 | 2 | 3 | 4>(1);
   const [selected, setSelected] = useState<SlotOption | null>(null);
+  const [pkg, setPkg] = useState<BookingPackage>(initialPackage);
   const [hold, setHold] = useState<Hold | null>(null);
   const [holdError, setHoldError] = useState<string | null>(null);
   const [continuing, setContinuing] = useState(false);
@@ -62,7 +75,11 @@ export default function BookingFlow() {
       const res = await fetch("/api/booking/hold", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slot_start: slot.start, slot_end: slot.end }),
+        body: JSON.stringify({
+          slot_start: slot.start,
+          slot_end: slot.end,
+          package: pkg,
+        }),
       });
       const data = await res.json();
       if (!res.ok || !data.success) {
@@ -133,7 +150,7 @@ export default function BookingFlow() {
             Session summary
           </p>
           <p className="mt-3 text-sm font-semibold text-[#1A1A1A]">
-            Initial consultation — 50 minutes
+            {packageLabel(pkg)}
           </p>
           {selected ? (
             <p className="mt-1 inline-flex items-center gap-1.5 text-sm text-[#1A1A1A]/75">
@@ -146,10 +163,26 @@ export default function BookingFlow() {
             </p>
           )}
           <div className="mt-3 space-y-1 rounded-lg bg-[#5D1F13]/[0.06] px-4 py-3 text-xs font-bold text-[#5D1F13]">
-            <p className="flex items-center justify-between">
-              <span className="text-[#1A1A1A]/60">Session Fee</span>
-              <span>${(SESSION_PRICE_CENTS / 100).toFixed(2)}</span>
-            </p>
+            {pkg === "bundle4" ? (
+              <>
+                <p className="flex items-center justify-between">
+                  <span className="text-[#1A1A1A]/60">Session Package</span>
+                  <span>${(BUNDLE4_PRICE_CENTS / 100).toFixed(2)}</span>
+                </p>
+                <p className="flex items-center justify-between">
+                  <span className="text-[#1A1A1A]/60">Total Value</span>
+                  <span>${(BUNDLE4_PRICE_CENTS / 100).toFixed(2)}</span>
+                </p>
+                <p className="text-[#1A1A1A]/55">
+                  {BUNDLE4_SESSIONS} virtual sessions × $50.00 each
+                </p>
+              </>
+            ) : (
+              <p className="flex items-center justify-between">
+                <span className="text-[#1A1A1A]/60">Session Fee</span>
+                <span>${(priceCentsFor(pkg) / 100).toFixed(2)}</span>
+              </p>
+            )}
             <p className="flex items-center justify-between border-t border-[#5D1F13]/[0.12] pt-1">
               <span className="inline-flex items-center gap-2 text-[#1A1A1A]/60">
                 <Lock className="h-3 w-3" aria-hidden="true" />
@@ -173,9 +206,64 @@ export default function BookingFlow() {
           <div className="flex h-full flex-col">
             <h3 className="font-display text-2xl text-[#5D1F13]">Pick your time</h3>
             <p className="mt-2 max-w-md text-sm leading-relaxed text-[#1A1A1A]/60">
-              Choose a date and an open slot — all times shown in Central
-              Time (CST).
+              Choose your package and an open slot — all times shown in
+              Central Time (CST).
             </p>
+
+            {/* Package selection — single session vs 4-session bundle */}
+            <div className="mt-5 grid gap-3 sm:grid-cols-2" role="radiogroup" aria-label="Session package">
+              <button
+                type="button"
+                role="radio"
+                aria-checked={pkg === "single"}
+                disabled={continuing}
+                onClick={() => setPkg("single")}
+                className={`rounded-xl border p-4 text-left transition-all ${
+                  pkg === "single"
+                    ? "border-[#5D1F13] bg-[#F3EDE5] shadow-[0_6px_20px_-12px_rgba(93,31,19,0.6)]"
+                    : "border-black/10 bg-white hover:border-[#A8532B]/40"
+                } disabled:pointer-events-none disabled:opacity-50`}
+              >
+                <span className="text-sm font-bold text-[#1A1A1A]">
+                  Single Session
+                </span>
+                <span className="mt-1 block text-xs text-[#1A1A1A]/60">
+                  One 50-minute virtual session
+                </span>
+                <span className="mt-2 block font-display text-lg font-semibold text-[#5D1F13]">
+                  ${(priceCentsFor("single") / 100).toFixed(2)}
+                </span>
+              </button>
+              <button
+                type="button"
+                role="radio"
+                aria-checked={pkg === "bundle4"}
+                disabled={continuing}
+                onClick={() => setPkg("bundle4")}
+                className={`relative rounded-xl border p-4 text-left transition-all ${
+                  pkg === "bundle4"
+                    ? "border-[#A8532B] bg-[#A8532B]/[0.07] shadow-[0_6px_20px_-12px_rgba(168,83,43,0.7)]"
+                    : "border-[#A8532B]/40 bg-white hover:border-[#A8532B]/70"
+                } disabled:pointer-events-none disabled:opacity-50`}
+              >
+                <span className="absolute -top-2.5 right-3 rounded-full bg-[#A8532B] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em] text-white">
+                  Special Offer
+                </span>
+                <span className="text-sm font-bold text-[#1A1A1A]">
+                  {BUNDLE4_LABEL}
+                </span>
+                <span className="mt-1 block text-xs text-[#1A1A1A]/60">
+                  {BUNDLE4_SESSIONS} virtual therapy sessions ($50 / session)
+                </span>
+                <span className="mt-2 block font-display text-lg font-semibold text-[#5D1F13]">
+                  ${(BUNDLE4_PRICE_CENTS / 100).toFixed(2)}{" "}
+                  <span className="font-sans text-xs font-normal text-[#1A1A1A]/55">
+                    total
+                  </span>
+                </span>
+              </button>
+            </div>
+
             <div className="mt-6">
               <CustomScheduler
                 selected={selected}
@@ -336,6 +424,14 @@ export default function BookingFlow() {
                 </span>
               </p>
               <p className="flex items-center justify-between gap-4">
+                <span className="text-[#1A1A1A]/60">Package</span>
+                <span className="font-semibold text-[#1A1A1A]">
+                  {pkg === "bundle4"
+                    ? `${BUNDLE4_LABEL} — $${(BUNDLE4_PRICE_CENTS / 100).toFixed(2)} total`
+                    : "Single session"}
+                </span>
+              </p>
+              <p className="flex items-center justify-between gap-4">
                 <span className="text-[#1A1A1A]/60">Name</span>
                 <span className="font-semibold text-[#1A1A1A]">
                   {fields.firstName} {fields.lastName}
@@ -356,6 +452,7 @@ export default function BookingFlow() {
                 promo={promo}
                 onApply={setPromo}
                 onClear={() => setPromo(null)}
+                priceCents={priceCentsFor(pkg)}
               />
             </div>
 
@@ -363,6 +460,7 @@ export default function BookingFlow() {
               bookingId={hold!.booking_id}
               holdExpiresAt={hold!.expires_at}
               manageToken={hold!.manage_token}
+              packageId={pkg}
               details={{
                 firstName: fields.firstName.trim(),
                 lastName: fields.lastName.trim(),

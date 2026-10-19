@@ -9,6 +9,8 @@ import GAScript from "@/components/analytics/GAScript";
 import ClarityScript from "@/components/analytics/ClarityScript";
 import FloatingBookingButton from "@/components/booking/FloatingBookingButton";
 import EngagementTracker from "@/components/analytics/EngagementTracker";
+import SpecialOfferBanner from "@/components/promotions/SpecialOfferBanner";
+import SpecialOfferModal from "@/components/promotions/SpecialOfferModal";
 import { site } from "@/lib/site";
 
 const display = Fraunces({
@@ -114,12 +116,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <AttributionCapture />
         <EngagementTracker />
         <BookingProvider>
+          <SpecialOfferBanner />
           <Navbar />
           <main id="top" className="flex-1">
             {children}
           </main>
           <Footer />
           <FloatingBookingButton />
+          <SpecialOfferModal />
         </BookingProvider>
       </body>
     </html>

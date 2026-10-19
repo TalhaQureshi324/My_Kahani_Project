@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
+import type { BookingPackage } from "@/lib/pricing";
 
 /**
  * Lazy client-only load: pages that merely include the site layout
@@ -23,9 +24,11 @@ const BookingFlow = dynamic(() => import("./BookingFlow"), {
 export default function BookingDrawer({
   open,
   onClose,
+  presetPackage,
 }: {
   open: boolean;
   onClose: () => void;
+  presetPackage: BookingPackage;
 }) {
   const [flowKey, setFlowKey] = useState(0);
   const [mounted, setMounted] = useState(false);
@@ -101,7 +104,9 @@ export default function BookingDrawer({
         </div>
 
         <div className="flex-1 px-6 pb-10 pt-6 sm:px-8">
-          {mounted ? <BookingFlow key={flowKey} /> : null}
+          {mounted ? (
+            <BookingFlow key={flowKey} initialPackage={presetPackage} />
+          ) : null}
         </div>
       </div>
     </div>

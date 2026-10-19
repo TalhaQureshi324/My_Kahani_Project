@@ -1,6 +1,7 @@
 "use client";
 
 import { trackEvent } from "@/lib/analytics";
+import type { BookingPackage } from "@/lib/pricing";
 import {
   createContext,
   useCallback,
@@ -12,7 +13,8 @@ import {
 import BookingDrawer from "./BookingDrawer";
 
 type BookingContextValue = {
-  openBooking: (source?: string) => void;
+  /** Opens the shared booking drawer. `pkg` preselects a tier. */
+  openBooking: (source?: string, pkg?: BookingPackage) => void;
   closeBooking: () => void;
 };
 
@@ -28,11 +30,16 @@ export function useBookingDrawer(): BookingContextValue {
 
 /**
  * Mounts once in the root layout: provides open/close to every CTA on
- * the site and hosts the shared slide-over booking drawer.
+ * the site and hosts the shared slide-over booking drawer. Promotional
+ * surfaces (offer banner, welcome modal) pass a package so the drawer
+ * opens with that tier already selected.
  */
 export default function BookingProvider({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
-  const openBooking = useCallback((source = "unknown") => {
+  const [presetPackage, setPresetPackage] =
+    useState<BookingPackage>("single");
+  const openBooking = useCallback((source = "unknown", pkg?: BookingPackage) => {
+    if (pkg) setPresetPackage(pkg);
     setOpen(true);
     trackEvent({ action: "booking_drawer_opened", category: "booking", source });
   }, []);
@@ -45,7 +52,7 @@ export default function BookingProvider({ children }: { children: ReactNode }) {
   return (
     <BookingContext.Provider value={value}>
       {children}
-      <BookingDrawer open={open} onClose={closeBooking} />
+      <BookingDrawer open={open} onClose={closeBooking} presetPackage={presetPackage} />
     </BookingContext.Provider>
   );
 }

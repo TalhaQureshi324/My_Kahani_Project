@@ -2,7 +2,13 @@ import { NextResponse } from "next/server";
 import { isDatabaseConfigured, getSupabaseAdmin } from "@/lib/supabase";
 import { generateSlots, HOLD_MINUTES, addDaysISO, todayChicago } from "@/lib/scheduling";
 import type { AvailabilityRule, AvailabilityException } from "@/lib/scheduling";
-import { SESSION_PRICE_CENTS, SESSION_CURRENCY, PRICING_SOURCE } from "@/lib/pricing";
+import {
+  isBookingPackage,
+  priceCentsFor,
+  pricingSourceFor,
+  SESSION_CURRENCY,
+  type BookingPackage,
+} from "@/lib/pricing";
 import {
   generateBookingReference,
   generateManageToken,
@@ -40,7 +46,7 @@ export async function POST(request: Request) {
     );
   }
 
-  let body: { slot_start?: string; slot_end?: string };
+  let body: { slot_start?: string; slot_end?: string; package?: string };
   try {
     body = await request.json();
   } catch {
@@ -136,6 +142,12 @@ export async function POST(request: Request) {
   // Single-timezone practice: client_timezone is always Central Time.
   const clientTz = "America/Chicago";
 
+  // Package tier: whitelisted server-side, and the price/pricing-source
+  // snapshot below always comes from server config — never the client.
+  const pkg: BookingPackage = isBookingPackage(body.package)
+    ? body.package
+    : "single";
+
   let booking: { id: string; booking_reference: string } | null = null;
   let insertError: { message: string } | null = null;
   // Retry on the (astronomically unlikely) reference collision.
@@ -148,9 +160,9 @@ export async function POST(request: Request) {
         slot_start: startDate.toISOString(),
         slot_end: endDate.toISOString(),
         expires_at: expiresAt,
-        session_price_cents: SESSION_PRICE_CENTS,
+        session_price_cents: priceCentsFor(pkg),
         session_currency: SESSION_CURRENCY,
-        pricing_source: PRICING_SOURCE,
+        pricing_source: pricingSourceFor(pkg),
         client_timezone: clientTz,
         manage_token_hash: manageTokenHash,
         gclid: attributionRecord?.gclid ?? null,
@@ -185,9 +197,10 @@ export async function POST(request: Request) {
     booking_reference: booking.booking_reference,
     manage_token: manageToken,
     pricing: {
-      cents: SESSION_PRICE_CENTS,
+      cents: priceCentsFor(pkg),
       currency: SESSION_CURRENCY,
-      source: PRICING_SOURCE,
+      source: pricingSourceFor(pkg),
+      package: pkg,
     },
     hold: {
       slot_start: startDate.toISOString(),

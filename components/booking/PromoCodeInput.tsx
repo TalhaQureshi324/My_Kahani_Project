@@ -32,10 +32,13 @@ export default function PromoCodeInput({
   promo,
   onApply,
   onClear,
+  priceCents = SESSION_PRICE_CENTS,
 }: {
   promo: AppliedPromo | null;
   onApply: (p: AppliedPromo) => void;
   onClear: () => void;
+  /** Price the discount applies to (selected booking tier). */
+  priceCents?: number;
 }) {
   const [code, setCode] = useState("");
   const [checking, setChecking] = useState(false);
@@ -72,8 +75,8 @@ export default function PromoCodeInput({
   }
 
   if (promo) {
-    const discount = promoDiscountCents(promo);
-    const remaining = SESSION_PRICE_CENTS - discount;
+    const discount = promoDiscountCents(promo, priceCents);
+    const remaining = priceCents - discount;
     return (
       <div className="flex items-center justify-between gap-3 rounded-lg border border-green-700/25 bg-green-50 px-4 py-3">
         <div className="flex items-center gap-2 text-sm font-semibold text-green-800">
