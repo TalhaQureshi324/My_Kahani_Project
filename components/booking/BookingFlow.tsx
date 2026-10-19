@@ -210,7 +210,11 @@ export default function BookingFlow({
               Central Time (CST).
             </p>
 
-            {/* Package selection — single session vs 4-session bundle */}
+            {/* Package selection — single session vs 4-session bundle.
+                Cards are equal-height (grid stretch + h-full) with the
+                price bottom-aligned (justify-between); the offer badge
+                is in normal flow above the title so it can never
+                overlap the text at any width. */}
             <div className="mt-5 grid gap-3 sm:grid-cols-2" role="radiogroup" aria-label="Session package">
               <button
                 type="button"
@@ -218,19 +222,21 @@ export default function BookingFlow({
                 aria-checked={pkg === "single"}
                 disabled={continuing}
                 onClick={() => setPkg("single")}
-                className={`rounded-xl border p-4 text-left transition-all ${
+                className={`flex h-full flex-col justify-between rounded-xl border p-4 text-left transition-all ${
                   pkg === "single"
                     ? "border-[#5D1F13] bg-[#F3EDE5] shadow-[0_6px_20px_-12px_rgba(93,31,19,0.6)]"
                     : "border-black/10 bg-white hover:border-[#A8532B]/40"
                 } disabled:pointer-events-none disabled:opacity-50`}
               >
-                <span className="text-sm font-bold text-[#1A1A1A]">
-                  Single Session
+                <span>
+                  <span className="block text-sm font-bold leading-tight text-[#1A1A1A]">
+                    Single Session
+                  </span>
+                  <span className="mt-1 block text-xs text-[#1A1A1A]/60">
+                    One 50-minute virtual session
+                  </span>
                 </span>
-                <span className="mt-1 block text-xs text-[#1A1A1A]/60">
-                  One 50-minute virtual session
-                </span>
-                <span className="mt-2 block font-display text-lg font-semibold text-[#5D1F13]">
+                <span className="mt-3 block font-display text-lg font-semibold text-[#5D1F13]">
                   ${(priceCentsFor("single") / 100).toFixed(2)}
                 </span>
               </button>
@@ -240,22 +246,24 @@ export default function BookingFlow({
                 aria-checked={pkg === "bundle4"}
                 disabled={continuing}
                 onClick={() => setPkg("bundle4")}
-                className={`relative rounded-xl border p-4 text-left transition-all ${
+                className={`flex h-full flex-col justify-between rounded-xl border p-4 text-left transition-all ${
                   pkg === "bundle4"
                     ? "border-[#A8532B] bg-[#A8532B]/[0.07] shadow-[0_6px_20px_-12px_rgba(168,83,43,0.7)]"
                     : "border-[#A8532B]/40 bg-white hover:border-[#A8532B]/70"
                 } disabled:pointer-events-none disabled:opacity-50`}
               >
-                <span className="absolute -top-2.5 right-3 rounded-full bg-[#A8532B] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em] text-white">
-                  Special Offer
+                <span>
+                  <span className="mb-2 inline-block whitespace-nowrap rounded-full bg-[#A8532B] px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em] text-white">
+                    Special Offer
+                  </span>
+                  <span className="mt-1 block text-sm font-bold leading-tight text-[#1A1A1A]">
+                    {BUNDLE4_LABEL}
+                  </span>
+                  <span className="mt-1 block text-xs text-[#1A1A1A]/60">
+                    {BUNDLE4_SESSIONS} virtual therapy sessions ($50 / session)
+                  </span>
                 </span>
-                <span className="text-sm font-bold text-[#1A1A1A]">
-                  {BUNDLE4_LABEL}
-                </span>
-                <span className="mt-1 block text-xs text-[#1A1A1A]/60">
-                  {BUNDLE4_SESSIONS} virtual therapy sessions ($50 / session)
-                </span>
-                <span className="mt-2 block font-display text-lg font-semibold text-[#5D1F13]">
+                <span className="mt-3 block font-display text-lg font-semibold text-[#5D1F13]">
                   ${(BUNDLE4_PRICE_CENTS / 100).toFixed(2)}{" "}
                   <span className="font-sans text-xs font-normal text-[#1A1A1A]/55">
                     total
