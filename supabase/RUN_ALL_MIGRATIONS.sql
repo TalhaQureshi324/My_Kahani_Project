@@ -661,3 +661,9 @@ create table if not exists ads_site_health (
 create index if not exists ads_site_health_checked_idx
   on ads_site_health (checked_at desc);
 alter table ads_site_health enable row level security;
+
+-- ============================================================
+-- MIGRATION 0010 — Blog CMS foundation (content automation system)
+-- Full definition: supabase/migrations_0010_blog_cms.sql
+-- Run that file directly; it is idempotent like the sections above.
+-- ============================================================

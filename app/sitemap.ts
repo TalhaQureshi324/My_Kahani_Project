@@ -1,7 +1,26 @@
 import type { MetadataRoute } from "next";
 import { site } from "@/lib/site";
+import { listPublishedForSitemap } from "@/lib/blog";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+/**
+ * Static routes + published CMS articles (spec section 57). Draft,
+ * review, rejected, generated, and failed content NEVER appears here.
+ * DB failure degrades to static-only rather than failing the build.
+ */
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  let blogEntries: MetadataRoute.Sitemap = [];
+  try {
+    const posts = await listPublishedForSitemap();
+    blogEntries = posts.map((p) => ({
+      url: `${site.url}/blog/${p.slug}`,
+      lastModified: new Date(p.updated_at),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    }));
+  } catch {
+    blogEntries = [];
+  }
+
   return [
     {
       url: site.url,
@@ -20,11 +39,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
         priority: 0.9,
       }),
     ),
+    {
+      url: `${site.url}/blog`,
+      lastModified: new Date(),
+      changeFrequency: "daily" as const,
+      priority: 0.8,
+    },
     ...["privacy", "terms"].map((slug) => ({
       url: `${site.url}/${slug}`,
       lastModified: new Date(),
       changeFrequency: "yearly" as const,
       priority: 0.3,
     })),
+    ...blogEntries,
   ];
 }
