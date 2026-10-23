@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "booking:check": "node scripts/booking-check.mjs",
-    "test": "node --experimental-strip-types --test tests/attribution.test.mjs tests/scheduling.test.mjs tests/conversions.test.mjs tests/leads.test.mjs tests/landing.test.mjs tests/googleAds.test.mjs tests/automation.test.mjs"
+    "test": "node --experimental-strip-types --test tests/attribution.test.mjs tests/scheduling.test.mjs tests/conversions.test.mjs tests/leads.test.mjs tests/landing.test.mjs tests/googleAds.test.mjs tests/automation.test.mjs tests/blog-cms.test.mjs"
   },
   "allowScripts": {
     "unrs-resolver@1.12.2": true
@@ -17,6 +17,7 @@
     "@hookform/resolvers": "^5.9.1",
     "@stripe/react-stripe-js": "^3.11.0",
     "@stripe/stripe-js": "^4.10.0",
+    "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.116.0",
     "isomorphic-dompurify": "^3.19.0",
     "lucide-react": "^1.35.0",

@@ -1,4 +1,9 @@
 import { getSupabaseAdmin } from "@/lib/supabase";
+import {
+  BLOG_STATUS_TRANSITIONS as SHARED_TRANSITIONS,
+  canTransition as sharedCanTransition,
+  slugify as sharedSlugify,
+} from "./blog-shared.mjs";
 
 /**
  * Blog CMS data access (spec section 2 / 34).
@@ -7,6 +12,8 @@ import { getSupabaseAdmin } from "@/lib/supabase";
  * (human or n8n) reads and writes through this module. All queries use
  * the service-role client — writes are server-only, and the public
  * pages additionally benefit from the RLS published-read policy.
+ * Domain rules (transitions, slugify) live in lib/blog-shared.mjs so
+ * the admin UI and node tests share the exact same implementation.
  */
 
 export type BlogStatus =
@@ -21,20 +28,15 @@ export type BlogStatus =
   | "failed";
 
 /** Allowed status transitions — mirrors the DB trigger in migration 0010. */
-export const BLOG_STATUS_TRANSITIONS: Record<BlogStatus, BlogStatus[]> = {
-  draft: ["generated", "review"],
-  generated: ["review", "rejected", "failed"],
-  review: ["approved", "rejected", "draft", "failed"],
-  approved: ["scheduled", "published", "rejected"],
-  scheduled: ["published", "approved"],
-  published: ["archived", "draft"],
-  archived: ["draft"],
-  rejected: ["draft"],
-  failed: ["draft", "review"],
-};
+export const BLOG_STATUS_TRANSITIONS: Record<BlogStatus, BlogStatus[]> =
+  SHARED_TRANSITIONS as Record<BlogStatus, BlogStatus[]>;
 
 export function canTransition(from: BlogStatus, to: BlogStatus): boolean {
-  return from === to || (BLOG_STATUS_TRANSITIONS[from]?.includes(to) ?? false);
+  return sharedCanTransition(from, to);
+}
+
+export function slugify(input: string): string {
+  return sharedSlugify(input);
 }
 
 export type BlogRecord = {
@@ -89,16 +91,6 @@ export type BlogRecord = {
 const PUBLISHED_COLUMNS =
   "id, title, slug, excerpt, featured_image, featured_image_alt, author, category, tags, " +
   "content_cluster, content_pillar, published_at, updated_at, meta_title, meta_description";
-
-export function slugify(input: string): string {
-  return input
-    .toLowerCase()
-    .normalize("NFKD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 80);
-}
 
 /** Published listing (public blog + sitemap). Never exposes drafts. */
 export async function listPublished(options?: {
@@ -176,21 +168,41 @@ export async function listPublishedForSitemap(): Promise<
   return data ?? [];
 }
 
-/** Admin listing (all statuses). */
+/** Admin listing (all statuses) with optional search + sort. */
 export async function listBlogs(options?: {
   status?: BlogStatus;
+  pillar?: string;
+  search?: string;
+  sort?: "updated" | "created" | "scheduled" | "published";
   limit?: number;
 }): Promise<BlogRecord[]> {
   const supabase = getSupabaseAdmin();
+  const sortColumn =
+    options?.sort === "created"
+      ? "created_at"
+      : options?.sort === "scheduled"
+        ? "scheduled_at"
+        : options?.sort === "published"
+          ? "published_at"
+          : "updated_at";
   let query = supabase
     .from("blogs")
     .select("*")
-    .order("updated_at", { ascending: false })
+    .order(sortColumn, { ascending: false, nullsFirst: false })
     .limit(Math.min(200, options?.limit ?? 50));
   if (options?.status) query = query.eq("status", options.status);
+  if (options?.pillar) query = query.eq("content_pillar", options.pillar);
+  if (options?.search) {
+    const term = options.search.replace(/[%,()]/g, " ").trim();
+    if (term) {
+      query = query.or(
+        [`title.ilike.%${term}%`, `slug.ilike.%${term}%`, `primary_keyword.ilike.%${term}%`].join(","),
+      );
+    }
+  }
   const { data, error } = await query;
   if (error) throw new Error(`listBlogs failed: ${error.message}`);
-  return (data ?? []) as BlogRecord[];
+  return (data ?? []) as unknown as BlogRecord[];
 }
 
 export async function getBlogById(id: string): Promise<BlogRecord | null> {
