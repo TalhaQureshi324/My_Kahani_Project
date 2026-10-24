@@ -86,6 +86,7 @@ export type BlogRecord = {
   social_post_id: string | null;
   instagram_media_id: string | null;
   instagram_status: string | null;
+  automation_job_id: string | null;
 };
 
 const PUBLISHED_COLUMNS =
@@ -319,4 +320,126 @@ export async function getMarketingSetting<T>(key: string): Promise<T | null> {
     .eq("key", key)
     .maybeSingle();
   return (data?.value as T) ?? null;
+}
+
+export async function getAllMarketingSettings(): Promise<Record<string, unknown>> {
+  const supabase = getSupabaseAdmin();
+  const { data } = await supabase
+    .from("marketing_settings")
+    .select("key, value");
+  return Object.fromEntries((data ?? []).map((r) => [r.key, r.value]));
+}
+
+/** Idempotency lookup for automation content creation. */
+export async function getBlogByAutomationJobId(jobId: string): Promise<BlogRecord | null> {
+  const supabase = getSupabaseAdmin();
+  const { data } = await supabase
+    .from("blogs")
+    .select("*")
+    .eq("automation_job_id", jobId)
+    .maybeSingle();
+  return (data as BlogRecord) ?? null;
+}
+
+export type InsertConflict = "SLUG_CONFLICT" | "JOB_CONFLICT";
+
+/**
+ * Inserts a blog row, classifying unique-violation races by constraint
+ * detail (slug vs automation_job_id) so callers can map to 409 codes.
+ */
+export async function insertBlog(
+  values: Record<string, unknown>,
+): Promise<
+  | { ok: true; blog: BlogRecord }
+  | { ok: false; conflict: InsertConflict }
+  | { ok: false; error: string }
+> {
+  const supabase = getSupabaseAdmin();
+  const { data, error } = await supabase
+    .from("blogs")
+    .insert(values)
+    .select("*")
+    .single();
+  if (!error && data) return { ok: true, blog: data as BlogRecord };
+  if (error && error.code === "23505") {
+    const detail = error.details ?? error.message;
+    if (/automation_job_id/i.test(detail)) return { ok: false, conflict: "JOB_CONFLICT" };
+    return { ok: false, conflict: "SLUG_CONFLICT" };
+  }
+  return { ok: false, error: error?.message ?? "insert failed" };
+}
+
+// ---------- Content calendar (marketing API + planner) ----------
+
+export type CalendarItem = {
+  id: string;
+  scheduled_date: string;
+  platform: string;
+  content_type: string;
+  pillar: string | null;
+  topic: string | null;
+  status: string;
+  blog_id: string | null;
+  automation_job_id: string | null;
+  approved_at: string | null;
+  published_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export async function listCalendar(options?: {
+  from?: string;
+  to?: string;
+  limit?: number;
+}): Promise<CalendarItem[]> {
+  const supabase = getSupabaseAdmin();
+  let query = supabase
+    .from("content_calendar")
+    .select("*")
+    .order("scheduled_date", { ascending: true })
+    .limit(Math.min(200, options?.limit ?? 60));
+  if (options?.from) query = query.gte("scheduled_date", options.from);
+  if (options?.to) query = query.lte("scheduled_date", options.to);
+  const { data, error } = await query;
+  if (error) throw new Error(`listCalendar failed: ${error.message}`);
+  return (data ?? []) as unknown as CalendarItem[];
+}
+
+export async function createCalendarItem(
+  values: Record<string, unknown>,
+): Promise<{ ok: true; item: CalendarItem } | { ok: false; conflict: boolean } | { ok: false; error: string }> {
+  const supabase = getSupabaseAdmin();
+  const { data, error } = await supabase
+    .from("content_calendar")
+    .insert(values)
+    .select("*")
+    .single();
+  if (!error && data) return { ok: true, item: data as CalendarItem };
+  if (error && error.code === "23505") return { ok: false, conflict: true };
+  return { ok: false, error: error?.message ?? "insert failed" };
+}
+
+export async function updateCalendarItem(
+  id: string,
+  patch: Record<string, unknown>,
+): Promise<CalendarItem | null> {
+  const supabase = getSupabaseAdmin();
+  const { data, error } = await supabase
+    .from("content_calendar")
+    .update({ ...patch, updated_at: new Date().toISOString() })
+    .eq("id", id)
+    .select("*")
+    .single();
+  if (error) throw new Error(`updateCalendarItem failed: ${error.message}`);
+  return (data as CalendarItem) ?? null;
+}
+
+export async function getCalendarItem(id: string): Promise<CalendarItem | null> {
+  const supabase = getSupabaseAdmin();
+  const { data } = await supabase
+    .from("content_calendar")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
+  return (data as CalendarItem) ?? null;
 }

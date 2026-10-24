@@ -1,0 +1,12 @@
+export declare const API_VERSION: string;
+export declare const WORKFLOW_EVENT_TYPES: string[];
+export declare const AUTOMATION_ALLOWED_STATUSES: string[];
+export declare const AUTOMATION_EDITABLE_STATUSES: string[];
+export declare const PUBLISHABLE_STATUSES: string[];
+export declare function verifyApiKey(presented: string | null | undefined, expected: string | null | undefined): boolean;
+export declare function bearerToken(header: string | null): string | null;
+export declare function okResponse(data: unknown, requestId: string, status?: number, extra?: Record<string, unknown>): unknown;
+export declare function errorResponse(code: string, message: string, requestId: string): unknown;
+export declare function mapAutomationPayload(body: Record<string, unknown> | null | undefined): { mapped: Record<string, unknown>; dropped: string[] };
+export declare function stripDangerousMarkdown(raw: string | null | undefined): string;
+export declare function compactContent(row: Record<string, unknown>): Record<string, unknown>;
